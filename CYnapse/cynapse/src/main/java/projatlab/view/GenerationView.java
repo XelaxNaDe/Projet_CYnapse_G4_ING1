@@ -124,7 +124,10 @@ public class GenerationView {
         // Button Generate
         Button btnGenerate = new Button("Générer un labyrinthe");
         btnGenerate.setPrefSize(150, 40);
-        btnGenerate.setOnAction(e -> openResWindow());
+        btnGenerate.setOnAction(e -> {
+        MazeView mazeView = new MazeView();
+        mazeView.show();
+    });
 
         VBox vbBotRight = new VBox();
         vbBotRight.getChildren().addAll(btnLoad, btnGenerate);
