@@ -18,9 +18,6 @@ public class GenerationView {
     public void show(Stage genStage) {
 
         StackPane mainPane = new StackPane();
-
-        
-
         
 
         // Seed Field
