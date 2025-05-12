@@ -75,6 +75,11 @@ public class ResolverView {
         Button bSave = new Button("Sauvegarder");
         Button bSolve = new Button("Résoudre");
         Button bModify = new Button("Modifier");
+        
+        bModify.setOnAction(e -> {
+            ModificationView modWindow = new ModificationView();
+            modWindow.show();
+        });
 
         HBox hbSaveModSolve = new HBox(bSave,bModify,bSolve);
 
