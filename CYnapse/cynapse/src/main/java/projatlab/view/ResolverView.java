@@ -6,14 +6,16 @@ import javafx.stage.Stage;
 
 public class ResolverView {
     public void show() {
-
         Stage resStage = new Stage();
-        
         VBox root = new VBox();
-        
-        Scene scene = new Scene(root, 250, 150);
+
+        // Ajout du labyrinthe
+        MazeView mazeView = new MazeView();
+        root.getChildren().add(mazeView.getMazeNode());
+
+        Scene scene = new Scene(root);
         resStage.setScene(scene);
+        resStage.setTitle("Résolution du labyrinthe");
         resStage.show();
     }
-    
 }
