@@ -1,18 +1,40 @@
 package projatlab.view;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
-import projatlab.model.Maze;
+import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
-public class MazeView  extends Pane{
-    Maze maze;
-    int width = 600;
-    int height= 600;
-    GraphicsContext gc;
-    
+public class MazeView {
+
     public void show() {
-        Canvas canvas = new Canvas(width, height);
-        gc = canvas.getGraphicsContext2D();
+        Stage stage = new Stage();
+        stage.setTitle("Labyrinthe généré");
+        stage.setResizable(false);
+
+        int rows = 10;
+        int cols = 10;
+        int cellSize = 25;
+
+        GridPane grid = new GridPane();
+
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
+                Rectangle rect = new Rectangle(cellSize, cellSize);
+                rect.setFill(Color.WHITE);
+                rect.setStroke(Color.BLACK); 
+                rect.setStrokeWidth(1);
+
+                grid.add(rect, x, y);
+            }
+        }
+
+        int totalWidth = cols * (cellSize + 1) ;
+        int totalHeight = rows * (cellSize + 1);
+
+        Scene scene = new Scene(grid, totalWidth, totalHeight);
+        stage.setScene(scene);
+        stage.show();   
     }
 }

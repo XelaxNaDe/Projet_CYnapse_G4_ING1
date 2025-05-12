@@ -1,5 +1,7 @@
 package projatlab.view;
 
+import java.io.File;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
@@ -105,12 +108,23 @@ public class GenerationView {
         // Button Load
         Button btnLoad = new Button("Charger un labyrinthe");
         btnLoad.setPrefSize(150, 40);
-        btnLoad.setOnAction(e -> openResWindow());
+        btnLoad.setOnAction(e -> {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Charger un labyrinthe");
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Tous les fichiers", "*.*"));
+        File selectedFile = fileChooser.showOpenDialog(genStage);
+        if (selectedFile != null) {
+            System.out.println("Fichier sélectionné : " + selectedFile.getAbsolutePath());
+        }});
 
         // Button Generate
         Button btnGenerate = new Button("Générer un labyrinthe");
         btnGenerate.setPrefSize(150, 40);
-        btnGenerate.setOnAction(e -> openResWindow());
+        btnGenerate.setOnAction(e -> {
+        MazeView mazeView = new MazeView();
+        mazeView.show();
+    });
 
         VBox vbBotRight = new VBox();
         vbBotRight.getChildren().addAll(btnLoad, btnGenerate);
