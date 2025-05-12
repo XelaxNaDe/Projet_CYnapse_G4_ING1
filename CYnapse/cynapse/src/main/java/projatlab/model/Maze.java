@@ -48,50 +48,41 @@ public class Maze {
 
     // Link Walls to their Cells
     private void linkWalls() {
-        for (int i = 0; i < height - 1; i++) {
-            for (int j = 0; j < width - 1; j++) {
-                if (!isOnBottomEdge(grid[i][j])) {
-                    grid[i][j].walls[2] = hWalls.get(i).get(j); // Bot Wall
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                Cell cell = grid[i][j];
+
+                // Haut
+                if (i > 0) {
+                    cell.walls[0] = hWalls.get(i - 1).get(j);
                 } else {
-                    grid[i][j].walls[2] = null;
-                }
-                if (!isOnRightEdge(grid[i][j])) {
-                    grid[i][j].walls[1] = vWalls.get(i).get(j); // Right Wall
-                } else {
-                    grid[i][j].walls[1] = null;
+                    cell.walls[0] = null;
                 }
 
-                if (!isOnTopEdge(grid[i + 1][j])) {
-                    grid[i + 1][j].walls[0] = hWalls.get(i).get(j); // Top Wall of the Bot Cell
+                // Droite
+                if (j < width - 1) {
+                    cell.walls[1] = vWalls.get(i).get(j);
                 } else {
-                    grid[i + 1][j].walls[0] = null;
+                    cell.walls[1] = null;
                 }
 
-                if (!isOnLeftEdge(grid[i][j + 1])) {
-                    grid[i][j + 1].walls[3] = vWalls.get(i).get(j); // Left Wall of the Right Wall
+                // Bas
+                if (i < height - 1) {
+                    cell.walls[2] = hWalls.get(i).get(j);
                 } else {
-                    grid[i][j + 1].walls[3] = null;
+                    cell.walls[2] = null;
+                }
+
+                // Gauche
+                if (j > 0) {
+                    cell.walls[3] = vWalls.get(i).get(j - 1);
+                } else {
+                    cell.walls[3] = null;
                 }
             }
         }
     }
 
-    // Methods to check if a Cell is on an edge
-    public boolean isOnTopEdge(Cell cell) {
-        return cell.i == 0;
-    }
-
-    public boolean isOnBottomEdge(Cell cell) {
-        return cell.i == height - 1;
-    }
-
-    public boolean isOnLeftEdge(Cell cell) {
-        return cell.j == 0;
-    }
-
-    public boolean isOnRightEdge(Cell cell) {
-        return cell.j == width - 1;
-    }
 
     // Getters
     public int getWidth() {

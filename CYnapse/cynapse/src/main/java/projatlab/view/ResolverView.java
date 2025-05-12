@@ -17,10 +17,6 @@ public class ResolverView {
         Stage resStage = new Stage();
         BorderPane root = new BorderPane();
 
-        //Center
-        MazeView mazeView = new MazeView();
-        root.setCenter(mazeView.getMazeNode());
-
         //Right
         VBox vbAlgoMode = new VBox();
         vbAlgoMode.setAlignment(Pos.TOP_LEFT);
