@@ -15,14 +15,18 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import projatlab.model.Maze;
 
 
 public class GenerationView {
+
+    private TextField tfWidth;
+    private TextField tfHeight;
+    
     public void show(Stage genStage) {
 
         StackPane mainPane = new StackPane();
         
-
         // Seed Field
         TextField tfSeed = new TextField();
         tfSeed.setPromptText("Seed");
@@ -31,7 +35,6 @@ public class GenerationView {
         //Perfect Check
         CheckBox cbPerfect = new CheckBox("Parfait");
 
-        
         HBox hbSeedPerfect = new HBox(20);
         hbSeedPerfect.getChildren().addAll(tfSeed, cbPerfect);
 
@@ -39,13 +42,13 @@ public class GenerationView {
         //Size Choice
         Label lSize = new Label("Taille");
 
-        TextField tfWidth = new TextField();
+        tfWidth = new TextField();
         tfWidth.setPromptText("Hauteur");
         tfWidth.setPrefWidth(90);
 
         Label lX = new Label("X");
 
-        TextField tfHeight = new TextField();
+        tfHeight = new TextField();
         tfHeight.setPromptText("Largeur");
         tfHeight.setPrefWidth(90);
 
@@ -151,7 +154,15 @@ public class GenerationView {
     }
 
     public void openResWindow() {
-        ResolverView resWindow = new ResolverView();
-        resWindow.show();
+
+        try {
+            int width = Integer.parseInt(tfWidth.getText());
+            int height = Integer.parseInt(tfHeight.getText());
+            ResolverView resWindow = new ResolverView(new Maze(width, height));
+            resWindow.show();
+
+        } catch (NumberFormatException ex) {
+            System.out.println("Veuillez entrer des dimensions valides (nombres entiers).");
+        }
     }
 }

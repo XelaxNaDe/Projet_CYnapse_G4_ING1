@@ -15,8 +15,7 @@ public class ModificationView {
         BorderPane root = new BorderPane();
 
         //Center
-        MazeView mazeView = new MazeView();
-        root.setCenter(mazeView.getMazeNode());
+        ////root.setCenter(mazeView.getMazeNode());
 
         // À droite : boutons de modification
         VBox vbChange = new VBox(10); // espacement vertical de 10px

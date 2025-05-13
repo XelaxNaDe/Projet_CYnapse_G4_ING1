@@ -83,6 +83,18 @@ public class MazeView extends Pane {
                 }
             }
         }
+    
+
+        Rectangle border = new Rectangle(
+            0,
+            0,
+            maze.getWidth() * cellSize,
+            maze.getHeight() * cellSize
+        );
+        border.setFill(Color.TRANSPARENT);
+        border.setStroke(Color.BLACK);
+        border.setStrokeWidth(2);
+        getChildren().add(border);
     }
 
 }

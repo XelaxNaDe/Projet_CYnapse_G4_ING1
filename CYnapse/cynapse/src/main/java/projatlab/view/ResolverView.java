@@ -11,11 +11,22 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import projatlab.model.Maze;
 
 public class ResolverView {
+
+    private Maze maze;
+
+    public ResolverView(Maze maze) {
+        this.maze = maze;
+    }
+
     public void show() {
         Stage resStage = new Stage();
         BorderPane root = new BorderPane();
+
+        MazeView mazeView = new MazeView(maze, 25); // cellSize arbitraire
+        root.setCenter(mazeView);        
 
         //Right
         VBox vbAlgoMode = new VBox();
