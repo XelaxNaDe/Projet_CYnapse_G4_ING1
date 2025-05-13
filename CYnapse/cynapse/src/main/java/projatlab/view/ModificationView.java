@@ -31,6 +31,7 @@ public class ModificationView {
         CheckBox cbNouveau = new CheckBox("Nouveau labyrinthe");
         Button btnAnnuler = new Button("Annuler");
         Button btnResoudre = new Button("Résoudre à nouveau");
+        btnResoudre.setOnAction(e -> openResWindow());
 
         btnMur.setMaxWidth(Double.MAX_VALUE);
         btnEntree.setMaxWidth(Double.MAX_VALUE);
@@ -56,5 +57,10 @@ public class ModificationView {
         modStage.setScene(scene);
         modStage.setResizable(false);
         modStage.show();
+    }
+
+    public void openResWindow() {
+        ResolverView resWindow = new ResolverView();
+        resWindow.show();
     }
 }

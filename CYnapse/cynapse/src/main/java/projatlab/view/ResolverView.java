@@ -19,7 +19,7 @@ public class ResolverView {
         BorderPane root = new BorderPane();
 
         //Center
-        Maze maze = new Maze(10, 10); // largeur, hauteur à adapter
+        Maze maze = new Maze(10, 10);
         MazeView mazeView = new MazeView(maze, 30.0);
         root.setCenter(mazeView);
 
