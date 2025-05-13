@@ -8,6 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import projatlab.model.Maze;
 
 public class ModificationView {
     public void show() {
@@ -15,11 +16,12 @@ public class ModificationView {
         BorderPane root = new BorderPane();
 
         //Center
-        MazeView mazeView = new MazeView();
-        root.setCenter(mazeView.getMazeNode());
+        Maze maze = new Maze(10, 10);
+        MazeView mazeView = new MazeView(maze, 30.0);
+        root.setCenter(mazeView);
 
-        // À droite : boutons de modification
-        VBox vbChange = new VBox(10); // espacement vertical de 10px
+        //Right Button
+        VBox vbChange = new VBox(10);
         vbChange.setAlignment(Pos.CENTER_RIGHT);
         vbChange.setPadding(new Insets(20));
 
