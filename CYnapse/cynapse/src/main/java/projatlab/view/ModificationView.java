@@ -11,12 +11,18 @@ import javafx.stage.Stage;
 import projatlab.model.Maze;
 
 public class ModificationView {
+    private Maze maze;
+
+    public ModificationView(Maze maze) {
+        this.maze = maze;
+    }
+
+
     public void show() {
         Stage modStage = new Stage();
         BorderPane root = new BorderPane();
 
         //Center
-        Maze maze = new Maze(10, 10);
         MazeView mazeView = new MazeView(maze, 30.0);
         root.setCenter(mazeView);
 

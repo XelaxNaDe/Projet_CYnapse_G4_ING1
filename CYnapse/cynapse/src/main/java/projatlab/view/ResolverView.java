@@ -88,7 +88,7 @@ public class ResolverView {
         Button bModify = new Button("Modifier");
         
         bModify.setOnAction(e -> {
-            ModificationView modWindow = new ModificationView();
+            ModificationView modWindow = new ModificationView(maze);
             modWindow.show();
         });
 
