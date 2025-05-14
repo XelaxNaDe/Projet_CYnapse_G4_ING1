@@ -31,7 +31,10 @@ public class ModificationView {
         CheckBox cbNouveau = new CheckBox("Nouveau labyrinthe");
         Button btnAnnuler = new Button("Annuler");
         Button btnResoudre = new Button("Résoudre à nouveau");
-        btnResoudre.setOnAction(e -> openResWindow());
+        btnResoudre.setOnAction(e -> {
+            ResolverView resWindow = new ResolverView(maze);
+            resWindow.show();
+        });
 
         btnMur.setMaxWidth(Double.MAX_VALUE);
         btnEntree.setMaxWidth(Double.MAX_VALUE);
