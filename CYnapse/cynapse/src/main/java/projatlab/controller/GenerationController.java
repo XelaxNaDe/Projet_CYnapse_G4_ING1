@@ -13,13 +13,10 @@ public class GenerationController {
 
     public void handleGenerateMaze(String widthText, String heightText, String seedText, String algo, Stage stage) {
         try {
-
-
             int width = Integer.parseInt(widthText);
             int height = Integer.parseInt(heightText);
 
             long seed;
-
             if (seedText == null || seedText.isEmpty()){
                 seed = System.currentTimeMillis();
             }
@@ -40,9 +37,14 @@ public class GenerationController {
             
             MazeView mazeView = new MazeView(maze);
             MazeController mazeController = new MazeController(maze, mazeView, generator);
-
             ResolverView resWindow = new ResolverView(maze, mazeController, mazeView);
             resWindow.show();
+
+            mazeController.setGenerationListener(time -> {
+                javafx.application.Platform.runLater(() -> {
+                    resWindow.setGenerationTime(time);
+                });
+            });
 
         } catch (NumberFormatException e) {
             System.out.println("Dimensions invalides. Entrez des entiers valides.");

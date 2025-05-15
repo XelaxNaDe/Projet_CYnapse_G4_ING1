@@ -9,7 +9,7 @@ import projatlab.algorithms.tools.Unionfind;
 import projatlab.model.Cell;
 import projatlab.model.MazeGenerator;
 
-public class kruskal implements MazeGenerator {  
+public class kruskal implements MazeGenerator {
 
     private final List<int[]> edges = new ArrayList<>();
     private final Unionfind uf;
@@ -27,29 +27,26 @@ public class kruskal implements MazeGenerator {
         for (int j = 0; j < rows; j++) {
             for (int i = 0; i < cols; i++) {
                 int currentIndex = index(i, j);
-                
+
                 // Bottom wall
                 if (j < rows - 1) {
-                    edges.add(new int[] { currentIndex, currentIndex + cols });
+                    edges.add(new int[]{currentIndex, currentIndex + cols});
                 }
-                
+
                 // Right wall
                 if (i < cols - 1) {
-                    edges.add(new int[] { currentIndex, currentIndex + 1 });
+                    edges.add(new int[]{currentIndex, currentIndex + 1});
                 }
             }
         }
 
-        // Shuffle edges with seed-based randomness
         Random rand = new Random(seed);
         Collections.shuffle(edges, rand);
     }
-    
+
     @Override
     public void step() {
-        if (currentEdgesIndex >= edges.size()) {
-            return;
-        }
+        if (currentEdgesIndex >= edges.size()) return;
 
         int[] edge = edges.get(currentEdgesIndex++);
         int index1 = edge[0];
@@ -60,13 +57,19 @@ public class kruskal implements MazeGenerator {
 
         if (!uf.connected(index1, index2)) {
             uf.union(index1, index2);
-            cell1.setVisited(true);
-            cell2.setVisited(true);
+
+            if (!cell1.visited) {
+                cell1.setVisited(true);
+            }
+            if (!cell2.visited) {
+                cell2.setVisited(true);
+            }
+
             removeWalls(cell1, cell2);
         }
     }
 
-    public Cell getCell(int index) {
+    private Cell getCell(int index) {
         if (index == -1) return null;
         return grid.get(index);
     }
@@ -75,7 +78,7 @@ public class kruskal implements MazeGenerator {
     public boolean isFinished() {
         return currentEdgesIndex >= edges.size();
     }
-    
+
     public int index(int i, int j) {
         if (i < 0 || j < 0 || i >= cols || j >= rows) {
             return -1;
@@ -103,4 +106,6 @@ public class kruskal implements MazeGenerator {
             b.walls[0] = false;
         }
     }
+
+
 }

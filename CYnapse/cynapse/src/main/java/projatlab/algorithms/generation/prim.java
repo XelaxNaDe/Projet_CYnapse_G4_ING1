@@ -19,7 +19,7 @@ public class prim implements MazeGenerator {
         this.grid = grid;
         this.cols = cols;
         this.rows = rows;
-        this.rand = new Random(seed); // <- Seeded randomness
+        this.rand = new Random(seed);
 
         // Start from a random cell
         int startIndex = rand.nextInt(grid.size());
@@ -27,7 +27,6 @@ public class prim implements MazeGenerator {
         start.visited = true;
         visitedCount++;
 
-        // Add neighbors to the frontier
         frontier.addAll(getUnvisitedNeighbors(start));
     }
 
@@ -37,20 +36,17 @@ public class prim implements MazeGenerator {
             return;
         }
 
-        // Random cell from frontier
         int index = rand.nextInt(frontier.size());
         Cell current = frontier.remove(index);
         current.visited = true;
         visitedCount++;
 
-        // Get visited neighbors of current
         List<Cell> visitedNeighbors = getVisitedNeighbors(current);
         if (!visitedNeighbors.isEmpty()) {
             Cell neighbor = visitedNeighbors.get(rand.nextInt(visitedNeighbors.size()));
             removeWalls(current, neighbor);
         }
 
-        // Add unvisited neighbors to frontier
         for (Cell n : getUnvisitedNeighbors(current)) {
             if (!frontier.contains(n)) {
                 frontier.add(n);
@@ -124,4 +120,5 @@ public class prim implements MazeGenerator {
     public boolean isFinished() {
         return frontier.isEmpty();
     }
+
 }

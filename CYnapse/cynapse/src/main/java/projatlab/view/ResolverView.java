@@ -20,13 +20,16 @@ public class ResolverView {
     private final Maze maze;
     private final MazeView mazeView;
     private final ResolverController controller;
+    private final MazeController mazeController;
 
     private Label lVisited;
     private Label lTimeGen;
+    private Label lTimeRes;
 
     public ResolverView(Maze maze, MazeController mazeController, MazeView mazeView) {
         this.maze = maze;
         this.mazeView = mazeView;
+        this.mazeController = mazeController;
         this.controller = new ResolverController(maze);
     }
 
@@ -80,9 +83,10 @@ public class ResolverView {
 
         VBox vbStats = new VBox();
         vbStats.setAlignment(Pos.CENTER_LEFT);
-        lVisited = new Label("Cases visitées :");        
-        lTimeGen = new Label("Temps de génération :");
-        Label lTimeRes = new Label("Temps de résolution :");
+
+        lVisited = new Label("Cases visitées :");     
+        lTimeGen = new Label("Temps de génération : ");
+        lTimeRes = new Label("Temps de résolution :");
 
         vbStats.getChildren().addAll(lVisited,lTimeGen, lTimeRes);
 
@@ -108,8 +112,7 @@ public class ResolverView {
         resStage.show();
     }
 
-    public void setGenerationStats(int visited, long timeGenMs) {
-        lVisited.setText("Cases visitées : " + visited);
+    public void setGenerationTime( long timeGenMs) {
         lTimeGen.setText("Temps de génération : " + timeGenMs + " ms");
     }
 }

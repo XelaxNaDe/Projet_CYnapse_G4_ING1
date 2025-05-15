@@ -9,7 +9,7 @@ import projatlab.model.MazeGenerator;
 
 public class dfs implements MazeGenerator {
 
-    private Boolean finished = false;
+    private boolean finished = false;
     private final int cols;
     private final int rows;
     private final ArrayList<Cell> grid;
@@ -30,9 +30,12 @@ public class dfs implements MazeGenerator {
 
     @Override
     public void step() {
-        if (current == null) return;
+        if (current == null || finished) return;
 
-        current.visited = true;
+
+        if (!current.visited) {
+            current.visited = true; 
+        }
 
         Cell next = getUnvisitedNeighbor(current);
 
@@ -42,7 +45,7 @@ public class dfs implements MazeGenerator {
             removeWalls(current, next);
             current = next;
         } else if (!stack.isEmpty()) {
-            current = stack.pop();
+            current = stack.pop(); 
         } else {
             finished = true;
         }
@@ -101,4 +104,5 @@ public class dfs implements MazeGenerator {
     public boolean isFinished() {
         return finished;
     }
+
 }
