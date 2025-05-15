@@ -21,8 +21,13 @@ public class MazeController {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                generator.step(maze.getcols(), maze.getrows());
-                view.draw();
+                if (!generator.isFinished()) {
+                    generator.step(maze.getCols(), maze.getRows());
+                    view.draw();
+                } else {
+                    System.out.println("Génération terminée.");
+                    this.stop();
+                }
             }
         };
         timer.start();

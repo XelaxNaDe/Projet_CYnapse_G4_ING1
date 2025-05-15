@@ -97,7 +97,7 @@ public class ResolverView {
         root.setBottom(vbStatsSave);
 
         // Scene
-        Scene scene = new Scene(root, maze.getcols() * 20 + 200, maze.getrows() * 20 + 100);
+        Scene scene = new Scene(root, maze.getCols() * 20 + 200, maze.getRows() * 20 + 100);
         resStage.setScene(scene);
         resStage.setResizable(false);
         resStage.setTitle("Résolution du labyrinthe");

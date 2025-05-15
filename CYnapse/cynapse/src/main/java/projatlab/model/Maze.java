@@ -32,9 +32,17 @@ public class Maze {
         return grid.get(idx);
     }
 
-    public int getcols() { return cols; }
-    public int getrows() { return rows; }
-    public ArrayList<Cell> getGrid() { return grid; }
+    public int getCols() {
+        return cols;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public ArrayList<Cell> getGrid() {
+        return grid;
+    }
 
     public Maze copy() {
         Maze copyMaze = new Maze(cols, rows);

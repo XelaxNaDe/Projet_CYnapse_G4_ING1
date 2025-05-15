@@ -62,18 +62,18 @@ public class GenerationView {
         // --- Algorithms checkboxes ---
         Label lAlgo = new Label("Algorithmes : ");
 
-        CheckBox cbAlgo1 = new CheckBox(".....");
+        CheckBox cbDFS = new CheckBox("DFS");
         CheckBox cbAlgo2 = new CheckBox(".....");
 
-        cbAlgo1.setOnAction(e -> {
-            if (cbAlgo1.isSelected()) cbAlgo2.setSelected(false);
+        cbDFS.setOnAction(e -> {
+            if (cbDFS.isSelected()) cbAlgo2.setSelected(false);
         });
 
         cbAlgo2.setOnAction(e -> {
-            if (cbAlgo2.isSelected()) cbAlgo1.setSelected(false);
+            if (cbAlgo2.isSelected()) cbDFS.setSelected(false);
         });
 
-        VBox vbTopLeft = new VBox(10, lAlgo, cbAlgo1, cbAlgo2);
+        VBox vbTopLeft = new VBox(10, lAlgo, cbDFS, cbAlgo2);
 
         // --- Generation mode checkboxes ---
         Label lModeG = new Label("Modes de génération :");

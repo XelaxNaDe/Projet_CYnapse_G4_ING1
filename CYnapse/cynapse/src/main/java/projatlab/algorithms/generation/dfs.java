@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class dfs {
+
+    private Boolean finished = false;
+    private int cols;
+    private int rows;
     private final ArrayList<Cell> grid;
-    private final Stack<Cell> stack = new Stack<>();
     public Cell current;
+    private final Stack<Cell> stack = new Stack<>();
 
     public dfs(ArrayList<Cell> grid) {
         this.grid = grid;
@@ -17,6 +21,11 @@ public class dfs {
     }
 
     public void step(int cols, int rows) {
+        System.out.println("DFS step: current = " + current);
+
+        this.cols = cols;
+        this.rows = rows;
+
         if (current == null) return;
 
         current.visited = true;
@@ -30,7 +39,7 @@ public class dfs {
             current = next;
         } else if (!stack.isEmpty()) {
             current = stack.pop();
-        }
+        } else finished = true;
     }
 
     private Cell getUnvisitedNeighbor(Cell cell, int cols, int rows) {
@@ -80,5 +89,9 @@ public class dfs {
             a.walls[2] = false;
             b.walls[0] = false;
         }
+    }
+    
+    public boolean isFinished() {
+        return finished;
     }
 }
