@@ -3,11 +3,11 @@ package projatlab.algorithms.generation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import projatlab.algorithms.tools.Unionfind;
 import projatlab.model.Cell;
 import projatlab.model.MazeGenerator;
-
 
 public class kruskal implements MazeGenerator {  
 
@@ -18,65 +18,62 @@ public class kruskal implements MazeGenerator {
     private final ArrayList<Cell> grid;
     private int currentEdgesIndex = 0;
 
-    public kruskal(ArrayList<Cell> grid, int cols, int rows) {
-
+    public kruskal(ArrayList<Cell> grid, int cols, int rows, long seed) {
         this.grid = grid;
         this.rows = rows;
         this.cols = cols;
-        this.uf = new Unionfind(rows*cols);
+        this.uf = new Unionfind(rows * cols);
 
-        for (int j=0; j<rows; j++){
-            for (int i= 0; i<cols;i++){
-                int currentIndex = index(i,j);
+        for (int j = 0; j < rows; j++) {
+            for (int i = 0; i < cols; i++) {
+                int currentIndex = index(i, j);
                 
                 // Bottom wall
-                if (j<rows-1){
-                    edges.add(new int[] {currentIndex, currentIndex + cols});
+                if (j < rows - 1) {
+                    edges.add(new int[] { currentIndex, currentIndex + cols });
                 }
                 
                 // Right wall
-                if (i<cols-1){
-                    edges.add(new int[] {currentIndex, currentIndex+1});
+                if (i < cols - 1) {
+                    edges.add(new int[] { currentIndex, currentIndex + 1 });
                 }
             }
         }
-        // Random sort (All edges have the same weight)
-        Collections.shuffle(edges);
+
+        // Shuffle edges with seed-based randomness
+        Random rand = new Random(seed);
+        Collections.shuffle(edges, rand);
     }
     
     @Override
-    public void step(){
-        if (currentEdgesIndex >= edges.size()){
+    public void step() {
+        if (currentEdgesIndex >= edges.size()) {
             return;
         }
 
-        int [] edge = edges.get(currentEdgesIndex++);
-    
+        int[] edge = edges.get(currentEdgesIndex++);
         int index1 = edge[0];
         int index2 = edge[1];
 
         Cell cell1 = getCell(index1);
         Cell cell2 = getCell(index2);
 
-        if (!uf.connected(index1,index2)){
-            uf.union(index1,index2);
-
+        if (!uf.connected(index1, index2)) {
+            uf.union(index1, index2);
             cell1.setVisited(true);
             cell2.setVisited(true);
-
-            removeWalls(cell1,cell2);
+            removeWalls(cell1, cell2);
         }
     }
 
-
-    public Cell getCell(int index){
+    public Cell getCell(int index) {
         if (index == -1) return null;
         return grid.get(index);
     }
 
     @Override
-    public boolean isFinished(){
-        return (currentEdgesIndex >= edges.size());
+    public boolean isFinished() {
+        return currentEdgesIndex >= edges.size();
     }
     
     public int index(int i, int j) {

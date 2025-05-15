@@ -96,6 +96,7 @@ public class GenerationView {
         btnGenerate.setOnAction(e -> controller.handleGenerateMaze(
                 tfWidth.getText(),
                 tfHeight.getText(),
+                tfSeed.getText(),
                 algoComboBox.getValue(),
                 genStage
         ));

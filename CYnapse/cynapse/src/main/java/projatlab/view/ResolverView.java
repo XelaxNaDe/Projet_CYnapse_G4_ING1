@@ -14,20 +14,19 @@ import javafx.stage.Stage;
 import projatlab.controller.MazeController;
 import projatlab.controller.ResolverController;
 import projatlab.model.Maze;
-import projatlab.model.MazeGenerator;
 
 public class ResolverView {
 
     private final Maze maze;
-    private final MazeGenerator generator;
+    private final MazeView mazeView;
     private final ResolverController controller;
 
     private Label lVisited;
     private Label lTimeGen;
 
-    public ResolverView(Maze maze, MazeGenerator generator) {
+    public ResolverView(Maze maze, MazeController mazeController, MazeView mazeView) {
         this.maze = maze;
-        this.generator = generator;
+        this.mazeView = mazeView;
         this.controller = new ResolverController(maze);
     }
 
@@ -36,8 +35,6 @@ public class ResolverView {
         BorderPane root = new BorderPane();
 
         // MazeView and Controller
-        MazeView mazeView = new MazeView(maze);
-        MazeController mazeController = new MazeController(maze, mazeView, generator);
         root.setCenter(mazeView);
 
         // Right Panel - Algorithm + Mode
