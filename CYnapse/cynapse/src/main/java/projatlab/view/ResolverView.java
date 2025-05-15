@@ -11,17 +11,23 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import projatlab.controller.ResolverController;
 import projatlab.controller.MazeController;
+import projatlab.controller.ResolverController;
 import projatlab.model.Maze;
+import projatlab.model.MazeGenerator;
 
 public class ResolverView {
 
     private final Maze maze;
+    private final MazeGenerator generator;
     private final ResolverController controller;
 
-    public ResolverView(Maze maze) {
+    private Label lVisited;
+    private Label lTimeGen;
+
+    public ResolverView(Maze maze, MazeGenerator generator) {
         this.maze = maze;
+        this.generator = generator;
         this.controller = new ResolverController(maze);
     }
 
@@ -31,7 +37,7 @@ public class ResolverView {
 
         // MazeView and Controller
         MazeView mazeView = new MazeView(maze);
-        MazeController mazeController = new MazeController(maze, mazeView);
+        MazeController mazeController = new MazeController(maze, mazeView, generator);
         root.setCenter(mazeView);
 
         // Right Panel - Algorithm + Mode
@@ -58,7 +64,7 @@ public class ResolverView {
 
         Label lMode = new Label("Mode :");
         CheckBox cbComplet = new CheckBox("Complet");
-        CheckBox cbPasComplet = new CheckBox("Pas Complet");
+        CheckBox cbPasComplet = new CheckBox("Pas à pas");
 
         cbComplet.setOnAction(e -> {
             if (cbComplet.isSelected()) cbPasComplet.setSelected(false);
@@ -77,10 +83,11 @@ public class ResolverView {
 
         VBox vbStats = new VBox();
         vbStats.setAlignment(Pos.CENTER_LEFT);
-        Label lVisited = new Label("Cases visitées :");
-        Label lTime = new Label("Temps de résolution :");
+        lVisited = new Label("Cases visitées :");        
+        lTimeGen = new Label("Temps de génération :");
+        Label lTimeRes = new Label("Temps de résolution :");
 
-        vbStats.getChildren().addAll(lVisited, lTime);
+        vbStats.getChildren().addAll(lVisited,lTimeGen, lTimeRes);
 
         Button bSave = new Button("Sauvegarder");
         Button bSolve = new Button("Résoudre");
@@ -102,5 +109,10 @@ public class ResolverView {
         resStage.setResizable(false);
         resStage.setTitle("Résolution du labyrinthe");
         resStage.show();
+    }
+
+    public void setGenerationStats(int visited, long timeGenMs) {
+        lVisited.setText("Cases visitées : " + visited);
+        lTimeGen.setText("Temps de génération : " + timeGenMs + " ms");
     }
 }

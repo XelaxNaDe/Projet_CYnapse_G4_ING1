@@ -1,12 +1,12 @@
 package projatlab.view;
 
+import java.util.ArrayList;
+
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import projatlab.model.Cell;
-
-import java.util.ArrayList;
 
 public class MazeView extends Pane {
 

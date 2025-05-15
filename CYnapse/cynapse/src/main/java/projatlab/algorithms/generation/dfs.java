@@ -1,30 +1,34 @@
 package projatlab.algorithms.generation;
 
-import projatlab.model.Cell;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class dfs {
+import projatlab.model.Cell;
+import projatlab.model.MazeGenerator;
+
+public class dfs implements MazeGenerator {
 
     private Boolean finished = false;
-    private int cols;
-    private int rows;
+    private final int cols;
+    private final int rows;
     private final ArrayList<Cell> grid;
     public Cell current;
     private final Stack<Cell> stack = new Stack<>();
 
-    public dfs(ArrayList<Cell> grid) {
+    public dfs(ArrayList<Cell> grid, int cols, int rows) {
+
+        this.cols = cols;
+        this.rows = rows;
+        
         this.grid = grid;
         if (!grid.isEmpty()) {
             this.current = grid.get(0);
         }
     }
 
-    public void step(int cols, int rows) {
+    @Override
+    public void step() {
         System.out.println("DFS step: current = " + current);
-
-        this.cols = cols;
-        this.rows = rows;
 
         if (current == null) return;
 
@@ -91,6 +95,7 @@ public class dfs {
         }
     }
     
+    @Override
     public boolean isFinished() {
         return finished;
     }

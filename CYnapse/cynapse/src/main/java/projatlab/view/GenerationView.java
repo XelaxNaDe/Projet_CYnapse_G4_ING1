@@ -2,19 +2,17 @@ package projatlab.view;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-
 import javafx.stage.Stage;
-
 import projatlab.controller.GenerationController;
 
 public class GenerationView {
@@ -39,6 +37,8 @@ public class GenerationView {
 
         CheckBox cbPerfect = new CheckBox("Parfait");
 
+        cbPerfect.setSelected(true);
+
         HBox hbSeedPerfect = new HBox(20, tfSeed, cbPerfect);
 
         // --- Size input fields ---
@@ -62,24 +62,21 @@ public class GenerationView {
         // --- Algorithms checkboxes ---
         Label lAlgo = new Label("Algorithmes : ");
 
-        CheckBox cbDFS = new CheckBox("DFS");
-        CheckBox cbAlgo2 = new CheckBox(".....");
+        ComboBox<String> algoComboBox = new ComboBox<>();
+            algoComboBox.getItems().addAll("DFS", "Prim", "Kruskal");
+            algoComboBox.setValue("DFS");
 
-        cbDFS.setOnAction(e -> {
-            if (cbDFS.isSelected()) cbAlgo2.setSelected(false);
-        });
-
-        cbAlgo2.setOnAction(e -> {
-            if (cbAlgo2.isSelected()) cbDFS.setSelected(false);
-        });
-
-        VBox vbTopLeft = new VBox(10, lAlgo, cbDFS, cbAlgo2);
+        
+        VBox vbTopLeft = new VBox (10, lAlgo, algoComboBox);
 
         // --- Generation mode checkboxes ---
         Label lModeG = new Label("Modes de génération :");
 
-        CheckBox cbStep = new CheckBox("Pas à pas");
         CheckBox cbComplet = new CheckBox("Complet");
+        CheckBox cbStep = new CheckBox("Pas à pas");
+
+        cbComplet.setSelected(true);
+
 
         cbStep.setOnAction(e -> {
             if (cbStep.isSelected()) cbComplet.setSelected(false);
@@ -89,7 +86,7 @@ public class GenerationView {
             if (cbComplet.isSelected()) cbStep.setSelected(false);
         });
 
-        VBox vbBotLeft = new VBox(10, lModeG, cbStep, cbComplet);
+        VBox vbBotLeft = new VBox(10, lModeG, cbComplet, cbStep);
 
         // --- Buttons ---
         Button btnLoad = new Button("Charger un labyrinthe");
@@ -99,6 +96,7 @@ public class GenerationView {
         btnGenerate.setOnAction(e -> controller.handleGenerateMaze(
                 tfWidth.getText(),
                 tfHeight.getText(),
+                algoComboBox.getValue(),
                 genStage
         ));
 

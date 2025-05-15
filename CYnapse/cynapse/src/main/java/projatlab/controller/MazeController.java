@@ -2,18 +2,18 @@ package projatlab.controller;
 
 import javafx.animation.AnimationTimer;
 import projatlab.model.Maze;
+import projatlab.model.MazeGenerator;
 import projatlab.view.MazeView;
-import projatlab.algorithms.generation.dfs;
 
 public class MazeController {
     private final Maze maze;
     private final MazeView view;
-    private final dfs generator;
+    private final MazeGenerator generator;
 
-    public MazeController(Maze maze, MazeView view) {
+    public MazeController(Maze maze, MazeView view, MazeGenerator generator) {
         this.maze = maze;
         this.view = view;
-        this.generator = new dfs(maze.getGrid());
+        this.generator = generator;
         startAnimation();
     }
 
@@ -22,7 +22,7 @@ public class MazeController {
             @Override
             public void handle(long now) {
                 if (!generator.isFinished()) {
-                    generator.step(maze.getCols(), maze.getRows());
+                    generator.step();
                     view.draw();
                 } else {
                     System.out.println("Génération terminée.");
