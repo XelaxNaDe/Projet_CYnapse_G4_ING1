@@ -17,18 +17,21 @@ public class ModificationView {
 
     public ModificationView(Maze maze) {
         this.originalMaze = maze;
-        /*this.copiedMaze = maze.copy();*/
+        this.copiedMaze = maze.copy();
     }
 
     public void show() {
         Stage modStage = new Stage();
         BorderPane root = new BorderPane();
 
-        //Center
+        // Center - affichage du labyrinthe
         MazeView mazeView = new MazeView(copiedMaze);
         root.setCenter(mazeView);
 
-        //Right Button
+        // Important : dessiner le labyrinthe
+        mazeView.draw();
+
+        // Right Button
         VBox vbChange = new VBox(10);
         vbChange.setAlignment(Pos.CENTER_RIGHT);
         vbChange.setPadding(new Insets(20));
@@ -39,8 +42,6 @@ public class ModificationView {
         CheckBox cbNouveau = new CheckBox("Nouveau labyrinthe");
         Button btnAnnuler = new Button("Annuler");
         Button btnResoudre = new Button("Résoudre à nouveau");
-        
-        //btnResoudre.setOnAction(e -> openResWindow());
 
         btnMur.setMaxWidth(Double.MAX_VALUE);
         btnEntree.setMaxWidth(Double.MAX_VALUE);
@@ -57,23 +58,14 @@ public class ModificationView {
             btnResoudre
         );
 
-
         root.setRight(vbChange);
-        
-        Scene scene = new Scene(root, 500, 300); // largeur et hauteur
+
+        Scene scene = new Scene(root, 500, 300);
 
         modStage.setTitle("Modification du labyrinthe");
         modStage.setScene(scene);
         modStage.setResizable(false);
         modStage.show();
-
     }
 
-
-    /*
-    public void openResWindow() {
-        ResolverView resWindow = new ResolverView(null);
-        resWindow.show();
-    }
-    */
 }

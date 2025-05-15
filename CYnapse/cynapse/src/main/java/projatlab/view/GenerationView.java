@@ -1,9 +1,8 @@
 package projatlab.view;
 
-import java.io.File;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -13,125 +12,99 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import projatlab.model.Maze;
 
+import javafx.stage.Stage;
+
+import projatlab.controller.GenerationController;
 
 public class GenerationView {
 
     private TextField tfWidth;
     private TextField tfHeight;
-    
+
+    private final GenerationController controller;
+
+    public GenerationView(GenerationController controller) {
+        this.controller = controller;
+    }
+
     public void show(Stage genStage) {
 
         StackPane mainPane = new StackPane();
-        
-        // Seed Field
+
+        // --- Seed Field & Perfect checkbox ---
         TextField tfSeed = new TextField();
         tfSeed.setPromptText("Seed");
         tfSeed.setPrefWidth(150);
 
-        //Perfect Check
         CheckBox cbPerfect = new CheckBox("Parfait");
 
-        HBox hbSeedPerfect = new HBox(20);
-        hbSeedPerfect.getChildren().addAll(tfSeed, cbPerfect);
+        HBox hbSeedPerfect = new HBox(20, tfSeed, cbPerfect);
 
-
-        //Size Choice
+        // --- Size input fields ---
         Label lSize = new Label("Taille");
 
         tfWidth = new TextField();
-        tfWidth.setPromptText("Hauteur");
+        tfWidth.setPromptText("Largeur");
         tfWidth.setPrefWidth(90);
 
         Label lX = new Label("X");
 
         tfHeight = new TextField();
-        tfHeight.setPromptText("Largeur");
+        tfHeight.setPromptText("Hauteur");
         tfHeight.setPrefWidth(90);
 
-        
-        HBox hbSize = new HBox(20);
-        hbSize.getChildren().addAll(tfWidth, lX, tfHeight);
+        HBox hbSize = new HBox(20, tfWidth, lX, tfHeight);
+        VBox vbSize = new VBox(lSize, hbSize);
 
-        VBox vbSize = new VBox();
-        vbSize.getChildren().addAll(lSize, hbSize);
+        VBox vbTopRight = new VBox(15, hbSeedPerfect, vbSize);
 
-
-        VBox vbTopRight = new VBox();
-        vbTopRight.getChildren().addAll(hbSeedPerfect, vbSize);
-
-
-        //Algorithms
+        // --- Algorithms checkboxes ---
         Label lAlgo = new Label("Algorithmes : ");
 
         CheckBox cbAlgo1 = new CheckBox(".....");
         CheckBox cbAlgo2 = new CheckBox(".....");
 
         cbAlgo1.setOnAction(e -> {
-            if (cbAlgo1.isSelected()) {
-                cbAlgo2.setSelected(false);
-            }
+            if (cbAlgo1.isSelected()) cbAlgo2.setSelected(false);
         });
 
         cbAlgo2.setOnAction(e -> {
-            if (cbAlgo2.isSelected()) {
-                cbAlgo1.setSelected(false);
-            }
+            if (cbAlgo2.isSelected()) cbAlgo1.setSelected(false);
         });
 
+        VBox vbTopLeft = new VBox(10, lAlgo, cbAlgo1, cbAlgo2);
 
-        VBox vbTopLeft = new VBox();
-        vbTopLeft.getChildren().addAll(lAlgo, cbAlgo1, cbAlgo2);
-
-
+        // --- Generation mode checkboxes ---
         Label lModeG = new Label("Modes de génération :");
 
         CheckBox cbStep = new CheckBox("Pas à pas");
         CheckBox cbComplet = new CheckBox("Complet");
 
         cbStep.setOnAction(e -> {
-            if (cbStep.isSelected()) {
-                cbComplet.setSelected(false);
-            }
+            if (cbStep.isSelected()) cbComplet.setSelected(false);
         });
 
         cbComplet.setOnAction(e -> {
-            if (cbComplet.isSelected()) {
-                cbStep.setSelected(false);
-            }
+            if (cbComplet.isSelected()) cbStep.setSelected(false);
         });
 
-        VBox vbBotLeft = new VBox();
-        vbBotLeft.getChildren().addAll(lModeG, cbStep, cbComplet);
+        VBox vbBotLeft = new VBox(10, lModeG, cbStep, cbComplet);
 
-
-        // Button Load
+        // --- Buttons ---
         Button btnLoad = new Button("Charger un labyrinthe");
-        btnLoad.setPrefSize(150, 40);
-        btnLoad.setOnAction(e -> {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Charger un labyrinthe");
-        fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("Tous les fichiers", "*.*"));
-        File selectedFile = fileChooser.showOpenDialog(genStage);
-        if (selectedFile != null) {
-            System.out.println("Fichier sélectionné : " + selectedFile.getAbsolutePath());
-        }});
+        btnLoad.setOnAction(e -> controller.handleLoadMaze(genStage));
 
-        // Button Generate
         Button btnGenerate = new Button("Générer un labyrinthe");
-        btnGenerate.setPrefSize(150, 40);
-        btnGenerate.setOnAction(e -> openResWindow());
+        btnGenerate.setOnAction(e -> controller.handleGenerateMaze(
+                tfWidth.getText(),
+                tfHeight.getText(),
+                genStage
+        ));
 
-        VBox vbBotRight = new VBox();
-        vbBotRight.getChildren().addAll(btnLoad, btnGenerate);
+        VBox vbBotRight = new VBox(10, btnLoad, btnGenerate);
 
-
-
-        // GridPane
+        // --- Layout GridPane ---
         GridPane root = new GridPane();
         root.setPadding(new Insets(10));
         root.setVgap(15);
@@ -146,23 +119,10 @@ public class GenerationView {
         mainPane.getChildren().add(root);
         mainPane.setAlignment(Pos.CENTER);
 
-        // Scene creation
+        // --- Scene setup ---
         genStage.setTitle("Génération");
         Scene scene = new Scene(mainPane, 400, 200);
         genStage.setScene(scene);
         genStage.show();
-    }
-
-    public void openResWindow() {
-
-        try {
-            int width = Integer.parseInt(tfWidth.getText());
-            int height = Integer.parseInt(tfHeight.getText());
-            ResolverView resWindow = new ResolverView(new Maze(width, height));
-            resWindow.show();
-
-        } catch (NumberFormatException ex) {
-            System.out.println("Veuillez entrer des dimensions valides (nombres entiers).");
-        }
     }
 }

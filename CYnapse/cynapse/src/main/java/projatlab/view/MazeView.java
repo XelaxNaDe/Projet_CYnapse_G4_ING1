@@ -5,32 +5,29 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-
-import projatlab.model.Cell;
-import projatlab.model.Maze;
 import projatlab.algorithms.generation.dfs;
+import projatlab.model.Cell;
 
 import java.util.ArrayList;
 
-
 public class MazeView extends Pane {
 
-    private static final int cellSize = Cell.cellSize;
     private final int cols;
     private final int rows;
     private final ArrayList<Cell> grid;
     private final dfs generator;
     private final GraphicsContext gc;
+    private final Canvas canvas;
 
-    public MazeView(Maze maze) {
+    public MazeView(projatlab.model.Maze maze) {
         this.cols = maze.getcols();
         this.rows = maze.getrows();
         this.grid = maze.getGrid();
 
-        Canvas canvas = new Canvas(cols * cellSize, rows * cellSize);
+        canvas = new Canvas(cols * Cell.cellSize, rows * Cell.cellSize);
         this.getChildren().add(canvas);
-        this.gc = canvas.getGraphicsContext2D();
 
+        gc = canvas.getGraphicsContext2D();
         generator = new dfs(grid);
 
         startAnimation();
@@ -40,20 +37,19 @@ public class MazeView extends Pane {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                generator.step(cols, rows);
                 draw();
             }
         };
         timer.start();
     }
 
-    private void draw() {
+    public void draw() {
         gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, cols * cellSize, rows * cellSize);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         for (Cell cell : grid) {
-            cell.show(gc, cellSize);
+            cell.show(gc);
         }
-
-        generator.step(cols, rows);
     }
 }

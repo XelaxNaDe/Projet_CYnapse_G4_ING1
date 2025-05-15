@@ -3,12 +3,14 @@ package projatlab.model;
 import java.util.ArrayList;
 
 public class Maze {
-    private final int rows, cols;
-    private final ArrayList<Cell> grid = new ArrayList<>();
+    private final int rows;
+    private final int cols;
+    private final ArrayList<Cell> grid;
 
     public Maze(int cols, int rows) {
         this.cols = cols;
         this.rows = rows;
+        this.grid = new ArrayList<>();
 
         for (int j = 0; j < rows; j++) {
             for (int i = 0; i < cols; i++) {
@@ -25,20 +27,24 @@ public class Maze {
     }
 
     public Cell getCell(int i, int j) {
-        int index = index(i, j);
-        if (index == -1) return null;
-        return grid.get(index);
+        int idx = index(i, j);
+        if (idx == -1) return null;
+        return grid.get(idx);
     }
 
-    public int getcols() {
-        return cols;
-    }
+    public int getcols() { return cols; }
+    public int getrows() { return rows; }
+    public ArrayList<Cell> getGrid() { return grid; }
 
-    public int getrows() {
-        return rows;
-    }
-
-    public ArrayList<Cell> getGrid() {
-        return grid;
+    public Maze copy() {
+        Maze copyMaze = new Maze(cols, rows);
+        for (int j = 0; j < rows; j++) {
+            for (int i = 0; i < cols; i++) {
+                Cell original = getCell(i, j);
+                Cell copyCell = original.copy();
+                copyMaze.getGrid().set(copyMaze.index(i, j), copyCell);
+            }
+        }
+        return copyMaze;
     }
 }

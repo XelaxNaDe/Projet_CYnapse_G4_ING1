@@ -11,34 +11,39 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import projatlab.controller.ResolverController;
+import projatlab.controller.MazeController;
 import projatlab.model.Maze;
 
 public class ResolverView {
 
-    private Maze maze;
+    private final Maze maze;
+    private final ResolverController controller;
 
     public ResolverView(Maze maze) {
         this.maze = maze;
+        this.controller = new ResolverController(maze);
     }
 
     public void show() {
         Stage resStage = new Stage();
         BorderPane root = new BorderPane();
 
-        MazeView mazeView = new MazeView(maze); // cellSize arbitraire
-        root.setCenter(mazeView);        
+        // MazeView and Controller
+        MazeView mazeView = new MazeView(maze);
+        MazeController mazeController = new MazeController(maze, mazeView);
+        root.setCenter(mazeView);
 
-        //Right
+        // Right Panel - Algorithm + Mode
         VBox vbAlgoMode = new VBox();
         vbAlgoMode.setAlignment(Pos.TOP_LEFT);
 
         Label lAlgo = new Label("Choix de l'algorithme :");
-        CheckBox cb1 = new CheckBox();
-        CheckBox cb2 = new CheckBox();
-        CheckBox cb3 = new CheckBox();
+        CheckBox cb1 = new CheckBox("A*");
+        CheckBox cb2 = new CheckBox("BFS");
+        CheckBox cb3 = new CheckBox("DFS");
 
         CheckBox[] algoBoxes = {cb1, cb2, cb3};
-
         for (CheckBox cb : algoBoxes) {
             cb.setOnAction(e -> {
                 if (cb.isSelected()) {
@@ -51,29 +56,23 @@ public class ResolverView {
             });
         }
 
-
         Label lMode = new Label("Mode :");
         CheckBox cbComplet = new CheckBox("Complet");
         CheckBox cbPasComplet = new CheckBox("Pas Complet");
 
         cbComplet.setOnAction(e -> {
-            if (cbComplet.isSelected()) {
-                cbPasComplet.setSelected(false);
-            }
+            if (cbComplet.isSelected()) cbPasComplet.setSelected(false);
         });
 
         cbPasComplet.setOnAction(e -> {
-            if (cbPasComplet.isSelected()) {
-                cbComplet.setSelected(false);
-            }
+            if (cbPasComplet.isSelected()) cbComplet.setSelected(false);
         });
 
         vbAlgoMode.getChildren().addAll(lAlgo, cb1, cb2, cb3, new Separator(), lMode, cbComplet, cbPasComplet);
         VBox.setVgrow(vbAlgoMode, Priority.ALWAYS);
         root.setRight(vbAlgoMode);
 
-        //Bottom
-
+        // Bottom Panel - Stats + Buttons
         VBox vbStatsSave = new VBox();
 
         VBox vbStats = new VBox();
@@ -86,25 +85,19 @@ public class ResolverView {
         Button bSave = new Button("Sauvegarder");
         Button bSolve = new Button("Résoudre");
         Button bModify = new Button("Modifier");
-        
-        bModify.setOnAction(e -> {
-            ModificationView modWindow = new ModificationView(maze);
-            modWindow.show();
-        });
 
-        HBox hbSaveModSolve = new HBox(bSave,bModify,bSolve);
+        bModify.setOnAction(e -> controller.handleModify());
 
-        hbSaveModSolve.setMaxWidth(Double.MAX_VALUE);
-        VBox.setVgrow(hbSaveModSolve, Priority.NEVER);
+        bSolve.setOnAction(e -> controller.handleSolve(cb1.isSelected(), cb2.isSelected(), cb3.isSelected(), cbComplet.isSelected()));
+
+        HBox hbSaveModSolve = new HBox(10, bSave, bModify, bSolve);
         hbSaveModSolve.setAlignment(Pos.BOTTOM_RIGHT);
 
-        
         vbStatsSave.getChildren().addAll(vbStats, hbSaveModSolve);
         root.setBottom(vbStatsSave);
 
-        Scene scene = new Scene(root);
-
-
+        // Scene
+        Scene scene = new Scene(root, maze.getcols() * 20 + 200, maze.getrows() * 20 + 100);
         resStage.setScene(scene);
         resStage.setResizable(false);
         resStage.setTitle("Résolution du labyrinthe");

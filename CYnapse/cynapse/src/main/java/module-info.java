@@ -4,6 +4,7 @@ module projatlab {
 
     exports projatlab;
 
+    exports projatlab.algorithms.generation;
     exports projatlab.view;
     exports projatlab.controller;
     exports projatlab.model;

@@ -5,35 +5,35 @@ import javafx.scene.paint.Color;
 
 public class Cell {
     public int i, j;
-    public boolean[] walls;
-    public boolean visited;
-    public static int cellSize = 20;
+    public boolean[] walls = {true, true, true, true}; // Haut, droite, bas, gauche
+    public boolean visited = false;
+    public static final int cellSize = 20;
 
     public Cell(int i, int j) {
         this.i = i;
         this.j = j;
-        this.walls = new boolean[]{true, true, true, true}; // haut, droite, bas, gauche
-        this.visited = false;
     }
 
-    public void show(GraphicsContext gc, int w) {
-        double x = i * w;
-        double y = j * w;
+    public void show(GraphicsContext gc) {
+        double x = i * cellSize;
+        double y = j * cellSize;
 
-        // Couleur du fond si visité
         if (visited) {
             gc.setFill(Color.rgb(200, 0, 100));
-            gc.fillRect(x, y, w, w);
+            gc.fillRect(x, y, cellSize, cellSize);
         }
 
         gc.setStroke(Color.WHITE);
-        if (walls[0]) gc.strokeLine(x, y, x + w, y);         // haut
-        if (walls[1]) gc.strokeLine(x + w, y, x + w, y + w); // droite
-        if (walls[2]) gc.strokeLine(x + w, y + w, x, y + w); // bas
-        if (walls[3]) gc.strokeLine(x, y + w, x, y);         // gauche
+        if (walls[0]) gc.strokeLine(x, y, x + cellSize, y);           // Haut
+        if (walls[1]) gc.strokeLine(x + cellSize, y, x + cellSize, y + cellSize); // Droite
+        if (walls[2]) gc.strokeLine(x + cellSize, y + cellSize, x, y + cellSize); // Bas
+        if (walls[3]) gc.strokeLine(x, y + cellSize, x, y);           // Gauche
     }
 
-    public int getSize() {
-        return cellSize;
+    public Cell copy() {
+        Cell copy = new Cell(i, j);
+        copy.visited = this.visited;
+        System.arraycopy(this.walls, 0, copy.walls, 0, this.walls.length);
+        return copy;
     }
 }
