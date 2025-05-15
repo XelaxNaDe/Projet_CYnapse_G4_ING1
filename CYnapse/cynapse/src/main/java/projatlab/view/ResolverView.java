@@ -25,7 +25,7 @@ public class ResolverView {
         Stage resStage = new Stage();
         BorderPane root = new BorderPane();
 
-        MazeView mazeView = new MazeView(maze, 25); // cellSize arbitraire
+        MazeView mazeView = new MazeView(maze); // cellSize arbitraire
         root.setCenter(mazeView);        
 
         //Right
@@ -88,7 +88,7 @@ public class ResolverView {
         Button bModify = new Button("Modifier");
         
         bModify.setOnAction(e -> {
-            ModificationView modWindow = new ModificationView();
+            ModificationView modWindow = new ModificationView(maze);
             modWindow.show();
         });
 

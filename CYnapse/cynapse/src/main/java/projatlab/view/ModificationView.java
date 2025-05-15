@@ -11,13 +11,21 @@ import javafx.stage.Stage;
 import projatlab.model.Maze;
 
 public class ModificationView {
+    
+    Maze originalMaze;
+    Maze copiedMaze;
+
+    public ModificationView(Maze maze) {
+        this.originalMaze = maze;
+        /*this.copiedMaze = maze.copy();*/
+    }
+
     public void show() {
         Stage modStage = new Stage();
         BorderPane root = new BorderPane();
 
         //Center
-        Maze maze = new Maze(10, 10);
-        MazeView mazeView = new MazeView(maze, 30.0);
+        MazeView mazeView = new MazeView(copiedMaze);
         root.setCenter(mazeView);
 
         //Right Button
@@ -31,7 +39,8 @@ public class ModificationView {
         CheckBox cbNouveau = new CheckBox("Nouveau labyrinthe");
         Button btnAnnuler = new Button("Annuler");
         Button btnResoudre = new Button("Résoudre à nouveau");
-        btnResoudre.setOnAction(e -> openResWindow());
+        
+        //btnResoudre.setOnAction(e -> openResWindow());
 
         btnMur.setMaxWidth(Double.MAX_VALUE);
         btnEntree.setMaxWidth(Double.MAX_VALUE);
@@ -57,10 +66,14 @@ public class ModificationView {
         modStage.setScene(scene);
         modStage.setResizable(false);
         modStage.show();
+
     }
 
+
+    /*
     public void openResWindow() {
         ResolverView resWindow = new ResolverView(null);
         resWindow.show();
     }
+    */
 }

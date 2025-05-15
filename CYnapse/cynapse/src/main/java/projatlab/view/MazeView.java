@@ -1,100 +1,59 @@
 package projatlab.view;
 
-import java.util.List;
-
+import javafx.animation.AnimationTimer;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+
 import projatlab.model.Cell;
 import projatlab.model.Maze;
-import projatlab.model.Wall;
+import projatlab.algorithms.generation.dfs;
+
+import java.util.ArrayList;
+
 
 public class MazeView extends Pane {
-    private final Maze maze;
-    private final double cellSize;
 
-    public MazeView(Maze maze, double cellSize) {
-        this.maze = maze;
-        this.cellSize = cellSize;
-        drawMaze();
+    private static final int cellSize = Cell.cellSize;
+    private final int cols;
+    private final int rows;
+    private final ArrayList<Cell> grid;
+    private final dfs generator;
+    private final GraphicsContext gc;
+
+    public MazeView(Maze maze) {
+        this.cols = maze.getcols();
+        this.rows = maze.getrows();
+        this.grid = maze.getGrid();
+
+        Canvas canvas = new Canvas(cols * cellSize, rows * cellSize);
+        this.getChildren().add(canvas);
+        this.gc = canvas.getGraphicsContext2D();
+
+        generator = new dfs(grid);
+
+        startAnimation();
     }
 
-    public void drawMaze() {
-        getChildren().clear();
-
-        // 1. Fond des cellules visités
-        for (Cell[] row : maze.getGrid()) {
-            for (Cell cell : row) {
-                if (cell.visited) {
-                    Rectangle background = new Rectangle(
-                        cell.j * cellSize,
-                        cell.i * cellSize,
-                        cellSize,
-                        cellSize
-                    );
-                    background.setFill(Color.LIGHTBLUE);
-                    getChildren().add(background);
-                }
-                if (cell.isSolution) {
-                    Rectangle background = new Rectangle(
-                        cell.j * cellSize,
-                        cell.i * cellSize,
-                        cellSize,
-                        cellSize
-                    );
-                    background.setFill(Color.GREEN);
-                    getChildren().add(background);
-                }
+    private void startAnimation() {
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                draw();
             }
-        }
-
-        // 2. Murs horizontaux
-        List<List<Wall>> hWalls = maze.getHWalls();
-        for (int i = 0; i < hWalls.size(); i++) {
-            for (int j = 0; j < hWalls.get(i).size(); j++) {
-                Wall wall = hWalls.get(i).get(j);
-                if (wall.isActive()) {
-                    Rectangle rect = new Rectangle(
-                        j * cellSize,
-                        (i + 1) * cellSize,
-                        cellSize,
-                        2
-                    );
-                    rect.setFill(Color.BLACK);
-                    getChildren().add(rect);
-                }
-            }
-        }
-
-        // 3. Murs verticaux
-        List<List<Wall>> vWalls = maze.getVWalls();
-        for (int i = 0; i < vWalls.size(); i++) {
-            for (int j = 0; j < vWalls.get(i).size(); j++) {
-                Wall wall = vWalls.get(i).get(j);
-                if (wall.isActive()) {
-                    Rectangle rect = new Rectangle(
-                        (j + 1) * cellSize,
-                        i * cellSize,
-                        2,
-                        cellSize
-                    );
-                    rect.setFill(Color.BLACK);
-                    getChildren().add(rect);
-                }
-            }
-        }
-    
-
-        Rectangle border = new Rectangle(
-            0,
-            0,
-            maze.getWidth() * cellSize,
-            maze.getHeight() * cellSize
-        );
-        border.setFill(Color.TRANSPARENT);
-        border.setStroke(Color.BLACK);
-        border.setStrokeWidth(2);
-        getChildren().add(border);
+        };
+        timer.start();
     }
 
+    private void draw() {
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, cols * cellSize, rows * cellSize);
+
+        for (Cell cell : grid) {
+            cell.show(gc, cellSize);
+        }
+
+        generator.step(cols, rows);
+    }
 }
