@@ -2,6 +2,7 @@ package projatlab.controller;
 
 import javafx.stage.Stage;
 import projatlab.algorithms.generation.dfs;
+import projatlab.algorithms.generation.kruskal;
 import projatlab.algorithms.generation.prim;
 import projatlab.model.Maze;
 import projatlab.model.MazeGenerator;
@@ -20,7 +21,7 @@ public class GenerationController {
             switch (algo) {
                 case "DFS" -> generator = new dfs(maze.getGrid(),width,height);
                 case "Prim" -> generator = new prim(maze.getGrid(),width,height);
-                //case "Kruskal" 
+                case "Kruskal" -> generator = new kruskal(maze.getGrid(),width,height); 
                 default -> throw new AssertionError();
             }
             

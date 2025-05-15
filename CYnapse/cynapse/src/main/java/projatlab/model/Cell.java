@@ -36,4 +36,12 @@ public class Cell {
         System.arraycopy(this.walls, 0, copy.walls, 0, this.walls.length);
         return copy;
     }
+    
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+    
+    public int getSize() {
+        return cellSize;
+    }
 }

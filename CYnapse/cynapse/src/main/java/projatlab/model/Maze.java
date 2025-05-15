@@ -32,6 +32,11 @@ public class Maze {
         return grid.get(idx);
     }
 
+    public Cell getCell(int index){
+        if (index == -1) return null;
+        return grid.get(index);
+    }
+
     public int getCols() {
         return cols;
     }
