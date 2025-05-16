@@ -7,7 +7,7 @@ import java.util.Stack;
 import projatlab.model.Cell;
 import projatlab.model.MazeGenerator;
 
-public class dfs implements MazeGenerator {
+public class MazeGeneratorDFS implements MazeGenerator {
 
     private boolean finished = false;
     private final int cols;
@@ -17,7 +17,7 @@ public class dfs implements MazeGenerator {
     private final Stack<Cell> stack = new Stack<>();
     private final Random rand;
 
-    public dfs(ArrayList<Cell> grid, int cols, int rows, long seed) {
+    public MazeGeneratorDFS(ArrayList<Cell> grid, int cols, int rows, long seed) {
         this.cols = cols;
         this.rows = rows;
         this.grid = grid;

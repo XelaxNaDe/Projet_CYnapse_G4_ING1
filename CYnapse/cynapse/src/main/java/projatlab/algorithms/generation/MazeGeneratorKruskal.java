@@ -9,7 +9,7 @@ import projatlab.algorithms.tools.Unionfind;
 import projatlab.model.Cell;
 import projatlab.model.MazeGenerator;
 
-public class kruskal implements MazeGenerator {
+public class MazeGeneratorKruskal implements MazeGenerator {
 
     private final List<int[]> edges = new ArrayList<>();
     private final Unionfind uf;
@@ -18,7 +18,7 @@ public class kruskal implements MazeGenerator {
     private final ArrayList<Cell> grid;
     private int currentEdgesIndex = 0;
 
-    public kruskal(ArrayList<Cell> grid, int cols, int rows, long seed) {
+    public MazeGeneratorKruskal(ArrayList<Cell> grid, int cols, int rows, long seed) {
         this.grid = grid;
         this.rows = rows;
         this.cols = cols;
