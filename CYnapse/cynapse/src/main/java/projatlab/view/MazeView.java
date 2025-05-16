@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import projatlab.controller.ModificationController;
 import projatlab.model.Cell;
 
 public class MazeView extends Pane {
@@ -15,6 +16,7 @@ public class MazeView extends Pane {
     private final ArrayList<Cell> grid;
     private final GraphicsContext gc;
     private final Canvas canvas;
+    private ModificationController modController;
 
     public MazeView(projatlab.model.Maze maze) {
         this.cols = maze.getCols();
@@ -37,4 +39,14 @@ public class MazeView extends Pane {
             cell.show(gc);
         }
     }
+
+    public void setController(ModificationController controller) {
+        this.modController = controller;
+        canvas.setOnMouseClicked(e -> {
+            if (modController != null) {
+                modController.handleClick(e.getX(), e.getY());
+            }
+        });
+    }
+
 }

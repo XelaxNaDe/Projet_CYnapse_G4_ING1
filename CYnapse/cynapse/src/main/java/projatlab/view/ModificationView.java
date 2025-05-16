@@ -8,6 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import projatlab.controller.ModificationController;
 import projatlab.model.Maze;
 
 public class ModificationView {
@@ -26,9 +27,10 @@ public class ModificationView {
 
         // Center - affichage du labyrinthe
         MazeView mazeView = new MazeView(copiedMaze);
+        ModificationController controller = new ModificationController(copiedMaze, mazeView);
+        mazeView.setController(controller);
         root.setCenter(mazeView);
 
-        // Important : dessiner le labyrinthe
         mazeView.draw();
 
         // Right Button
@@ -49,6 +51,10 @@ public class ModificationView {
         btnAnnuler.setMaxWidth(Double.MAX_VALUE);
         btnResoudre.setMaxWidth(Double.MAX_VALUE);
 
+        btnMur.setOnAction(e -> controller.setMode(ModificationController.Mode.MUR));
+        btnEntree.setOnAction(e -> controller.setMode(ModificationController.Mode.ENTREE));
+        btnSortie.setOnAction(e -> controller.setMode(ModificationController.Mode.SORTIE));
+
         vbChange.getChildren().addAll(
             btnMur,
             btnEntree,
@@ -64,7 +70,7 @@ public class ModificationView {
 
         modStage.setTitle("Modification du labyrinthe");
         modStage.setScene(scene);
-        modStage.setResizable(false);
+        //modStage.setResizable(false);
         modStage.show();
     }
 
