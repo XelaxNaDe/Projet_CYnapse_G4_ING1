@@ -5,14 +5,13 @@ import java.util.Random;
 import java.util.Stack;
 
 import projatlab.model.Cell;
-import projatlab.model.MazeGenerator;
 
-public class dfs implements MazeGenerator {
+public class dfs extends MazeGenerator {
 
-    private boolean finished = false;
     private final int cols;
     private final int rows;
     private final ArrayList<Cell> grid;
+
     public Cell current;
     private final Stack<Cell> stack = new Stack<>();
     private final Random rand;
@@ -78,31 +77,4 @@ public class dfs implements MazeGenerator {
         if (i < 0 || j < 0 || i >= cols || j >= rows) return null;
         return grid.get(i + j * cols);
     }
-
-    private void removeWalls(Cell a, Cell b) {
-        int x = a.i - b.i;
-        int y = a.j - b.j;
-
-        if (x == 1) {
-            a.walls[3] = false;
-            b.walls[1] = false;
-        } else if (x == -1) {
-            a.walls[1] = false;
-            b.walls[3] = false;
-        }
-
-        if (y == 1) {
-            a.walls[0] = false;
-            b.walls[2] = false;
-        } else if (y == -1) {
-            a.walls[2] = false;
-            b.walls[0] = false;
-        }
-    }
-
-    @Override
-    public boolean isFinished() {
-        return finished;
-    }
-
 }

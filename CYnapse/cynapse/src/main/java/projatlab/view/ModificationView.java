@@ -43,7 +43,7 @@ public class ModificationView {
         Button btnSortie = new Button("Sortie");
         CheckBox cbNouveau = new CheckBox("Nouveau labyrinthe");
         Button btnAnnuler = new Button("Annuler");
-        Button btnResoudre = new Button("Résoudre à nouveau");
+        Button btnResoudre = new Button("Sauvgarder les changements");
 
         btnMur.setMaxWidth(Double.MAX_VALUE);
         btnEntree.setMaxWidth(Double.MAX_VALUE);

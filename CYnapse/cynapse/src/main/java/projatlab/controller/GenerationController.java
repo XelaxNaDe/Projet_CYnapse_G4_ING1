@@ -1,11 +1,11 @@
 package projatlab.controller;
 
 import javafx.stage.Stage;
+import projatlab.algorithms.generation.MazeGenerator;
 import projatlab.algorithms.generation.dfs;
 import projatlab.algorithms.generation.kruskal;
 import projatlab.algorithms.generation.prim;
 import projatlab.model.Maze;
-import projatlab.model.MazeGenerator;
 import projatlab.view.MazeView;
 import projatlab.view.ResolverView;
 

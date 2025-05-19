@@ -44,16 +44,19 @@ public class ModificationController {
         toggleWall(cell, 0);
         Cell top = maze.getCell(colClicked, rowClicked - 1);
         if (top != null) toggleWall(top, 2);
+        
     } else if (offsetX > Cell.cellSize - threshold && colClicked < maze.getCols() - 1) {
         // Droite
         toggleWall(cell, 1);
         Cell right = maze.getCell(colClicked + 1, rowClicked);
         if (right != null) toggleWall(right, 3);
+
     } else if (offsetY > Cell.cellSize - threshold && rowClicked < maze.getRows() - 1) {
         // Bas
         toggleWall(cell, 2);
         Cell bottom = maze.getCell(colClicked, rowClicked + 1);
         if (bottom != null) toggleWall(bottom, 0);
+
     } else if (offsetX < threshold && colClicked > 0) {
         // Gauche
         toggleWall(cell, 3);

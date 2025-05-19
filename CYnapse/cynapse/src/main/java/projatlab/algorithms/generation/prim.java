@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.Random;
 
 import projatlab.model.Cell;
-import projatlab.model.MazeGenerator;
 
-public class prim implements MazeGenerator {
+public class prim extends MazeGenerator {
     private final ArrayList<Cell> grid;
     private final List<Cell> frontier = new ArrayList<>();
     private final Random rand;
@@ -95,26 +94,7 @@ public class prim implements MazeGenerator {
         return grid.get(i + j * cols);
     }
 
-    private void removeWalls(Cell a, Cell b) {
-        int x = a.i - b.i;
-        int y = a.j - b.j;
-
-        if (x == 1) {
-            a.walls[3] = false;
-            b.walls[1] = false;
-        } else if (x == -1) {
-            a.walls[1] = false;
-            b.walls[3] = false;
-        }
-
-        if (y == 1) {
-            a.walls[0] = false;
-            b.walls[2] = false;
-        } else if (y == -1) {
-            a.walls[2] = false;
-            b.walls[0] = false;
-        }
-    }
+    
 
     @Override
     public boolean isFinished() {

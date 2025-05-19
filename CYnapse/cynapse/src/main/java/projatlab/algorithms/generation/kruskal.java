@@ -7,9 +7,8 @@ import java.util.Random;
 
 import projatlab.algorithms.tools.Unionfind;
 import projatlab.model.Cell;
-import projatlab.model.MazeGenerator;
 
-public class kruskal implements MazeGenerator {
+public class kruskal extends MazeGenerator {
 
     private final List<int[]> edges = new ArrayList<>();
     private final Unionfind uf;
@@ -69,15 +68,17 @@ public class kruskal implements MazeGenerator {
         }
     }
 
-    private Cell getCell(int index) {
-        if (index == -1) return null;
-        return grid.get(index);
-    }
 
     @Override
     public boolean isFinished() {
         return currentEdgesIndex >= edges.size();
     }
+
+    private Cell getCell(int index) {
+        if (index == -1) return null;
+        return grid.get(index);
+    }
+
 
     public int index(int i, int j) {
         if (i < 0 || j < 0 || i >= cols || j >= rows) {
@@ -85,27 +86,5 @@ public class kruskal implements MazeGenerator {
         }
         return i + j * cols;
     }
-
-    private void removeWalls(Cell a, Cell b) {
-        int x = a.i - b.i;
-        int y = a.j - b.j;
-
-        if (x == 1) {
-            a.walls[3] = false;
-            b.walls[1] = false;
-        } else if (x == -1) {
-            a.walls[1] = false;
-            b.walls[3] = false;
-        }
-
-        if (y == 1) {
-            a.walls[0] = false;
-            b.walls[2] = false;
-        } else if (y == -1) {
-            a.walls[2] = false;
-            b.walls[0] = false;
-        }
-    }
-
-
+   
 }
