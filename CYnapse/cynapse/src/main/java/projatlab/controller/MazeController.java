@@ -10,8 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import javafx.animation.AnimationTimer;
-import projatlab.algorithms.generation.MazeGenerator;
+
 import projatlab.model.Cell;
 import projatlab.model.Maze;
 import projatlab.view.MazeView;
@@ -40,6 +39,10 @@ public class MazeController {
         startGenerationAnimation();
     }
 
+    public void setGenerator(MazeGenerator generator){
+        this.generator = generator;
+    }
+
     public void solveMaze(MazeSolver solver){
         this.solver = solver;
         startSolvingAnimation();
@@ -56,7 +59,7 @@ public class MazeController {
     }
 
 
-    private void startGenerationAnimation() {
+    public void startGenerationAnimation() {
         AnimationTimer timer = new AnimationTimer() {
             private long startTime = -1;
 
@@ -107,6 +110,50 @@ public class MazeController {
         timer.start();
     }
 
+
+
+    public interface SolvingListener {
+        void onSolvingFinished(long solvingTime);
+    }
+
+
+    public void setSolvingListener(SolvingListener listener) {
+        this.solvingListener = listener;
+    }
+
+    public void startSolvingAnimation() {
+        AnimationTimer timer = new AnimationTimer() {
+            private long startTime = -1;
+
+            @Override
+            public void handle(long now) {
+                if (startTime == -1) {
+                    startTime = System.currentTimeMillis();
+                }
+
+                if (!solver.isFinished()) {
+                    solver.step();
+                    view.draw();
+                } else {
+                    long endTime = System.currentTimeMillis();
+                    long solvingTime = endTime - startTime;
+                    System.out.println("Résolution terminée en " + solvingTime + " ms");
+
+                    if (solvingListener != null) {
+                        solvingListener.onSolvingFinished(solvingTime);
+                    }
+
+
+                    this.stop();
+                }
+            }
+        };
+        timer.start();
+    }
+
+
+
+
     public void noAnimation(){
         long startTime = System.currentTimeMillis();
         while (!generator.isFinished()) {
@@ -115,7 +162,6 @@ public class MazeController {
 
         long endTime = System.currentTimeMillis();
         generationTime = endTime - startTime;
-        finished = true;
 
         view.draw(); 
 

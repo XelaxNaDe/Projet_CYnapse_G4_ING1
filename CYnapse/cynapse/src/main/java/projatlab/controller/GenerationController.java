@@ -20,7 +20,7 @@ public class GenerationController {
 
     private Maze maze;
 
-    public void handleGenerateMaze(String widthText, String heightText, String seedText, String algo, String mode, Stage stage) {
+    public void handleGenerateMaze(String widthText, String heightText, String seedText, String genAlgo, String mode, Stage stage) {
         try {
             int width = Integer.parseInt(widthText);
             int height = Integer.parseInt(heightText);
@@ -47,7 +47,7 @@ public class GenerationController {
             MazeView mazeView = new MazeView(maze);
             MazeController mazeController = new MazeController(maze, mazeView, seed);
             ResolverView resWindow = new ResolverView(maze, mazeController, mazeView);
-            mazeController.generateMaze(generator);
+            mazeController.setGenerator(generator);
             resWindow.show();
 
             mazeController.setGenerationListener(time -> {
@@ -58,7 +58,7 @@ public class GenerationController {
 
             System.out.println(mode);
             if ("step".equals(mode)){
-                mazeController.startAnimation();
+                mazeController.startGenerationAnimation();
             }
             else{
                 mazeController.noAnimation();
@@ -114,8 +114,7 @@ public class GenerationController {
 
                 MazeView mazeView = new MazeView(maze);
 
-                MazeGenerator dummyGenerator = new MazeGenerator();
-                MazeController mazeController = new MazeController(maze, mazeView, dummyGenerator);
+                MazeController mazeController = new MazeController(maze, mazeView, 0);
                 mazeController.drawAll();
 
                 ResolverView resWindow = new ResolverView(maze, mazeController, mazeView);
