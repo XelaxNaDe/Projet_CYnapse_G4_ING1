@@ -82,6 +82,8 @@ public class ResolverView {
         Button bSolve = new Button("Résoudre");
         Button bModify = new Button("Modifier");
 
+        bSave.setOnAction(e -> controller.handleSave(resStage));
+
         bModify.setOnAction(e -> controller.handleModify());
 
         bSolve.setOnAction(e -> controller.handleSolveMaze(maze, cBAlgo.getValue(), resStage));

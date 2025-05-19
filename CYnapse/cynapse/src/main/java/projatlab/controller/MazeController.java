@@ -5,6 +5,13 @@ import java.util.Random;
 import javafx.animation.AnimationTimer;
 import projatlab.algorithms.generation.MazeGenerator;
 import projatlab.algorithms.solvers.MazeSolver;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import javafx.animation.AnimationTimer;
+import projatlab.algorithms.generation.MazeGenerator;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
 import projatlab.view.MazeView;
@@ -100,48 +107,54 @@ public class MazeController {
         timer.start();
     }
 
-    public interface SolvingListener {
-        void onSolvingFinished(long solvingTime);
+    public void noAnimation(){
+        long startTime = System.currentTimeMillis();
+        while (!generator.isFinished()) {
+            generator.step();
+        }
+
+        long endTime = System.currentTimeMillis();
+        generationTime = endTime - startTime;
+        finished = true;
+
+        view.draw(); 
+
+        System.out.println("Génération complète terminée en " + generationTime + " ms");
+
+        if (generationListener != null) {
+            generationListener.onGenerationFinished(generationTime);
+        }
     }
 
-    
+    public void saveMazeToFile(File file) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            int cols = maze.getCols();
+            int rows = maze.getRows();
 
-    public void setSolvingListener(SolvingListener listener) {
-        this.solvingListener = listener;
-    }
+            //dimensions
+            writer.write(cols + " " + rows);
+            writer.newLine();
 
-
-
-    private void startSolvingAnimation() {
-        AnimationTimer timer = new AnimationTimer() {
-            private long startTime = -1;
-
-            @Override
-            public void handle(long now) {
-                if (startTime == -1) {
-                    startTime = System.currentTimeMillis();
+            //cells (i j walls)
+            for (Cell cell : maze.getGrid()) {
+                StringBuilder walls = new StringBuilder();
+                for (boolean wall : cell.walls) {
+                    walls.append(wall ? "1" : "0");
                 }
-
-                if (!solver.isFinished()) {
-                    solver.step();
-                    view.draw();
-                } else {
-                    long endTime = System.currentTimeMillis();
-                    long solvingTime = endTime - startTime;
-                    System.out.println("Résolution terminée en " + solvingTime + " ms");
-
-                    if (solvingListener != null) {
-                        solvingListener.onSolvingFinished(solvingTime);
-                    }
-
-
-                    this.stop();
-                }
+                writer.write(cell.i + " " + cell.j + " " + walls);
+                writer.newLine();
             }
-        };
-        timer.start();
-    }
 
+            System.out.println("Labyrinthe sauvegardé dans : " + file.getAbsolutePath());
+
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la sauvegarde : " + e.getMessage());
+        }
+    }   
+
+    public void drawAll() {
+        view.draw();
+    }
 
     public long getGenerationTime() {
         System.out.println(generationTime);
