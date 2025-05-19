@@ -7,7 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -72,34 +74,32 @@ public class GenerationView {
         // --- Generation mode checkboxes ---
         Label lModeG = new Label("Modes de génération :");
 
-        CheckBox cbComplet = new CheckBox("Complet");
-        CheckBox cbStep = new CheckBox("Pas à pas");
+        ToggleGroup generationModeGroup = new ToggleGroup();
 
-        cbComplet.setSelected(true);
+        RadioButton rbComplet = new RadioButton("Complet");
+        rbComplet.setToggleGroup(generationModeGroup);
+        rbComplet.setSelected(true);
 
+        RadioButton rbStep = new RadioButton("Pas à pas");
+        rbStep.setToggleGroup(generationModeGroup);
 
-        cbStep.setOnAction(e -> {
-            if (cbStep.isSelected()) cbComplet.setSelected(false);
-        });
-
-        cbComplet.setOnAction(e -> {
-            if (cbComplet.isSelected()) cbStep.setSelected(false);
-        });
-
-        VBox vbBotLeft = new VBox(10, lModeG, cbComplet, cbStep);
+        VBox vbBotLeft = new VBox(10, lModeG, rbComplet, rbStep);
 
         // --- Buttons ---
         Button btnLoad = new Button("Charger un labyrinthe");
-        btnLoad.setOnAction(e -> controller.handleLoadMaze(genStage));
+        btnLoad.setOnAction(e -> controller.handleLoad(genStage));
 
         Button btnGenerate = new Button("Générer un labyrinthe");
-        btnGenerate.setOnAction(e -> controller.handleGenerateMaze(
+        btnGenerate.setOnAction(e -> {
+        String mode = rbComplet.isSelected() ? "complet" : "step";
+        controller.handleGenerateMaze(
                 tfWidth.getText(),
                 tfHeight.getText(),
                 tfSeed.getText(),
                 algoComboBox.getValue(),
+                mode,
                 genStage
-        ));
+        );});
 
         VBox vbBotRight = new VBox(10, btnLoad, btnGenerate);
 

@@ -60,4 +60,5 @@ public class Maze {
         }
         return copyMaze;
     }
+
 }

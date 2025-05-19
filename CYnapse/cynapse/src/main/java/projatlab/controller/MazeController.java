@@ -1,7 +1,13 @@
 package projatlab.controller;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import javafx.animation.AnimationTimer;
 import projatlab.algorithms.generation.MazeGenerator;
+import projatlab.model.Cell;
 import projatlab.model.Maze;
 import projatlab.view.MazeView;
 
@@ -17,7 +23,6 @@ public class MazeController {
         this.maze = maze;
         this.view = view;
         this.generator = generator;
-        startAnimation();
     }
 
     public interface GenerationListener {
@@ -30,7 +35,7 @@ public class MazeController {
             this.generationListener = listener;
         }
 
-     private void startAnimation() {
+     public void startAnimation() {
         AnimationTimer timer = new AnimationTimer() {
             private long startTime = -1;
             
@@ -60,6 +65,56 @@ public class MazeController {
         };
         timer.start();
     }
+
+    public void noAnimation(){
+        long startTime = System.currentTimeMillis();
+        while (!generator.isFinished()) {
+            generator.step();
+        }
+
+        long endTime = System.currentTimeMillis();
+        generationTime = endTime - startTime;
+        finished = true;
+
+        view.draw(); 
+
+        System.out.println("Génération complète terminée en " + generationTime + " ms");
+
+        if (generationListener != null) {
+            generationListener.onGenerationFinished(generationTime);
+        }
+    }
+
+    public void saveMazeToFile(File file) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            int cols = maze.getCols();
+            int rows = maze.getRows();
+
+            //dimensions
+            writer.write(cols + " " + rows);
+            writer.newLine();
+
+            //cells (i j walls)
+            for (Cell cell : maze.getGrid()) {
+                StringBuilder walls = new StringBuilder();
+                for (boolean wall : cell.walls) {
+                    walls.append(wall ? "1" : "0");
+                }
+                writer.write(cell.i + " " + cell.j + " " + walls);
+                writer.newLine();
+            }
+
+            System.out.println("Labyrinthe sauvegardé dans : " + file.getAbsolutePath());
+
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la sauvegarde : " + e.getMessage());
+        }
+    }   
+
+    public void drawAll() {
+        view.draw();
+    }
+
     public long getGenerationTime() {
         System.out.println(generationTime);
         return generationTime;
