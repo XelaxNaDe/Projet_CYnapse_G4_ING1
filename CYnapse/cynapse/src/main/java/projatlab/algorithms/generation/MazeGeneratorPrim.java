@@ -6,7 +6,7 @@ import java.util.Random;
 
 import projatlab.model.Cell;
 
-public class prim extends MazeGenerator {
+public class MazeGeneratorPrim extends MazeGenerator {
     private final ArrayList<Cell> grid;
     private final List<Cell> frontier = new ArrayList<>();
     private final Random rand;
@@ -14,7 +14,7 @@ public class prim extends MazeGenerator {
     private final int rows;
     private int visitedCount = 0;
 
-    public prim(ArrayList<Cell> grid, int cols, int rows, long seed) {
+    public MazeGeneratorPrim(ArrayList<Cell> grid, int cols, int rows, long seed) {
         this.grid = grid;
         this.cols = cols;
         this.rows = rows;

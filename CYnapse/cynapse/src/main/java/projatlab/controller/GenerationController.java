@@ -2,9 +2,9 @@ package projatlab.controller;
 
 import javafx.stage.Stage;
 import projatlab.algorithms.generation.MazeGenerator;
-import projatlab.algorithms.generation.dfs;
-import projatlab.algorithms.generation.kruskal;
-import projatlab.algorithms.generation.prim;
+import projatlab.algorithms.generation.MazeGeneratorDFS;
+import projatlab.algorithms.generation.MazeGeneratorKruskal;
+import projatlab.algorithms.generation.MazeGeneratorPrim;
 import projatlab.model.Maze;
 import projatlab.view.MazeView;
 import projatlab.view.ResolverView;
@@ -29,9 +29,9 @@ public class GenerationController {
 
             MazeGenerator generator;
             switch (algo) {
-                case "DFS" -> generator = new dfs(maze.getGrid(),width,height,seed);
-                case "Prim" -> generator = new prim(maze.getGrid(),width,height,seed);
-                case "Kruskal" -> generator = new kruskal(maze.getGrid(),width,height,seed); 
+                case "DFS" -> generator = new MazeGeneratorDFS(maze.getGrid(),width,height,seed);
+                case "Prim" -> generator = new MazeGeneratorPrim(maze.getGrid(),width,height,seed);
+                case "Kruskal" -> generator = new MazeGeneratorKruskal(maze.getGrid(),width,height,seed); 
                 default -> throw new AssertionError();
             }
             
