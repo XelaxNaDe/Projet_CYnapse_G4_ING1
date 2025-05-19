@@ -62,12 +62,12 @@ public class GenerationView {
         // --- Algorithms checkboxes ---
         Label lAlgo = new Label("Algorithmes : ");
 
-        ComboBox<String> algoComboBox = new ComboBox<>();
-            algoComboBox.getItems().addAll("DFS", "Prim", "Kruskal");
-            algoComboBox.setValue("DFS");
+        ComboBox<String> cBAlgo = new ComboBox<>();
+        cBAlgo.getItems().addAll("DFS", "Prim", "Kruskal");
+        cBAlgo.setValue("DFS");
 
         
-        VBox vbTopLeft = new VBox (10, lAlgo, algoComboBox);
+        VBox vbTopLeft = new VBox (10, lAlgo, cBAlgo);
 
         // --- Generation mode checkboxes ---
         Label lModeG = new Label("Modes de génération :");
@@ -97,7 +97,7 @@ public class GenerationView {
                 tfWidth.getText(),
                 tfHeight.getText(),
                 tfSeed.getText(),
-                algoComboBox.getValue(),
+                cBAlgo.getValue(),
                 genStage
         ));
 

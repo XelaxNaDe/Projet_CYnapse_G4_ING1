@@ -5,7 +5,9 @@ import java.util.ArrayList;
 public class Maze {
     private final int rows;
     private final int cols;
-    private final ArrayList<Cell> grid;
+    private ArrayList<Cell> grid;
+    private Cell startCell;
+    private Cell endCell;
 
     public Maze(int cols, int rows) {
         this.cols = cols;
@@ -26,11 +28,14 @@ public class Maze {
         return i + j * cols;
     }
 
-    public Cell getCell(int i, int j) {
-        int idx = index(i, j);
-        if (idx == -1) return null;
-        return grid.get(idx);
+    public void setStart(Cell cell) {
+        this.startCell = cell;
     }
+
+    public void setEnd(Cell cell) {
+        this.endCell = cell;
+    }
+
 
     public Cell getCell(int index){
         if (index == -1) return null;
@@ -49,11 +54,20 @@ public class Maze {
         return grid;
     }
 
+    public Cell getStart() {
+        return startCell;
+    }
+
+    public Cell getEnd() {
+        return endCell;
+    }
+
+
     public Maze copy() {
         Maze copyMaze = new Maze(cols, rows);
         for (int j = 0; j < rows; j++) {
             for (int i = 0; i < cols; i++) {
-                Cell original = getCell(i, j);
+                Cell original = getCell(index(i,j));
                 Cell copyCell = original.copy();
                 copyMaze.getGrid().set(copyMaze.index(i, j), copyCell);
             }

@@ -25,7 +25,7 @@ public class ModificationController {
         int col = (int) (x / Cell.cellSize);
         int row = (int) (y / Cell.cellSize);
 
-        Cell cell = maze.getCell(col, row);
+        Cell cell = maze.getCell(maze.index(col, row));
         if (cell == null) return;
 
         switch (currentMode) {
@@ -42,36 +42,36 @@ public class ModificationController {
     if (offsetY < threshold && rowClicked > 0) {
         // Haut
         toggleWall(cell, 0);
-        Cell top = maze.getCell(colClicked, rowClicked - 1);
+        Cell top = maze.getCell(maze.index(colClicked, rowClicked - 1));
         if (top != null) toggleWall(top, 2);
         
     } else if (offsetX > Cell.cellSize - threshold && colClicked < maze.getCols() - 1) {
         // Droite
         toggleWall(cell, 1);
-        Cell right = maze.getCell(colClicked + 1, rowClicked);
+        Cell right = maze.getCell(maze.index(colClicked + 1, rowClicked));
         if (right != null) toggleWall(right, 3);
 
     } else if (offsetY > Cell.cellSize - threshold && rowClicked < maze.getRows() - 1) {
         // Bas
         toggleWall(cell, 2);
-        Cell bottom = maze.getCell(colClicked, rowClicked + 1);
+        Cell bottom = maze.getCell(maze.index(colClicked, rowClicked + 1));
         if (bottom != null) toggleWall(bottom, 0);
 
     } else if (offsetX < threshold && colClicked > 0) {
         // Gauche
         toggleWall(cell, 3);
-        Cell left = maze.getCell(colClicked - 1, rowClicked);
+        Cell left = maze.getCell(maze.index(colClicked - 1, rowClicked));
         if (left != null) toggleWall(left, 1);
     }
     break;
 
             case ENTREE:
-                //maze.getGrid().forEach(c -> c.setStart(false));
-                //cell.setStart(true);
+                maze.getGrid().forEach(c -> c.setStart(false));
+                cell.setStart(true);
                 break;
             case SORTIE:
-                //maze.getGrid().forEach(c -> c.setEnd(false));
-                //cell.setEnd(true);
+                maze.getGrid().forEach(c -> c.setEnd(false));
+                cell.setEnd(true);
                 break;
         }
 

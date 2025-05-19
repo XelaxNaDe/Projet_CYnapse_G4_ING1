@@ -7,34 +7,36 @@ import java.util.Random;
 
 import projatlab.algorithms.tools.Unionfind;
 import projatlab.model.Cell;
+import projatlab.model.Maze;
 
 public class MazeGeneratorKruskal extends MazeGenerator {
 
     private final List<int[]> edges = new ArrayList<>();
     private final Unionfind uf;
-    private final int cols;
-    private final int rows;
-    private final ArrayList<Cell> grid;
     private int currentEdgesIndex = 0;
 
-    public MazeGeneratorKruskal(ArrayList<Cell> grid, int cols, int rows, long seed) {
-        this.grid = grid;
-        this.rows = rows;
-        this.cols = cols;
+    private final Maze maze;
+    private final ArrayList<Cell> grid;
+    private final int cols;
+    private final int rows;
+
+    public MazeGeneratorKruskal(Maze maze, long seed) {
+        this.maze = maze;
+        this.grid = maze.getGrid();
+        this.cols = maze.getCols();
+        this.rows = maze.getRows();
         this.uf = new Unionfind(rows * cols);
 
+        // Génération des arêtes (edges)
         for (int j = 0; j < rows; j++) {
             for (int i = 0; i < cols; i++) {
-                int currentIndex = index(i, j);
+                int currentIndex = maze.index(i, j);  // 👈 Utilisation centralisée
 
-                // Bottom wall
                 if (j < rows - 1) {
-                    edges.add(new int[]{currentIndex, currentIndex + cols});
+                    edges.add(new int[]{currentIndex, maze.index(i, j + 1)}); // bas
                 }
-
-                // Right wall
                 if (i < cols - 1) {
-                    edges.add(new int[]{currentIndex, currentIndex + 1});
+                    edges.add(new int[]{currentIndex, maze.index(i + 1, j)}); // droite
                 }
             }
         }
@@ -42,6 +44,7 @@ public class MazeGeneratorKruskal extends MazeGenerator {
         Random rand = new Random(seed);
         Collections.shuffle(edges, rand);
     }
+
 
     @Override
     public void step() {
@@ -78,13 +81,4 @@ public class MazeGeneratorKruskal extends MazeGenerator {
         if (index == -1) return null;
         return grid.get(index);
     }
-
-
-    public int index(int i, int j) {
-        if (i < 0 || j < 0 || i >= cols || j >= rows) {
-            return -1;
-        }
-        return i + j * cols;
-    }
-   
 }

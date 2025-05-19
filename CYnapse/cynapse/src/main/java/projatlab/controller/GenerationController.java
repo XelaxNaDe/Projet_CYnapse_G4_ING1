@@ -11,7 +11,7 @@ import projatlab.view.ResolverView;
 
 public class GenerationController {
 
-    public void handleGenerateMaze(String widthText, String heightText, String seedText, String algo, Stage stage) {
+    public void handleGenerateMaze(String widthText, String heightText, String seedText, String genAlgo, Stage stage) {
         try {
             int width = Integer.parseInt(widthText);
             int height = Integer.parseInt(heightText);
@@ -28,16 +28,17 @@ public class GenerationController {
 
 
             MazeGenerator generator;
-            switch (algo) {
-                case "DFS" -> generator = new MazeGeneratorDFS(maze.getGrid(),width,height,seed);
-                case "Prim" -> generator = new MazeGeneratorPrim(maze.getGrid(),width,height,seed);
-                case "Kruskal" -> generator = new MazeGeneratorKruskal(maze.getGrid(),width,height,seed); 
+            switch (genAlgo) {
+                case "DFS" -> generator = new MazeGeneratorDFS(maze, seed);
+                case "Prim" -> generator = new MazeGeneratorPrim(maze,seed);
+                case "Kruskal" -> generator = new MazeGeneratorKruskal(maze, seed); 
                 default -> throw new AssertionError();
             }
             
             MazeView mazeView = new MazeView(maze);
-            MazeController mazeController = new MazeController(maze, mazeView, generator);
+            MazeController mazeController = new MazeController(maze, mazeView, seed);
             ResolverView resWindow = new ResolverView(maze, mazeController, mazeView);
+            mazeController.generateMaze(generator);
             resWindow.show();
 
             mazeController.setGenerationListener(time -> {

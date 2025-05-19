@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Random;
 
 import projatlab.model.Cell;
+import projatlab.model.Maze;
 
 public class MazeGeneratorPrim extends MazeGenerator {
+
+    private final Maze maze;
     private final ArrayList<Cell> grid;
     private final List<Cell> frontier = new ArrayList<>();
     private final Random rand;
@@ -14,10 +17,12 @@ public class MazeGeneratorPrim extends MazeGenerator {
     private final int rows;
     private int visitedCount = 0;
 
-    public MazeGeneratorPrim(ArrayList<Cell> grid, int cols, int rows, long seed) {
-        this.grid = grid;
-        this.cols = cols;
-        this.rows = rows;
+    public MazeGeneratorPrim(Maze maze, long seed) {
+
+        this.maze = maze;
+        this.grid = maze.getGrid();
+        this.cols = maze.getCols();
+        this.rows = maze.getRows();
         this.rand = new Random(seed);
 
         // Start from a random cell
@@ -35,8 +40,8 @@ public class MazeGeneratorPrim extends MazeGenerator {
             return;
         }
 
-        int index = rand.nextInt(frontier.size());
-        Cell current = frontier.remove(index);
+        int ind = rand.nextInt(frontier.size());
+        Cell current = frontier.remove(ind);
         current.visited = true;
         visitedCount++;
 

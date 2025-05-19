@@ -7,7 +7,11 @@ public class Cell {
     public int i, j;
     public boolean[] walls = {true, true, true, true}; // Haut, droite, bas, gauche
     public boolean visited = false;
-    public static final int cellSize = 20;
+    public static int cellSize = 20;
+
+    private boolean isStart = false;
+    private boolean isEnd = false;
+    public boolean isInFinalPath = false;
 
     public Cell(int i, int j) {
         this.i = i;
@@ -18,25 +22,45 @@ public class Cell {
         double x = i * cellSize;
         double y = j * cellSize;
 
-        if (visited) {
-            gc.setFill(Color.rgb(200, 0, 100));
+        if (isStart) {
+            gc.setFill(Color.LIMEGREEN);
+            gc.fillRect(x, y, cellSize, cellSize);
+        } else if (isEnd) {
+            gc.setFill(Color.RED);
+            gc.fillRect(x, y, cellSize, cellSize);
+        } else if (visited) {
+            gc.setFill(Color.HOTPINK);
             gc.fillRect(x, y, cellSize, cellSize);
         }
-
-        gc.setStroke(Color.WHITE);
-        if (walls[0]) gc.strokeLine(x, y, x + cellSize, y);           // Haut
-        if (walls[1]) gc.strokeLine(x + cellSize, y, x + cellSize, y + cellSize); // Droite
-        if (walls[2]) gc.strokeLine(x + cellSize, y + cellSize, x, y + cellSize); // Bas
-        if (walls[3]) gc.strokeLine(x, y + cellSize, x, y);           // Gauche
+        if (isInFinalPath) {
+        gc.setFill(Color.BLUE);
+        gc.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
     }
 
+        gc.setStroke(Color.WHITE);
+        if (walls[0]) gc.strokeLine(x, y, x + cellSize, y);                 // Haut
+        if (walls[1]) gc.strokeLine(x + cellSize, y, x + cellSize, y + cellSize); // Droite
+        if (walls[2]) gc.strokeLine(x + cellSize, y + cellSize, x, y + cellSize); // Bas
+        if (walls[3]) gc.strokeLine(x, y + cellSize, x, y);
+    }
+    
     public Cell copy() {
         Cell copy = new Cell(i, j);
-        copy.visited = this.visited;
+        copy.isStart = this.isStart;
+        copy.isEnd = this.isEnd;
         System.arraycopy(this.walls, 0, copy.walls, 0, this.walls.length);
         return copy;
     }
     
+    public void setStart(boolean isStart) {
+        this.isStart = isStart;
+    }
+
+    public void setEnd(boolean isEnd) {
+        this.isEnd = isEnd;
+    }
+
+
     public void setVisited(boolean visited) {
         this.visited = visited;
     }

@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import projatlab.controller.ModificationController;
 import projatlab.model.Cell;
+import projatlab.model.Maze;
 
 public class MazeView extends Pane {
 
@@ -18,7 +19,7 @@ public class MazeView extends Pane {
     private final Canvas canvas;
     private ModificationController modController;
 
-    public MazeView(projatlab.model.Maze maze) {
+    public MazeView(Maze maze) {
         this.cols = maze.getCols();
         this.rows = maze.getRows();
         this.grid = maze.getGrid();
@@ -33,7 +34,7 @@ public class MazeView extends Pane {
     public void draw() {
 
         gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, canvas.getWidth() -2, canvas.getHeight()-2);
+        gc.fillRect(0, 0, canvas.getWidth()-2, canvas.getHeight()-2);
 
         for (Cell cell : grid) {
             cell.show(gc);

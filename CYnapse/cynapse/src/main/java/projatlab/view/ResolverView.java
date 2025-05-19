@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.BorderPane;
@@ -30,7 +31,7 @@ public class ResolverView {
         this.maze = maze;
         this.mazeView = mazeView;
         this.mazeController = mazeController;
-        this.controller = new ResolverController(maze);
+        this.controller = new ResolverController(maze, mazeController);
     }
 
     public void show() {
@@ -45,22 +46,9 @@ public class ResolverView {
         vbAlgoMode.setAlignment(Pos.TOP_LEFT);
 
         Label lAlgo = new Label("Choix de l'algorithme :");
-        CheckBox cb1 = new CheckBox("A*");
-        CheckBox cb2 = new CheckBox("BFS");
-        CheckBox cb3 = new CheckBox("DFS");
-
-        CheckBox[] algoBoxes = {cb1, cb2, cb3};
-        for (CheckBox cb : algoBoxes) {
-            cb.setOnAction(e -> {
-                if (cb.isSelected()) {
-                    for (CheckBox other : algoBoxes) {
-                        if (other != cb) {
-                            other.setSelected(false);
-                        }
-                    }
-                }
-            });
-        }
+        ComboBox<String> cBAlgo = new ComboBox<>();
+        cBAlgo.getItems().addAll("BFS", "DFS", "Prim", "Kruskal");
+        cBAlgo.setValue("BFS");
 
         Label lMode = new Label("Mode :");
         CheckBox cbComplet = new CheckBox("Complet");
@@ -74,7 +62,7 @@ public class ResolverView {
             if (cbPasComplet.isSelected()) cbComplet.setSelected(false);
         });
 
-        vbAlgoMode.getChildren().addAll(lAlgo, cb1, cb2, cb3, new Separator(), lMode, cbComplet, cbPasComplet);
+        vbAlgoMode.getChildren().addAll(lAlgo, cBAlgo, new Separator(), lMode, cbComplet, cbPasComplet);
         VBox.setVgrow(vbAlgoMode, Priority.ALWAYS);
         root.setRight(vbAlgoMode);
 
@@ -96,7 +84,7 @@ public class ResolverView {
 
         bModify.setOnAction(e -> controller.handleModify());
 
-        bSolve.setOnAction(e -> controller.handleSolve(cb1.isSelected(), cb2.isSelected(), cb3.isSelected(), cbComplet.isSelected()));
+        bSolve.setOnAction(e -> controller.handleSolveMaze(maze, cBAlgo.getValue(), resStage));
 
         HBox hbSaveModSolve = new HBox(10, bSave, bModify, bSolve);
         hbSaveModSolve.setAlignment(Pos.BOTTOM_RIGHT);

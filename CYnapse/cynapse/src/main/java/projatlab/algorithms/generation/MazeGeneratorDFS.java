@@ -5,9 +5,11 @@ import java.util.Random;
 import java.util.Stack;
 
 import projatlab.model.Cell;
+import projatlab.model.Maze;
 
 public class MazeGeneratorDFS extends MazeGenerator {
 
+    private Maze maze;
     private final int cols;
     private final int rows;
     private final ArrayList<Cell> grid;
@@ -16,10 +18,12 @@ public class MazeGeneratorDFS extends MazeGenerator {
     private final Stack<Cell> stack = new Stack<>();
     private final Random rand;
 
-    public MazeGeneratorDFS(ArrayList<Cell> grid, int cols, int rows, long seed) {
-        this.cols = cols;
-        this.rows = rows;
-        this.grid = grid;
+    public MazeGeneratorDFS(Maze maze, long seed) {
+
+        this.maze = maze;
+        this.cols = maze.getCols();
+        this.rows = maze.getRows();
+        this.grid = maze.getGrid();
         this.rand = new Random(seed);
 
         if (!grid.isEmpty()) {
