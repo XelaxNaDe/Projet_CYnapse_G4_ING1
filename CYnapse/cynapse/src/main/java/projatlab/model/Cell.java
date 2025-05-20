@@ -9,8 +9,8 @@ public class Cell {
     public boolean visited = false;
     public static int cellSize = 20;
 
-    private boolean isStart = false;
-    private boolean isEnd = false;
+    public boolean isStart = false;
+    public boolean isEnd = false;
     public boolean isInFinalPath = false;
 
     public Cell(int i, int j) {
@@ -22,27 +22,30 @@ public class Cell {
         double x = i * cellSize;
         double y = j * cellSize;
 
+
         if (isStart) {
             gc.setFill(Color.LIMEGREEN);
-            gc.fillRect(x, y, cellSize, cellSize);
+            gc.fillRect(x ,y , cellSize, cellSize);
         } else if (isEnd) {
             gc.setFill(Color.RED);
-            gc.fillRect(x, y, cellSize, cellSize);
+            gc.fillRect(x ,y ,cellSize, cellSize);
         } else if (visited) {
             gc.setFill(Color.HOTPINK);
-            gc.fillRect(x, y, cellSize, cellSize);
+            gc.fillRect(x , y,cellSize, cellSize);
         }
         if (isInFinalPath) {
-        gc.setFill(Color.BLUE);
-        gc.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
-    }
+            gc.setFill(Color.BLUE);
+            gc.fillRect(x , y,cellSize, cellSize);
+        }
 
-        gc.setStroke(Color.WHITE);
-        if (walls[0]) gc.strokeLine(x, y, x + cellSize, y);                 // Haut
-        if (walls[1]) gc.strokeLine(x + cellSize, y, x + cellSize, y + cellSize); // Droite
-        if (walls[2]) gc.strokeLine(x + cellSize, y + cellSize, x, y + cellSize); // Bas
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(2);
+        if (walls[0]) gc.strokeLine(x, y, x + cellSize, y);
+        if (walls[1]) gc.strokeLine(x + cellSize, y, x + cellSize, y + cellSize);
+        if (walls[2]) gc.strokeLine(x + cellSize, y + cellSize, x, y + cellSize);
         if (walls[3]) gc.strokeLine(x, y + cellSize, x, y);
     }
+
     
     public Cell copy() {
         Cell copy = new Cell(i, j);

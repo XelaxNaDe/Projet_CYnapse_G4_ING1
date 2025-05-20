@@ -33,7 +33,7 @@ public class MazeView extends Pane {
 
     public void draw() {
 
-        gc.setFill(Color.BLACK);
+        gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, canvas.getWidth()-2, canvas.getHeight()-2);
 
         for (Cell cell : grid) {

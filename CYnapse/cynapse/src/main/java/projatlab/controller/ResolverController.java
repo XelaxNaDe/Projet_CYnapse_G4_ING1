@@ -28,8 +28,11 @@ public class ResolverController {
 
     public void handleModify() {
         ModificationView modWindow = new ModificationView(maze);
-        modWindow.show();
+        modWindow.showAndWait();  // méthode à ajouter dans ModificationView
+        // Après fermeture de la fenêtre modale, on redessine le labyrinthe modifié
+        mazeController.drawAll();
     }
+
 
     public void handleSolveMaze(Maze maze, String solvAlgo, Stage stage) {
         MazeSolver solver;
@@ -53,18 +56,6 @@ public class ResolverController {
         });
     }
 
-    public void handleSolve(boolean useAStar, boolean useBFS, boolean useDFS, boolean isCompleteMode) {
-        // Exemple de logique future
-        if (useAStar) {
-            System.out.println("Résolution avec A* " + (isCompleteMode ? "en mode complet" : "en mode pas à pas"));
-        } else if (useBFS) {
-            System.out.println("Résolution avec BFS " + (isCompleteMode ? "en mode complet" : "en mode pas à pas"));
-        } else if (useDFS) {
-            System.out.println("Résolution avec DFS " + (isCompleteMode ? "en mode complet" : "en mode pas à pas"));
-        } else {
-            System.out.println("Veuillez sélectionner un algorithme.");
-        }
-    }
 
     public void handleSave(Stage stage) {
         FileChooser fileChooser = new FileChooser();

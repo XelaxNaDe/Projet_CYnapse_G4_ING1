@@ -4,7 +4,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -13,24 +12,23 @@ import projatlab.model.Maze;
 
 public class ModificationView {
     
-    Maze originalMaze;
-    Maze copiedMaze;
+    private Maze originalMaze;
+    private Maze copiedMaze;
+    private Stage modStage;
 
     public ModificationView(Maze maze) {
         this.originalMaze = maze;
         this.copiedMaze = maze.copy();
     }
 
-    public void show() {
-        Stage modStage = new Stage();
+    public void showAndWait() {
+        modStage = new Stage();
         BorderPane root = new BorderPane();
 
-        // Center - affichage du labyrinthe
         MazeView mazeView = new MazeView(copiedMaze);
-        ModificationController controller = new ModificationController(copiedMaze, mazeView);
+        ModificationController controller = new ModificationController(copiedMaze, mazeView, originalMaze, modStage);
         mazeView.setController(controller);
         root.setCenter(mazeView);
-
         mazeView.draw();
 
         // Right Button
@@ -41,27 +39,27 @@ public class ModificationView {
         Button btnMur = new Button("Mur");
         Button btnEntree = new Button("Entrée");
         Button btnSortie = new Button("Sortie");
-        CheckBox cbNouveau = new CheckBox("Nouveau labyrinthe");
         Button btnAnnuler = new Button("Annuler");
-        Button btnResoudre = new Button("Sauvgarder les changements");
+        Button btnSave = new Button("Sauvgarder les changements");
 
         btnMur.setMaxWidth(Double.MAX_VALUE);
         btnEntree.setMaxWidth(Double.MAX_VALUE);
         btnSortie.setMaxWidth(Double.MAX_VALUE);
         btnAnnuler.setMaxWidth(Double.MAX_VALUE);
-        btnResoudre.setMaxWidth(Double.MAX_VALUE);
+        btnSave.setMaxWidth(Double.MAX_VALUE);
 
         btnMur.setOnAction(e -> controller.setMode(ModificationController.Mode.MUR));
         btnEntree.setOnAction(e -> controller.setMode(ModificationController.Mode.ENTREE));
         btnSortie.setOnAction(e -> controller.setMode(ModificationController.Mode.SORTIE));
+        btnAnnuler.setOnAction(e -> modStage.close());
+        btnSave.setOnAction(e -> controller.handleSave());
 
         vbChange.getChildren().addAll(
             btnMur,
             btnEntree,
             btnSortie,
-            cbNouveau,
             btnAnnuler,
-            btnResoudre
+            btnSave
         );
 
         root.setRight(vbChange);
@@ -71,7 +69,7 @@ public class ModificationView {
         modStage.setTitle("Modification du labyrinthe");
         modStage.setScene(scene);
         //modStage.setResizable(false);
-        modStage.show();
+        modStage.showAndWait();
     }
 
 }

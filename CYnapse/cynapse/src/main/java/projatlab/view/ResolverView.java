@@ -21,7 +21,6 @@ public class ResolverView {
     private final Maze maze;
     private final MazeView mazeView;
     public final ResolverController controller;
-    private final MazeController mazeController;
 
     private Label lVisited;
     private Label lTimeGen;
@@ -30,7 +29,6 @@ public class ResolverView {
     public ResolverView(Maze maze, MazeController mazeController, MazeView mazeView) {
         this.maze = maze;
         this.mazeView = mazeView;
-        this.mazeController = mazeController;
         this.controller = new ResolverController(maze, mazeController);
     }
 
