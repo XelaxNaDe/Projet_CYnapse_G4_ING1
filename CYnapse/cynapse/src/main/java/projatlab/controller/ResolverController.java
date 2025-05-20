@@ -32,18 +32,16 @@ public class ResolverController {
         modWindow.show();
     }
 
-    public void handleSolveMaze(Maze maze, String solvAlgo, Stage stage) {
+    public void handleSolveMaze(Maze maze, String solvAlgo, String mode, double delayMs, Stage stage) {
         MazeSolver solver;
             switch (solvAlgo) {
                 case "DFS" -> solver = new MazeSolverDFS(maze);
-                //case "BFS" -> solver = new MazeSolverBFS(maze);
                 case "A*" -> solver = new MazeSolverAStar(maze);
                 case "Dijkstra" -> solver = new MazeSolverDijkstra(maze);
                 default -> throw new AssertionError();
                 
             }
-            mazeController.solveMaze(solver);
-
+        
 
         mazeController.setSolvingListener(time -> {
             javafx.application.Platform.runLater(() -> {
@@ -53,21 +51,17 @@ public class ResolverController {
                 resWindow.setCellsVisited(cellsVisited);
             });
         });
-    }
 
-    public void handleSolve(boolean useAStar, boolean useBFS, boolean useDFS, boolean useDijkstra, boolean isCompleteMode) {
-        // Exemple de logique future
-        if (useAStar) {
-            System.out.println("Résolution avec A* " + (isCompleteMode ? "en mode complet" : "en mode pas à pas"));
-        } else if (useBFS) {
-            System.out.println("Résolution avec BFS " + (isCompleteMode ? "en mode complet" : "en mode pas à pas"));
-        } else if (useDFS) {
-            System.out.println("Résolution avec DFS " + (isCompleteMode ? "en mode complet" : "en mode pas à pas"));
-        } else if (useDijkstra){
-            System.out.println("Résolution avec Dijkstra " + (isCompleteMode ? "en mode complet" : "en mode pas à pas"));
-        } else {
-            System.out.println("Veuillez sélectionner un algorithme.");
-        }
+
+        mazeController.setSolver(solver);
+        System.out.println(mode);
+            if ("step".equals(mode)){
+                mazeController.startSolvingAnimation(delayMs);
+            }
+            else{
+                mazeController.noSolvingAnimation();
+            }
+
     }
 
     public void handleSave(Stage stage) {

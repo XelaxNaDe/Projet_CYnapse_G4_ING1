@@ -6,7 +6,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import projatlab.algorithms.generation.MazeGenerator;
 import projatlab.algorithms.solvers.MazeSolver;
 import projatlab.model.Cell;
@@ -33,20 +35,13 @@ public class MazeController {
         this.rand = new Random(seed);
     }
 
-    public void generateMaze(MazeGenerator generator){
-        this.generator = generator;
-        startGenerationAnimation();
-    }
-
     public void setGenerator(MazeGenerator generator){
         this.generator = generator;
     }
 
-    public void solveMaze(MazeSolver solver){
+    public void setSolver(MazeSolver solver){
         this.solver = solver;
-        startSolvingAnimation();
     }
-
 
     public interface GenerationListener {
         void onGenerationFinished(long generationTime);
@@ -58,102 +53,55 @@ public class MazeController {
     }
 
 
-    public void startGenerationAnimation() {
-        AnimationTimer timer = new AnimationTimer() {
-            private long startTime = -1;
+    public void startGenerationAnimation(double delayMillis) {
+        Timeline timeline = new Timeline();
+        long startTime = System.currentTimeMillis(); 
 
-            @Override
-            public void handle(long now) {
-                if (startTime == -1) {
-                    startTime = System.currentTimeMillis();
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(delayMillis), event -> {
+
+            if (!generator.isFinished()) {
+                generator.step();
+                view.draw();
+            } 
+            else {
+                long endTime = System.currentTimeMillis();
+                generationTime = endTime - startTime;
+                System.out.println("Génération terminée en " + generationTime + " ms");
+
+                for (Cell cell : maze.getGrid()) {
+                    cell.setVisited(false);
                 }
 
-                if (!generator.isFinished()) {
-                    generator.step();
-                    view.draw();
-                } else {
-                    
-                    long endTime = System.currentTimeMillis();
-                    generationTime = endTime - startTime;
-                    System.out.println("Génération terminée en " + generationTime + " ms");
+                int gridSize = maze.getGrid().size();
+                Cell startCell;
+                Cell endCell;
 
-                    for (Cell cell : maze.getGrid()) {
-                        cell.setVisited(false);
-                    }
-                    
+                do {
+                    startCell = maze.getCell(rand.nextInt(gridSize));
+                    endCell = maze.getCell(rand.nextInt(gridSize));
+                } while (startCell == endCell);
 
-                    int gridSize = maze.getGrid().size();
-                    Cell startCell;
-                    Cell endCell;
+                maze.setStart(startCell);
+                maze.setEnd(endCell);
+                startCell.setStart(true);
+                endCell.setEnd(true);
 
-                    do{
-                        startCell = maze.getCell((rand.nextInt(gridSize)));
-                        endCell = maze.getCell((rand.nextInt(gridSize)));
-                    } while(startCell == endCell);
+                view.draw();
 
-                    maze.setStart(startCell);
-                    maze.setEnd(endCell);
-
-                    startCell.setStart(true);
-                    endCell.setEnd(true);
-
-                    if (generationListener != null) {
-                        generationListener.onGenerationFinished(generationTime);
-                    }
-                    view.draw();
-                
-                    this.stop();
+                if (generationListener != null) {
+                    generationListener.onGenerationFinished(generationTime);
                 }
+
+                timeline.stop();
             }
-        };
-        timer.start();
+        });
+
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
-
-
-    public interface SolvingListener {
-        void onSolvingFinished(long solvingTime);
-    }
-
-
-    public void setSolvingListener(SolvingListener listener) {
-        this.solvingListener = listener;
-    }
-
-    public void startSolvingAnimation() {
-        AnimationTimer timer = new AnimationTimer() {
-            private long startTime = -1;
-
-            @Override
-            public void handle(long now) {
-                if (startTime == -1) {
-                    startTime = System.currentTimeMillis();
-                }
-
-                if (!solver.isFinished()) {
-                    solver.step();
-                    view.draw();
-                } else {
-                    long endTime = System.currentTimeMillis();
-                    solvingTime = endTime - startTime;
-                    System.out.println("Résolution terminée en " + solvingTime + " ms");
-
-                    if (solvingListener != null) {
-                        solvingListener.onSolvingFinished(solvingTime);
-                    }
-
-
-                    this.stop();
-                }
-            }
-        };
-        timer.start();
-    }
-
-
-
-
-    public void noAnimation(){
+    public void noGenerationAnimation(){
         long startTime = System.currentTimeMillis();
         while (!generator.isFinished()) {
             generator.step();
@@ -192,6 +140,61 @@ public class MazeController {
         }
     }
 
+
+    public interface SolvingListener {
+        void onSolvingFinished(long solvingTime);
+    }
+
+
+    public void setSolvingListener(SolvingListener listener) {
+        this.solvingListener = listener;
+    }
+
+    public void startSolvingAnimation(double delayMs) {
+        Timeline timeline = new Timeline();
+        long startTime = System.currentTimeMillis();
+
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(delayMs), event -> {
+           
+            if (!solver.isFinished()) {
+                solver.step();
+                view.draw();
+            } else {
+                long endTime = System.currentTimeMillis();
+                solvingTime = endTime - startTime;
+                System.out.println("Résolution terminée en " + solvingTime + " ms");
+
+                if (solvingListener != null) {
+                    solvingListener.onSolvingFinished(solvingTime);
+                }
+                timeline.stop();
+            }
+        });
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+
+    public void noSolvingAnimation() {
+        long startTime = System.currentTimeMillis();
+
+        while (!solver.isFinished()) {
+            solver.step();
+        }
+
+        long endTime = System.currentTimeMillis();
+        solvingTime = endTime - startTime;
+
+        System.out.println("Résolution complète terminée en " + solvingTime + " ms");
+
+        view.draw();
+
+        if (solvingListener != null) {
+            solvingListener.onSolvingFinished(solvingTime);
+        }
+    }
+    
     public void saveMazeToFile(File file) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             int cols = maze.getCols();
