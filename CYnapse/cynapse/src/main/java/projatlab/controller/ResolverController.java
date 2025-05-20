@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import projatlab.algorithms.solvers.MazeSolver;
 import projatlab.algorithms.solvers.MazeSolverAStar;
 import projatlab.algorithms.solvers.MazeSolverDFS;
+import projatlab.algorithms.solvers.MazeSolverDijkstra;
 import projatlab.model.Maze;
 import projatlab.view.ModificationView;
 import projatlab.view.ResolverView;
@@ -37,6 +38,7 @@ public class ResolverController {
                 case "DFS" -> solver = new MazeSolverDFS(maze);
                 //case "BFS" -> solver = new MazeSolverBFS(maze);
                 case "A*" -> solver = new MazeSolverAStar(maze);
+                case "Dijkstra" -> solver = new MazeSolverDijkstra(maze);
                 default -> throw new AssertionError();
                 
             }
@@ -53,7 +55,7 @@ public class ResolverController {
         });
     }
 
-    public void handleSolve(boolean useAStar, boolean useBFS, boolean useDFS, boolean isCompleteMode) {
+    public void handleSolve(boolean useAStar, boolean useBFS, boolean useDFS, boolean useDijkstra, boolean isCompleteMode) {
         // Exemple de logique future
         if (useAStar) {
             System.out.println("Résolution avec A* " + (isCompleteMode ? "en mode complet" : "en mode pas à pas"));
@@ -61,6 +63,8 @@ public class ResolverController {
             System.out.println("Résolution avec BFS " + (isCompleteMode ? "en mode complet" : "en mode pas à pas"));
         } else if (useDFS) {
             System.out.println("Résolution avec DFS " + (isCompleteMode ? "en mode complet" : "en mode pas à pas"));
+        } else if (useDijkstra){
+            System.out.println("Résolution avec Dijkstra " + (isCompleteMode ? "en mode complet" : "en mode pas à pas"));
         } else {
             System.out.println("Veuillez sélectionner un algorithme.");
         }

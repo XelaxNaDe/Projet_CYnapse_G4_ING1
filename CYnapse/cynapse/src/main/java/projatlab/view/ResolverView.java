@@ -47,7 +47,7 @@ public class ResolverView {
 
         Label lAlgo = new Label("Choix de l'algorithme :");
         ComboBox<String> cBAlgo = new ComboBox<>();
-        cBAlgo.getItems().addAll("DFS", "BFS", "A*");
+        cBAlgo.getItems().addAll("DFS", "BFS", "A*","Dijkstra");
         cBAlgo.setValue("DFS");
 
         Label lMode = new Label("Mode :");
