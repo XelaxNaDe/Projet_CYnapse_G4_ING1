@@ -1,11 +1,12 @@
 package projatlab.algorithms.solvers;
 
-import projatlab.model.Cell;
-import projatlab.model.Maze;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
+
+import projatlab.model.Cell;
+import projatlab.model.Maze;
 
 public class MazeSolverDFS extends MazeSolver{
 
@@ -33,10 +34,15 @@ public class MazeSolverDFS extends MazeSolver{
         }
     }
 
+    private int visitedCount =0;
+
     public void step() {
         if (current == null) return;
 
-        current.visited = true;
+        if (!current.visited) {
+            current.visited = true;
+            visitedCount++;
+        }
 
         // ici on check si on est à l'arrive
         if (current == maze.getEnd()) {
@@ -90,5 +96,10 @@ public class MazeSolverDFS extends MazeSolver{
         }
 
         return null;
+    } 
+
+    @Override
+    public int getVisitedCount() {
+        return visitedCount;
     }
 }

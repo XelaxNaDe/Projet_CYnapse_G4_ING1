@@ -19,5 +19,9 @@ public class MazeSolver {
     public ArrayList<Cell> getFinalPath() {
         return finalPath;
     }
+
+    public int getVisitedCount() {
+        return 0;
+    }
     
 }

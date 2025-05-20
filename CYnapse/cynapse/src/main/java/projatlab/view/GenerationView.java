@@ -119,7 +119,7 @@ public class GenerationView {
         mainPane.setAlignment(Pos.CENTER);
 
         // --- Scene setup ---
-        genStage.setTitle("Génération");
+        genStage.setTitle("Génération du labyrinthe");
         Scene scene = new Scene(mainPane, 400, 200);
         genStage.setScene(scene);
         genStage.show();

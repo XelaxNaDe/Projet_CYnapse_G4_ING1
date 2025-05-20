@@ -47,6 +47,7 @@ public class GenerationController {
             MazeView mazeView = new MazeView(maze);
             MazeController mazeController = new MazeController(maze, mazeView, seed);
             ResolverView resWindow = new ResolverView(maze, mazeController, mazeView);
+            resWindow.controller.setResolverView(resWindow);
             mazeController.setGenerator(generator);
             resWindow.show();
 
@@ -87,6 +88,22 @@ public class GenerationController {
 
                 Maze maze = new Maze(cols, rows);
 
+                //start & end
+                String startendLine = reader.readLine();
+                String[] startend = startendLine.split(" ");
+                int startI = Integer.parseInt(startend[0]);
+                int startJ = Integer.parseInt(startend[1]);
+                int endI = Integer.parseInt(startend[2]);
+                int endJ = Integer.parseInt(startend[3]);
+
+                Cell startCell = maze.getCell(maze.index(startI, startJ));
+                Cell endCell = maze.getCell(maze.index(endI,endJ));
+
+                maze.setStart(startCell);
+                maze.setEnd(endCell);
+                startCell.setStart(true);
+                endCell.setEnd(true);
+
                 //cells
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -118,7 +135,10 @@ public class GenerationController {
                 mazeController.drawAll();
 
                 ResolverView resWindow = new ResolverView(maze, mazeController, mazeView);
+                resWindow.controller.setResolverView(resWindow);
+
                 resWindow.show();
+                resWindow.setGenerationTime(0);
 
                 System.out.println("Labyrinthe chargé depuis : " + file.getAbsolutePath());
 

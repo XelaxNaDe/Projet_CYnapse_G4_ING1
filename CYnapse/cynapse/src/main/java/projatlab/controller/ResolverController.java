@@ -1,8 +1,5 @@
 package projatlab.controller;
 
-import javafx.stage.Stage;
-import projatlab.algorithms.solvers.MazeSolver;
-import projatlab.algorithms.solvers.MazeSolverDFS;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -10,13 +7,18 @@ import java.io.IOException;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import projatlab.algorithms.solvers.MazeSolver;
+import projatlab.algorithms.solvers.MazeSolverAStar;
+import projatlab.algorithms.solvers.MazeSolverDFS;
 import projatlab.model.Maze;
 import projatlab.view.ModificationView;
+import projatlab.view.ResolverView;
 
 public class ResolverController {
 
     private final Maze maze;
     private final MazeController mazeController;
+    private ResolverView resWindow;
 
     public ResolverController(Maze maze, MazeController mazeController) {
         this.maze = maze;
@@ -30,18 +32,25 @@ public class ResolverController {
     }
 
     public void handleSolveMaze(Maze maze, String solvAlgo, Stage stage) {
-        try {
-            MazeSolver solver;
+        MazeSolver solver;
             switch (solvAlgo) {
-                //case "BFS" -> solver = new MazeSolverBFS(maze);
                 case "DFS" -> solver = new MazeSolverDFS(maze);
-                //case "Dijkstra" -> solver = new MazeSolverDijkstra(maze);
-                //case "A*" -> solver = new MazeSolverAstar(maze);
+                //case "BFS" -> solver = new MazeSolverBFS(maze);
+                case "A*" -> solver = new MazeSolverAStar(maze);
                 default -> throw new AssertionError();
                 
             }
             mazeController.solveMaze(solver);
-        } catch (NumberFormatException e) {}
+
+
+        mazeController.setSolvingListener(time -> {
+            javafx.application.Platform.runLater(() -> {
+                resWindow.setSolvingTime(time);
+
+                int cellsVisited = solver.getVisitedCount();
+                resWindow.setCellsVisited(cellsVisited);
+            });
+        });
     }
 
     public void handleSolve(boolean useAStar, boolean useBFS, boolean useDFS, boolean isCompleteMode) {
@@ -67,6 +76,8 @@ public class ResolverController {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
                 writer.write(maze.getCols() + " " + maze.getRows());
                 writer.newLine();
+                writer.write(maze.getStart().i + " " + maze.getStart().j + " " + maze.getEnd().i + " " + maze.getEnd().j);
+                writer.newLine();
                 for (var cell : maze.getGrid()) {
                     writer.write(cell.i + " " + cell.j + " " +
                             (cell.walls[0] ? "1" : "0") +
@@ -80,5 +91,9 @@ public class ResolverController {
                 System.err.println("Erreur lors de la sauvegarde : " + e.getMessage());
             }
         }
+    }
+
+    public void setResolverView(ResolverView resWindow) {
+        this.resWindow = resWindow;
     }
 }

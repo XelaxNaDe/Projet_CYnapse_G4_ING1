@@ -20,7 +20,7 @@ public class ResolverView {
 
     private final Maze maze;
     private final MazeView mazeView;
-    private final ResolverController controller;
+    public final ResolverController controller;
     private final MazeController mazeController;
 
     private Label lVisited;
@@ -47,8 +47,8 @@ public class ResolverView {
 
         Label lAlgo = new Label("Choix de l'algorithme :");
         ComboBox<String> cBAlgo = new ComboBox<>();
-        cBAlgo.getItems().addAll("BFS", "DFS", "Prim", "Kruskal");
-        cBAlgo.setValue("BFS");
+        cBAlgo.getItems().addAll("DFS", "BFS", "A*");
+        cBAlgo.setValue("DFS");
 
         Label lMode = new Label("Mode :");
         CheckBox cbComplet = new CheckBox("Complet");
@@ -72,11 +72,11 @@ public class ResolverView {
         VBox vbStats = new VBox();
         vbStats.setAlignment(Pos.CENTER_LEFT);
 
-        lVisited = new Label("Cases visitées :");     
-        lTimeGen = new Label("Temps de génération : ");
-        lTimeRes = new Label("Temps de résolution :");
+        lVisited = new Label("Cases visitées : Pas résolu");     
+        lTimeGen = new Label("Temps de génération : En cours de génération");
+        lTimeRes = new Label("Temps de résolution : Pas résolu");
 
-        vbStats.getChildren().addAll(lVisited,lTimeGen, lTimeRes);
+        vbStats.getChildren().addAll(lVisited,lTimeGen,lTimeRes);
 
         Button bSave = new Button("Sauvegarder");
         Button bSolve = new Button("Résoudre");
@@ -102,7 +102,15 @@ public class ResolverView {
         resStage.show();
     }
 
-    public void setGenerationTime( long timeGenMs) {
-        lTimeGen.setText("Temps de génération : " + timeGenMs + " ms");
+    public void setGenerationTime(long timeGenMs) {
+        lTimeGen.setText("Temps de génération : " + timeGenMs + "ms");
+    }
+
+    public void setSolvingTime (long timeResMs) {
+        lTimeRes.setText("Temps de résolution : " + timeResMs + "ms");
+    }
+
+    public void setCellsVisited (long visitedcellsNB) {
+        lVisited.setText("Cases visitées : " + visitedcellsNB);
     }
 }

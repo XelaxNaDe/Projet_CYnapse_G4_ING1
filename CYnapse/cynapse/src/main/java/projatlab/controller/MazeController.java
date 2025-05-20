@@ -1,16 +1,14 @@
 package projatlab.controller;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 import javafx.animation.AnimationTimer;
 import projatlab.algorithms.generation.MazeGenerator;
 import projatlab.algorithms.solvers.MazeSolver;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-
 import projatlab.model.Cell;
 import projatlab.model.Maze;
 import projatlab.view.MazeView;
@@ -24,6 +22,7 @@ public class MazeController {
     private MazeGenerator generator;
     private MazeSolver solver;
     private long generationTime;
+    private long solvingTime;
 
     private GenerationListener generationListener;
     private SolvingListener solvingListener;
@@ -136,7 +135,7 @@ public class MazeController {
                     view.draw();
                 } else {
                     long endTime = System.currentTimeMillis();
-                    long solvingTime = endTime - startTime;
+                    solvingTime = endTime - startTime;
                     System.out.println("Résolution terminée en " + solvingTime + " ms");
 
                     if (solvingListener != null) {
@@ -163,7 +162,28 @@ public class MazeController {
         long endTime = System.currentTimeMillis();
         generationTime = endTime - startTime;
 
+
+        for (Cell cell : maze.getGrid()) {
+            cell.setVisited(false);
+        }
+
+        int gridSize = maze.getGrid().size();
+        Cell startCell;
+        Cell endCell;
+
+        do{
+            startCell = maze.getCell((rand.nextInt(gridSize)));
+            endCell = maze.getCell((rand.nextInt(gridSize)));
+        } while(startCell == endCell);
+
+        maze.setStart(startCell);
+        maze.setEnd(endCell);
+
+        startCell.setStart(true);
+        endCell.setEnd(true);
+
         view.draw(); 
+
 
         System.out.println("Génération complète terminée en " + generationTime + " ms");
 
@@ -203,7 +223,10 @@ public class MazeController {
     }
 
     public long getGenerationTime() {
-        System.out.println(generationTime);
         return generationTime;
+    }
+
+    public long getSovingTime() {
+        return solvingTime;
     }
 }
