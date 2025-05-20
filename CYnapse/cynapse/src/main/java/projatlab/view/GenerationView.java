@@ -8,6 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
@@ -16,6 +17,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import projatlab.controller.GenerationController;
+
 
 public class GenerationView {
 
@@ -83,7 +85,20 @@ public class GenerationView {
         RadioButton rbStep = new RadioButton("Pas à pas");
         rbStep.setToggleGroup(generationModeGroup);
 
-        VBox vbBotLeft = new VBox(10, lModeG, rbComplet, rbStep);
+        Slider sSpeed = new Slider(1, 100, 10); 
+        sSpeed.setPrefWidth(100); 
+        sSpeed.setShowTickMarks(true);
+        sSpeed.setMajorTickUnit(25);
+        sSpeed.setBlockIncrement(5);
+
+        Label lSpeed = new Label("10 ms");
+        sSpeed.valueProperty().addListener((obs, oldVal, newVal) -> {
+            lSpeed.setText(newVal.intValue() + " ms");
+        });
+
+        HBox hbStep = new HBox(5, rbStep, sSpeed, lSpeed);
+
+        VBox vbBotLeft = new VBox(10, lModeG, rbComplet, hbStep);
 
         // --- Buttons ---
         Button btnLoad = new Button("Charger un labyrinthe");
@@ -98,6 +113,7 @@ public class GenerationView {
                 tfSeed.getText(),
                 cBAlgo.getValue(),
                 mode,
+                sSpeed.getValue(),
                 genStage
         );});
 

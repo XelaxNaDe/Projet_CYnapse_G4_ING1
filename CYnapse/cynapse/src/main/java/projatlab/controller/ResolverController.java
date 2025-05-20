@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import projatlab.algorithms.solvers.MazeSolver;
 import projatlab.algorithms.solvers.MazeSolverAStar;
 import projatlab.algorithms.solvers.MazeSolverDFS;
+import projatlab.algorithms.solvers.MazeSolverDijkstra;
 import projatlab.model.Maze;
 import projatlab.view.ModificationView;
 import projatlab.view.ResolverView;
@@ -33,18 +34,16 @@ public class ResolverController {
         mazeController.drawAll();
     }
 
-
-    public void handleSolveMaze(Maze maze, String solvAlgo, Stage stage) {
+    public void handleSolveMaze(Maze maze, String solvAlgo, String mode, double delayMs, Stage stage) {
         MazeSolver solver;
             switch (solvAlgo) {
                 case "DFS" -> solver = new MazeSolverDFS(maze);
-                //case "BFS" -> solver = new MazeSolverBFS(maze);
                 case "A*" -> solver = new MazeSolverAStar(maze);
+                case "Dijkstra" -> solver = new MazeSolverDijkstra(maze);
                 default -> throw new AssertionError();
                 
             }
-            mazeController.solveMaze(solver);
-
+        
 
         mazeController.setSolvingListener(time -> {
             javafx.application.Platform.runLater(() -> {
@@ -54,8 +53,18 @@ public class ResolverController {
                 resWindow.setCellsVisited(cellsVisited);
             });
         });
-    }
 
+
+        mazeController.setSolver(solver);
+        System.out.println(mode);
+            if ("step".equals(mode)){
+                mazeController.startSolvingAnimation(delayMs);
+            }
+            else{
+                mazeController.noSolvingAnimation();
+            }
+
+    }
 
     public void handleSave(Stage stage) {
         FileChooser fileChooser = new FileChooser();

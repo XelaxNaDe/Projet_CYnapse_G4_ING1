@@ -1,12 +1,15 @@
 package projatlab.view;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
+import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -35,6 +38,8 @@ public class ResolverView {
     public void show() {
         Stage resStage = new Stage();
         BorderPane root = new BorderPane();
+        root.setPadding(new Insets(20));
+        root.setMinWidth(100);
 
         // MazeView and Controller
         root.setCenter(mazeView);
@@ -45,22 +50,33 @@ public class ResolverView {
 
         Label lAlgo = new Label("Choix de l'algorithme :");
         ComboBox<String> cBAlgo = new ComboBox<>();
-        cBAlgo.getItems().addAll("DFS", "BFS", "A*");
+        cBAlgo.getItems().addAll("DFS", "A*","Dijkstra");
         cBAlgo.setValue("DFS");
 
-        Label lMode = new Label("Mode :");
-        CheckBox cbComplet = new CheckBox("Complet");
-        CheckBox cbPasComplet = new CheckBox("Pas à pas");
+        Label lModeS = new Label("Mode :");
 
-        cbComplet.setOnAction(e -> {
-            if (cbComplet.isSelected()) cbPasComplet.setSelected(false);
+        ToggleGroup solverModeGroup = new ToggleGroup();
+
+        RadioButton rbComplet = new RadioButton("Complet");
+        rbComplet.setToggleGroup(solverModeGroup);
+        rbComplet.setSelected(true);
+
+        RadioButton rbStep = new RadioButton("Pas à pas");
+        rbStep.setToggleGroup(solverModeGroup);
+
+        Slider sSpeed = new Slider(1, 100, 10); 
+        sSpeed.setPrefWidth(100); 
+        sSpeed.setShowTickMarks(true);
+        sSpeed.setMajorTickUnit(25);
+        sSpeed.setBlockIncrement(5);
+
+        Label lSpeed = new Label("10 ms");
+        sSpeed.valueProperty().addListener((obs, oldVal, newVal) -> {
+            lSpeed.setText(newVal.intValue() + " ms");
         });
 
-        cbPasComplet.setOnAction(e -> {
-            if (cbPasComplet.isSelected()) cbComplet.setSelected(false);
-        });
-
-        vbAlgoMode.getChildren().addAll(lAlgo, cBAlgo, new Separator(), lMode, cbComplet, cbPasComplet);
+        vbAlgoMode.getChildren().addAll(lAlgo, cBAlgo, new Separator(), lModeS, rbComplet, rbStep, sSpeed, lSpeed);
+        vbAlgoMode.setSpacing(5);
         VBox.setVgrow(vbAlgoMode, Priority.ALWAYS);
         root.setRight(vbAlgoMode);
 
@@ -84,7 +100,11 @@ public class ResolverView {
 
         bModify.setOnAction(e -> controller.handleModify());
 
-        bSolve.setOnAction(e -> controller.handleSolveMaze(maze, cBAlgo.getValue(), resStage));
+        bSolve.setOnAction(e -> {
+
+        String mode = rbComplet.isSelected() ? "complet" : "step";
+        controller.handleSolveMaze(maze, cBAlgo.getValue(), mode, sSpeed.getValue(), resStage);
+    });
 
         HBox hbSaveModSolve = new HBox(10, bSave, bModify, bSolve);
         hbSaveModSolve.setAlignment(Pos.BOTTOM_RIGHT);
@@ -93,7 +113,7 @@ public class ResolverView {
         root.setBottom(vbStatsSave);
 
         // Scene
-        Scene scene = new Scene(root, maze.getCols() * 20 + 200, maze.getRows() * 20 + 100);
+        Scene scene = new Scene(root, maze.getCols() * 20 + 200, maze.getRows() * 20 + 140);
         resStage.setScene(scene);
         resStage.setResizable(false);
         resStage.setTitle("Résolution du labyrinthe");

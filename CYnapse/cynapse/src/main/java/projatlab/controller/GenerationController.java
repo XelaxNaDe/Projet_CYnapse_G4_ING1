@@ -20,7 +20,7 @@ public class GenerationController {
 
     private Maze maze;
 
-    public void handleGenerateMaze(String widthText, String heightText, String seedText, String genAlgo, String mode, Stage stage) {
+    public void handleGenerateMaze(String widthText, String heightText, String seedText, String genAlgo, String mode, double AnimationSpeed, Stage stage) {
         try {
             int width = Integer.parseInt(widthText);
             int height = Integer.parseInt(heightText);
@@ -59,10 +59,10 @@ public class GenerationController {
 
             System.out.println(mode);
             if ("step".equals(mode)){
-                mazeController.startGenerationAnimation();
+                mazeController.startGenerationAnimation(AnimationSpeed);
             }
             else{
-                mazeController.noAnimation();
+                mazeController.noGenerationAnimation();
             }
 
 
