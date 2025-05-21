@@ -24,17 +24,17 @@ public class Cell {
 
 
         if (isStart) {
-            gc.setFill(Color.LIMEGREEN);
+            gc.setFill(Color.GREEN);
             gc.fillRect(x ,y , cellSize, cellSize);
         } else if (isEnd) {
             gc.setFill(Color.RED);
             gc.fillRect(x ,y ,cellSize, cellSize);
         } else if (visited) {
-            gc.setFill(Color.HOTPINK);
+            gc.setFill(Color.web("FF77FF"));
             gc.fillRect(x , y,cellSize, cellSize);
         }
         if (isInFinalPath) {
-            gc.setFill(Color.BLUE);
+            gc.setFill(Color.web("#0099FF"));
             gc.fillRect(x , y,cellSize, cellSize);
         }
 
