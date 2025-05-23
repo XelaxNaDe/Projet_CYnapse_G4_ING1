@@ -1,9 +1,7 @@
 package projatlab.controller;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javafx.animation.KeyFrame;
@@ -13,12 +11,13 @@ import projatlab.algorithms.generators.MazeGenerator;
 import projatlab.algorithms.solvers.MazeSolver;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
+import projatlab.view.ErrorView;
 import projatlab.view.MazeView;
 
 public class MazeController {
 
     private final Maze maze;
-    private final MazeView view;
+    public final MazeView view;
     private final Random rand;
     
     private MazeGenerator generator;
@@ -31,6 +30,8 @@ public class MazeController {
 
     private boolean isGenerating = false;
     private boolean isSolving = false;
+
+    private List<Cell> visitedCells;
     
     // Référence au ResolverController pour notifier l'état de génération
     private projatlab.controller.ResolverController resolverController;
@@ -118,8 +119,6 @@ public class MazeController {
 
         finishGeneration();
 
-        System.out.println("Génération complète terminée en " + generationTime + " ms");
-
         if (generationListener != null) {
             generationListener.onGenerationFinished(generationTime);
         }
@@ -185,9 +184,11 @@ public class MazeController {
         } else {
             long endTime = System.currentTimeMillis();
             solvingTime = endTime - startTime;
-            System.out.println("Résolution terminée en " + solvingTime + " ms");
 
             view.draw(); // dessin final
+            visitedCells = getVisitedCells();
+            view.setShowVisited(true);
+
 
             if (solvingListener != null) {
                 solvingListener.onSolvingFinished(solvingTime);
@@ -216,9 +217,9 @@ public class MazeController {
         long endTime = System.currentTimeMillis();
         solvingTime = endTime - startTime;
 
-        System.out.println("Résolution complète terminée en " + solvingTime + " ms");
-
         view.draw();
+        visitedCells = getVisitedCells();
+        view.setShowVisited(true);
 
         if (solvingListener != null) {
             solvingListener.onSolvingFinished(solvingTime);
@@ -227,31 +228,32 @@ public class MazeController {
         setSolvingState(false);
     }
     
-    public void saveMazeToFile(File file) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            int cols = maze.getCols();
-            int rows = maze.getRows();
 
-            //dimensions
-            writer.write(cols + " " + rows);
-            writer.newLine();
-
-            //cells (i j walls)
-            for (Cell cell : maze.getGrid()) {
-                StringBuilder walls = new StringBuilder();
-                for (boolean wall : cell.walls) {
-                    walls.append(wall ? "1" : "0");
+    public List<Cell> getVisitedCells() {
+        List<Cell> visited = new ArrayList<>();
+        for (int row = 0; row < maze.getRows(); row++) {
+            for (int col = 0; col < maze.getCols(); col++) {
+                Cell cell = maze.getCell(maze.index(col,row));
+                if (cell.visited) {
+                    visited.add(cell);
                 }
-                writer.write(cell.i + " " + cell.j + " " + walls);
-                writer.newLine();
             }
-
-            System.out.println("Labyrinthe sauvegardé dans : " + file.getAbsolutePath());
-
-        } catch (IOException e) {
-            System.err.println("Erreur lors de la sauvegarde : " + e.getMessage());
         }
-    }   
+        return visited;
+    }
+
+    public boolean handleToggleVisited(boolean showVisited){
+        if (visitedCells == null || visitedCells.isEmpty()) {
+            ErrorView.showError("Vous n'avez pas encore résolu le labyrinthe");
+            return showVisited;
+        }
+        try {
+            return view.toggleVisited(visitedCells);
+        } catch (Exception e) {
+            ErrorView.showError("Vous n'avez pas encore résolu le labyrinthe");
+            return showVisited;
+        }
+    }
 
     public void drawAll() {
         view.draw();

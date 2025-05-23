@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
 
-
+/** Abstract class for maze solvers 
+ *
+ */
 public class MazeSolver {
 
     /** The maze to solve. */
@@ -15,18 +17,30 @@ public class MazeSolver {
     public boolean pathFound = false;
 
     public boolean finished = false;
+
+    /** Stores the final path from the start cell to the end cell */
     public ArrayList<Cell> finalPath = new ArrayList<>();
     
+    /** Perform a step of the solving algorithm */
     public void step(){}
     
+    /** Check if the solving process is complete
+     * @return true if the algorithm is finished, false otherwise
+     */
     public boolean isFinished(){
         return finished;
     }
 
+    /** Return the list of cells forming the final path from start to the end 
+     * @return list of cells in the final solution path
+     */
     public ArrayList<Cell> getFinalPath() {
         return finalPath;
     }
 
+    /** Returns the number of cells visited by the algorithm
+     * Can be overriden 
+     */
     public int getVisitedCount() {
         return 0;
     }

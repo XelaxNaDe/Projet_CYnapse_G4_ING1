@@ -12,6 +12,7 @@ import projatlab.algorithms.solvers.MazeSolverAStar;
 import projatlab.algorithms.solvers.MazeSolverDFS;
 import projatlab.algorithms.solvers.MazeSolverDijkstra;
 import projatlab.model.Maze;
+import projatlab.view.ErrorView;
 import projatlab.view.ModificationView;
 import projatlab.view.ResolverView;
 
@@ -92,16 +93,15 @@ public class ResolverController {
                 writer.write(maze.getStart().i + " " + maze.getStart().j + " " + maze.getEnd().i + " " + maze.getEnd().j);
                 writer.newLine();
                 for (var cell : maze.getGrid()) {
-                    writer.write(cell.i + " " + cell.j + " " +
-                            (cell.walls[0] ? "1" : "0") +
-                            (cell.walls[1] ? "1" : "0") +
-                            (cell.walls[2] ? "1" : "0") +
-                            (cell.walls[3] ? "1" : "0"));
+                    writer.write(
+                                (cell.walls[0] ? "1" : "0") +
+                                (cell.walls[1] ? "1" : "0") +
+                                (cell.walls[2] ? "1" : "0") +
+                                (cell.walls[3] ? "1" : "0"));
                     writer.newLine();
                 }
-                System.out.println("Labyrinthe sauvegardé dans " + file.getAbsolutePath());
             } catch (IOException e) {
-                System.err.println("Erreur lors de la sauvegarde : " + e.getMessage());
+                ErrorView.showError("Erreur lors de la sauvegarde : " + e.getMessage());
             }
         }
     }

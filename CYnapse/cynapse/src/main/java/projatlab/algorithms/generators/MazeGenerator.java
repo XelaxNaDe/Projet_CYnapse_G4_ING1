@@ -7,7 +7,7 @@ import java.util.Random;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
 
-/** Abstract base class for maze generators */
+/** Abstract class for maze generators */
 
 public class MazeGenerator {
 
