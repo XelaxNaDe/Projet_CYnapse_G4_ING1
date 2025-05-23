@@ -9,6 +9,10 @@ import projatlab.algorithms.tools.Unionfind;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
 
+/** Maze generator using Kruskal's algorithm using Union-Find data structure
+ * It starts with each cell as an individual set and removes walls between randoms adjacent cells
+ * that belong to different sets, forming a minimum spanning tree
+*/
 public class MazeGeneratorKruskal extends MazeGenerator {
 
     private final List<int[]> edges = new ArrayList<>();
