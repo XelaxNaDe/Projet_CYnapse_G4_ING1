@@ -2,7 +2,7 @@ package projatlab.algorithms.generators;
 
 import projatlab.model.Cell;
 
-/** Abstract base class for maze generators */
+/** Abstract class for maze generators */
 
 public class MazeGenerator {
 

@@ -13,7 +13,7 @@ import projatlab.model.Maze;
  */
 public class MazeGeneratorPrim extends MazeGenerator {
 
-    /** The maze to solve. */
+    /** The maze to generate. */
     private Maze maze;
 
     /** List of frontier cells (unvisited cells adjacent to visited ones) */
