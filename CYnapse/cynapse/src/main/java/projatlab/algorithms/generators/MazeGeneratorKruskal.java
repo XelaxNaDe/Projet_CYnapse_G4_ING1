@@ -15,14 +15,26 @@ import projatlab.model.Maze;
 */
 public class MazeGeneratorKruskal extends MazeGenerator {
 
+    /** List of edges representing possible connections between adjacent cells */
     private final List<int[]> edges = new ArrayList<>();
-    private final Unionfind uf;
-    private int currentEdgesIndex = 0;
 
-    private final Maze maze;
-    private final ArrayList<Cell> grid;
+    /** Union-Find (Disjoint Set) data structure  */
+    private final Unionfind uf;
+
+    /** Index to keep track of the current position in the shuffled list of edges */
+    private int currentEdgesIndex = 0;
+    
+    /** Reference to the maze being generated. */
+    private Maze maze;
+    
+    /** Number of columns in the maze. */
     private final int cols;
+ 
+    /** Number of rows in the maze. */
     private final int rows;
+ 
+    /** Grid representing a list of all the cells in the maze. */
+    private final ArrayList<Cell> grid;
 
     public MazeGeneratorKruskal(Maze maze, long seed) {
         this.maze = maze;
@@ -31,20 +43,23 @@ public class MazeGeneratorKruskal extends MazeGenerator {
         this.rows = maze.getRows();
         this.uf = new Unionfind(rows * cols);
 
-        // Génération des arêtes (edges)
+        // Generate all possible edges between adjacent cells
+          
         for (int j = 0; j < rows; j++) {
             for (int i = 0; i < cols; i++) {
-                int currentIndex = maze.index(i, j);  // 👈 Utilisation centralisée
+                int currentIndex = maze.index(i, j);
 
                 if (j < rows - 1) {
-                    edges.add(new int[]{currentIndex, maze.index(i, j + 1)}); // bas
+                    edges.add(new int[]{currentIndex, maze.index(i, j + 1)}); // bottom
                 }
                 if (i < cols - 1) {
-                    edges.add(new int[]{currentIndex, maze.index(i + 1, j)}); // droite
+                    edges.add(new int[]{currentIndex, maze.index(i + 1, j)}); // right
                 }
             }
         }
 
+        // Shuffle the edges using the seed
+         
         Random rand = new Random(seed);
         Collections.shuffle(edges, rand);
     }
