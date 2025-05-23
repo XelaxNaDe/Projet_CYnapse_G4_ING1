@@ -44,8 +44,6 @@ public class ResolverView {
     private boolean showVisited = true;
 
 
-    private int cellSize = Cell.cellSize;
-
     public ResolverView(Maze maze, MazeController mazeController, MazeView mazeView) {
         this.maze = maze;
         this.mazeView = mazeView;
@@ -156,20 +154,18 @@ public class ResolverView {
         VBox vbStats = new VBox();
         vbStats.setAlignment(Pos.CENTER_LEFT);
 
-        lVisited = new Label("Cases visitées : Pas résolu");     
+        lVisited = new Label("Cases visitées par l'algorithme : Aucune (Non résolu)");     
         lTimeGen = new Label("Temps de génération : En cours de génération");
-        lTimeRes = new Label("Temps de résolution : Pas résolu");
+        lTimeRes = new Label("Temps de résolution : Non résolu");
 
-        vbStats.getChildren().addAll(lVisited,lTimeGen,lTimeRes);
+        vbStats.getChildren().addAll(lTimeGen, lTimeRes, lVisited);
 
         bSave = new Button("Sauvegarder");
         bSolve = new Button("Résoudre");
         bModify = new Button("Modifier");
 
         bSave.setOnAction(e -> controller.handleSave(resStage));
-
         bModify.setOnAction(e -> controller.handleModify());
-
         bSolve.setOnAction(e -> {
             String mode = rbComplet.isSelected() ? "complet" : "step";
             controller.handleSolveMaze(maze, cBAlgo.getValue(), mode, sSpeed.getValue(), resStage);

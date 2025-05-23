@@ -18,8 +18,6 @@ import projatlab.view.ResolverView;
 
 public class GenerationController {
 
-    private Maze maze;
-
     public void handleGenerateMaze(String widthText, String heightText, String seedText, String genAlgo, String mode, double AnimationSpeed, Stage stage) {
         try {
             int width = Integer.parseInt(widthText);

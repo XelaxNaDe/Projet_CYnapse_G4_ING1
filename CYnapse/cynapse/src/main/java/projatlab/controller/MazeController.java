@@ -160,44 +160,45 @@ public class MazeController {
     }
 
     public void startSolvingAnimation(double delayMs) {
-        if (isSolving) return;
-        setSolvingState(true);
+    if (isSolving) return;
+    setSolvingState(true);
 
-        Timeline timeline = new Timeline();
-        long startTime = System.currentTimeMillis();
+    Timeline timeline = new Timeline();
+    long startTime = System.currentTimeMillis();
 
-        int totalCells = maze.getRows() * maze.getCols();
-        int drawStepInterval = Math.max(1, totalCells / 1000);
-        final int[] stepCounter = {0};
+    int totalCells = maze.getRows() * maze.getCols();
+    int drawStepInterval = Math.max(1, totalCells / 1000);
+    final int[] stepCounter = {0};
 
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(delayMs), event -> {
+    KeyFrame keyFrame = new KeyFrame(Duration.millis(delayMs), event -> {
 
-            if (!solver.isFinished()) {
-                solver.step();
-                stepCounter[0]++;
-                if (stepCounter[0] % drawStepInterval == 0) {
-                    view.draw();
-                }
-            } else {
-                long endTime = System.currentTimeMillis();
-                solvingTime = endTime - startTime;
-                System.out.println("Résolution terminée en " + solvingTime + " ms");
-
-                view.draw(); // dessin final
-                visitedCells = getVisitedCells();
-
-                if (solvingListener != null) {
-                    solvingListener.onSolvingFinished(solvingTime);
-                }
-                setSolvingState(false);
-                timeline.stop();
+        if (!solver.isFinished()) {
+            solver.step();
+            stepCounter[0]++;
+            if (stepCounter[0] % drawStepInterval == 0) {
+                view.draw();
             }
-        });
+        } else {
+            long endTime = System.currentTimeMillis();
+            solvingTime = endTime - startTime;
+            System.out.println("Résolution terminée en " + solvingTime + " ms");
 
-        timeline.getKeyFrames().add(keyFrame);
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-    }
+            view.draw(); // dessin final
+            visitedCells = getVisitedCells();
+
+
+            if (solvingListener != null) {
+                solvingListener.onSolvingFinished(solvingTime);
+            }
+            setSolvingState(false);
+            timeline.stop();
+        }
+    });
+
+    timeline.getKeyFrames().add(keyFrame);
+    timeline.setCycleCount(Timeline.INDEFINITE);
+    timeline.play();
+}
 
 
     public void noSolvingAnimation() {

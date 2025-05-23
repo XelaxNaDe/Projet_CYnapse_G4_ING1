@@ -1,4 +1,4 @@
-package projatlab.algorithms.generation;
+package projatlab.algorithms.generators;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,20 +16,11 @@ public class MazeGeneratorDFS extends MazeGenerator {
 
     /** Reference to the maze being generated. */
     private Maze maze;
-    
-    /** Number of columns in the maze. */
-    private final int cols;
-
-    /** Number of rows in the maze. */
-    private final int rows;
-
-    /** Grid representing a list of all the cells in the maze. */
-    private final ArrayList<Cell> grid;
 
     /** The current cell being processed in the DFS algorithm. */
     public Cell current;
 
-     /** Stack to backtrack during DFS. */
+    /** Stack to backtrack during DFS. */
     private final Stack<Cell> stack = new Stack<>();
 
     /** Random number generator for choosing neighbors. */
@@ -44,13 +35,10 @@ public class MazeGeneratorDFS extends MazeGenerator {
     public MazeGeneratorDFS(Maze maze, long seed) {
 
         this.maze = maze;
-        this.cols = maze.getCols();
-        this.rows = maze.getRows();
-        this.grid = maze.getGrid();
         this.rand = new Random(seed);
 
-        if (!grid.isEmpty()) {
-            this.current = grid.get(0); // Start from the top-left cell
+        if (!maze.getGrid().isEmpty()) {
+            this.current = maze.getGrid().get(0);
         }
     }
     
@@ -75,7 +63,7 @@ public class MazeGeneratorDFS extends MazeGenerator {
             next.visited = true;
             stack.push(current);  
             removeWalls(current, next); 
-            current = next; // Getting to the next cell
+            current = next; 
         } else if (!stack.isEmpty()) {
             current = stack.pop(); // Backtrack to the previous one
         } else {
@@ -95,10 +83,10 @@ public class MazeGeneratorDFS extends MazeGenerator {
         int i = cell.i;
         int j = cell.j;
 
-        Cell top = getCell(i, j - 1);
-        Cell right = getCell(i + 1, j);
-        Cell bottom = getCell(i, j + 1);
-        Cell left = getCell(i - 1, j);
+        Cell top = maze.getCell(maze.index(i, j - 1));
+        Cell right = maze.getCell(maze.index(i + 1, j));
+        Cell bottom = maze.getCell(maze.index(i, j + 1));
+        Cell left = maze.getCell(maze.index(i - 1, j));
 
         if (top != null && !top.visited) neighbors.add(top); 
         if (right != null && !right.visited) neighbors.add(right);
@@ -106,21 +94,9 @@ public class MazeGeneratorDFS extends MazeGenerator {
         if (left != null && !left.visited) neighbors.add(left); 
 
         if (!neighbors.isEmpty()) {
-            int r = rand.nextInt(neighbors.size()); // Choose a random number
+            int r = rand.nextInt(neighbors.size());
             return neighbors.get(r); // Return the neighbor choosed with the random number
         }
         return null; // If no more unvisited return null
-    }
-
-    /**
-     * Returns the cell at a specific coordinate.
-     *
-     * @param i The column index.
-     * @param j The row index.
-     * @return The corresponding Cell object or null if out of bounds.
-     */
-    private Cell getCell(int i, int j) {
-        if (i < 0 || j < 0 || i >= cols || j >= rows) return null;
-        return grid.get(i + j * cols);
     }
 }
