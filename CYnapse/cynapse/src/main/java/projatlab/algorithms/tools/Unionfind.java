@@ -5,9 +5,9 @@ package projatlab.algorithms.tools;
  */
 
 public class Unionfind {
-    
-    private final int[] parent;
+
     /** Array used to store the parent of each element */
+    private final int[] parent;
 
     /** Constructs a new Union-Find data structure with a a specified size 
      * At the start, each cell is its own parent (own set)
