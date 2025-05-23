@@ -15,31 +15,40 @@ import projatlab.model.Maze;
 */
 public class MazeGeneratorKruskal extends MazeGenerator {
 
+    /** List of edges representing possible connections between adjacent cells */
     private final List<int[]> edges = new ArrayList<>();
-    private final Unionfind uf;
-    private int currentEdgesIndex = 0;
 
+    /** Union-Find (Disjoint Set) data structure  */
+    private final Unionfind uf;
+
+    /** Index to keep track of the current position in the shuffled list of edges */
+    private int currentEdgesIndex = 0;
+    
+    /** Reference to the maze being generated. */
     private Maze maze;
+    
 
     public MazeGeneratorKruskal(Maze maze, long seed) {
 
         this.maze = maze;
         this.uf = new Unionfind(maze.getRows() * maze.getCols());
 
-        // Génération des arêtes (edges)
+        // Generate all possible edges between adjacent cells
         for (int j = 0; j < maze.getRows(); j++) {
             for (int i = 0; i < maze.getCols(); i++) {
-                int currentIndex = maze.index(i, j);  // 👈 Utilisation centralisée
+                int currentIndex = maze.index(i, j);
 
                 if (j < maze.getRows() - 1) {
-                    edges.add(new int[]{currentIndex, maze.index(i, j + 1)}); // bas
+                    edges.add(new int[]{currentIndex, maze.index(i, j + 1)}); // bottom
                 }
                 if (i < maze.getCols() - 1) {
-                    edges.add(new int[]{currentIndex, maze.index(i + 1, j)}); // droite
+                    edges.add(new int[]{currentIndex, maze.index(i + 1, j)}); // right
                 }
             }
         }
 
+        // Shuffle the edges using the seed
+         
         Random rand = new Random(seed);
         Collections.shuffle(edges, rand);
     }
