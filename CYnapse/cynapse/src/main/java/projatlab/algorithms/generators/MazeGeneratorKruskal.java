@@ -27,7 +27,10 @@ public class MazeGeneratorKruskal extends MazeGenerator {
     /** Reference to the maze being generated. */
     private Maze maze;
     
-
+      /** Constructs a maze with the Kruskal generator and a seed
+     * @param maze the maze to generate
+     * @param seed the seed for random number generation
+     */
     public MazeGeneratorKruskal(Maze maze, long seed) {
 
         this.maze = maze;
@@ -54,6 +57,9 @@ public class MazeGeneratorKruskal extends MazeGenerator {
     }
 
 
+    /** Performs a step of the Kruskal algorithm 
+     * Pick the next edge and remove the wall between the cell if they are not connected
+     */
     @Override
     public void step() {
         if (currentEdgesIndex >= edges.size()) return;
@@ -79,7 +85,10 @@ public class MazeGeneratorKruskal extends MazeGenerator {
         }
     }
 
-
+    /** Check if the maze generation is complete
+     * @return true if all edges have been processed, false otherwise
+     */
+    
     @Override
     public boolean isFinished() {
         return currentEdgesIndex >= edges.size();
