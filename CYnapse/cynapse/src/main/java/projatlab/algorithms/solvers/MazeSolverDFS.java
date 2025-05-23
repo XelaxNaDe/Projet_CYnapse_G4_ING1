@@ -17,15 +17,6 @@ public class MazeSolverDFS extends MazeSolver{
     /** The maze to solve. */
     private Maze maze;
 
-    /** The grid of all cells in the maze. */
-    private ArrayList<Cell> grid;
-
-    /** Number of rows in the maze. */
-    private int rows;
-
-    /** Number of columns in the maze. */
-    private int cols;
-
     /** Random number generator for selecting neighbors randomly. */
     private Random rand = new Random(System.currentTimeMillis());
 
@@ -46,11 +37,8 @@ public class MazeSolverDFS extends MazeSolver{
     public MazeSolverDFS(Maze maze) {
 
         this.maze = maze;
-        this.cols = maze.getCols();
-        this.rows = maze.getRows();
-        this.grid = maze.getGrid();
 
-        if (!grid.isEmpty()) {
+        if (!maze.getGrid().isEmpty()) {
             this.current = maze.getStart(); // Begin at the starting point choosed randomly 
         }
     }
@@ -87,7 +75,7 @@ public class MazeSolverDFS extends MazeSolver{
         }
 
         // Move to an accessible and unvisited neighbor
-        Cell next = getAccessibleNeighbor(current, cols, rows, rand);
+        Cell next = getAccessibleNeighbor(current, rand);
         if (next != null) {
             stack.push(current); 
             path.add(current);   
@@ -101,12 +89,10 @@ public class MazeSolverDFS extends MazeSolver{
      * Gets an accessible (not wall between and unvisited) neighbor of a cell.
      *
      * @param cell The current cell.
-     * @param cols Number of columns in the maze.
-     * @param rows Number of rows in the maze.
      * @param rand Random instance for selection.
      * @return A random unvisited accessible neighbor or null if none exist.
      */
-    private Cell getAccessibleNeighbor(Cell cell, int cols, int rows, Random rand) {
+    private Cell getAccessibleNeighbor(Cell cell, Random rand) {
         int[] dx = {0, 1, 0, -1}; // Horizontal directions (left/right) 
         int[] dy = {-1, 0, 1, 0}; // Vertical directions (top/bottom)
         List<Cell> accessibleNeighbors = new ArrayList<>();
@@ -117,7 +103,7 @@ public class MazeSolverDFS extends MazeSolver{
                 int nj = cell.j + dy[d];
                 int index = maze.index(ni, nj); 
                 if (index != -1) {
-                    Cell neighbor = grid.get(index);
+                    Cell neighbor = maze.getGrid().get(index);
                     if (!neighbor.visited) {
                         accessibleNeighbors.add(neighbor);
                     }
