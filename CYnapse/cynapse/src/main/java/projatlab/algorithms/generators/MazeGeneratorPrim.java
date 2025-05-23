@@ -7,14 +7,14 @@ import java.util.Random;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
 
-/** Implements the Prim's algorithm
+/** Implements Prim's algorithm
  * Starts from a random cell, connects it to a visted neighbor
- * and adds its unvisted neigbors to the frontier
+ * and adds its unvisited neigbors to the frontier
  */
 public class MazeGeneratorPrim extends MazeGenerator {
 
     /** The maze to generate. */
-    private Maze maze;
+    private final Maze maze;
 
     /** List of frontier cells (unvisited cells adjacent to visited ones) */
     private final List<Cell> frontier = new ArrayList<>();
@@ -40,7 +40,7 @@ public class MazeGeneratorPrim extends MazeGenerator {
         start.visited = true;
         visitedCount++;
 
-        // Add its unvisted neignors to the frontier list
+        // Add its unvisited neignors to the frontier list
         frontier.addAll(getUnvisitedNeighbors(start));
     }
 

@@ -131,8 +131,7 @@ public class ResolverView {
         bToggleVisited.setPrefWidth(200);
         bToggleVisited.setPrefHeight(30);
         bToggleVisited.setOnAction(e -> {
-            showVisited = !showVisited;
-            mazeController.handleToggleVisited();
+            showVisited = mazeController.handleToggleVisited(showVisited);
             bToggleVisited.setText(showVisited ? "Masquer les cases visitées" : "Montrer les cases visitées");
         });
 
@@ -167,6 +166,7 @@ public class ResolverView {
         bSave.setOnAction(e -> controller.handleSave(resStage));
         bModify.setOnAction(e -> controller.handleModify());
         bSolve.setOnAction(e -> {
+            bToggleVisited.setText("Masquer les cases visitées");
             String mode = rbComplet.isSelected() ? "complet" : "step";
             controller.handleSolveMaze(maze, cBAlgo.getValue(), mode, sSpeed.getValue(), resStage);
         });
@@ -186,13 +186,13 @@ public class ResolverView {
 
         if (mazeCols <= 100 && mazeRows <= 50) {
             // Adapter la fenêtre à la taille réelle du labyrinthe
-            resStage.setWidth(mazeCols * Cell.cellSize + 300);
-            resStage.setHeight(mazeRows * Cell.cellSize + 140);
+            resStage.setWidth(mazeCols * Cell.cellSize + 400);
+            resStage.setHeight(mazeRows * Cell.cellSize + 340);
             resStage.setResizable(false);
         } else {
             // Fenêtre fixe (scrollable)
-            resStage.setWidth(1300);  // 1000 (mazeView) + 300 (panel)
-            resStage.setHeight(640);  // 500 (mazeView) + 140 (panel)
+            resStage.setWidth(1400);  // 1000 (mazeView) + 400 (panel)
+            resStage.setHeight(840);  // 500 (mazeView) + 340 (panel)
             resStage.setResizable(true); // pour l'utilisateur, optionnel
         }
 
@@ -205,11 +205,7 @@ public class ResolverView {
     }
 
     public void setSolvingTime (long timeResMs) {
-        if (timeResMs == 0) {
-            lTimeRes.setText("Temps de résolution : Pas résolu");
-        } else {
             lTimeRes.setText("Temps de résolution : " + timeResMs + "ms");
-        }
     }
 
     public void setCellsVisited (long visitedcellsNB) {

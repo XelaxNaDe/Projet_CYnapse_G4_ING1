@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -13,6 +15,7 @@ import projatlab.algorithms.generators.MazeGeneratorKruskal;
 import projatlab.algorithms.generators.MazeGeneratorPrim;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
+import projatlab.view.ErrorView;
 import projatlab.view.MazeView;
 import projatlab.view.ResolverView;
 
@@ -24,11 +27,11 @@ public class GenerationController {
             int height = Integer.parseInt(heightText);
 
             if (width <= 0 || height <= 0) {
-                System.out.println("Erreur : la taille du labyrinthe doit être supérieure à 0.");
+                ErrorView.showError("Erreur : la taille du labyrinthe doit être supérieure à 0.");
                 return;
             }
             if (width == 1 && height == 1) {
-                System.out.println("Avertissement : le labyrinthe 1x1 n'a qu'une seule case.");
+                ErrorView.showError("Avertissement : le labyrinthe 1x1 n'a qu'une seule case.");
                 return;
             }
 
@@ -61,8 +64,6 @@ public class GenerationController {
                 Cell.cellSize = refCellSize;
             }
 
-
-
             MazeGenerator generator;
             switch (genAlgo) {
                 case "DFS" -> generator = new MazeGeneratorDFS(maze, seed);
@@ -93,9 +94,8 @@ public class GenerationController {
             }
 
 
-
         } catch (NumberFormatException e) {
-            System.out.println("Dimensions invalides. Entrez des entiers valides.");
+            ErrorView.showError("Entrez des entiers valides.");
         }
     }
 
@@ -113,11 +113,17 @@ public class GenerationController {
                 int cols = Integer.parseInt(dimensions[0]);
                 int rows = Integer.parseInt(dimensions[1]);
 
+                if (dimensions.length !=2) throw new IOException("Problème de dimension");
+
                 Maze maze = new Maze(cols, rows);
 
                 //start & end
                 String startendLine = reader.readLine();
                 String[] startend = startendLine.split(" ");
+
+
+                if (startend.length != 4) throw new IOException("Problème de départ/arrivé)");
+
                 int startI = Integer.parseInt(startend[0]);
                 int startJ = Integer.parseInt(startend[1]);
                 int endI = Integer.parseInt(startend[2]);
@@ -126,35 +132,44 @@ public class GenerationController {
                 Cell startCell = maze.getCell(maze.index(startI, startJ));
                 Cell endCell = maze.getCell(maze.index(endI,endJ));
 
+                if (startI < 0 || startI >= cols || startJ < 0 || startJ >= rows || endI < 0 || endI >= cols || endJ < 0 || endJ >= rows) {
+                    throw new IOException("Coordonnées départ/arrivé hors limites");
+                }
+
                 maze.setStart(startCell);
                 maze.setEnd(endCell);
                 startCell.setStart(true);
                 endCell.setEnd(true);
 
+
                 //cells
+                List<String> wallLines = new ArrayList<>();
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(" ");
-                    if (parts.length == 3) {
-                        int i = Integer.parseInt(parts[0]);
-                        int j = Integer.parseInt(parts[1]);
-                        String wallsStr = parts[2];
-
-                        Cell cell = null;
-                        for (Cell c : maze.getGrid()) {
-                            if (c.i == i && c.j == j) {
-                                cell = c;
-                                break;
-                            }
-                        }
-
-                        if (cell != null && wallsStr.length() == 4) {
-                            for (int k = 0; k < 4; k++) {
-                                cell.walls[k] = wallsStr.charAt(k) == '1';
-                            }
-                        }
-                    }
+                    wallLines.add(line.trim());
                 }
+
+                int expectedLines = rows * cols;
+                if (wallLines.size() != expectedLines) {
+                    throw new IOException(expectedLines + " lignes attendus, " + wallLines.size() + " lignes trouvés");
+                }
+
+                    List<Cell> grid = maze.getGrid();
+
+                        for (int idx = 0; idx < expectedLines; idx++) {
+                            String wallLine = wallLines.get(idx);
+
+                            if (wallLine.length() != 4 || !wallLine.matches("[01]{4}")) {
+                                throw new IOException("Problème de murs à la ligne " + (idx + 3));
+                            }
+
+                            Cell cell = grid.get(idx);
+
+                            for (int k = 0; k < 4; k++) {
+                                cell.walls[k] = wallLine.charAt(k) == '1';
+                            }
+                        }
+                
 
                 MazeView mazeView = new MazeView(maze);
 
@@ -167,10 +182,10 @@ public class GenerationController {
                 resWindow.show();
                 resWindow.setGenerationTime(0);
 
-                System.out.println("Labyrinthe chargé depuis : " + file.getAbsolutePath());
-
-            } catch (IOException | NumberFormatException e) {
-                System.err.println("Erreur lors du chargement : " + e.getMessage());
+            } catch (IOException e) {
+                ErrorView.showError("Erreur lors du chargement : " + e.getMessage());
+            } catch (NumberFormatException e) {
+                ErrorView.showError("Erreur lors du chargement : Mauvais type de charactère" );
             }
         }
     }

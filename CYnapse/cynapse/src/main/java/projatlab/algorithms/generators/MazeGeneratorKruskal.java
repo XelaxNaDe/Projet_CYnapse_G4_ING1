@@ -25,7 +25,7 @@ public class MazeGeneratorKruskal extends MazeGenerator {
     private int currentEdgesIndex = 0;
     
     /** Reference to the maze being generated. */
-    private Maze maze;
+    private final Maze maze;
     
       /** Constructs a maze with the Kruskal generator and a seed
      * @param maze the maze to generate

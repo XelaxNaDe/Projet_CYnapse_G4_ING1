@@ -1,9 +1,5 @@
 package projatlab.controller;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,6 +11,7 @@ import projatlab.algorithms.generators.MazeGenerator;
 import projatlab.algorithms.solvers.MazeSolver;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
+import projatlab.view.ErrorView;
 import projatlab.view.MazeView;
 
 public class MazeController {
@@ -119,8 +116,6 @@ public class MazeController {
 
         finishGeneration();
 
-        System.out.println("Génération complète terminée en " + generationTime + " ms");
-
         if (generationListener != null) {
             generationListener.onGenerationFinished(generationTime);
         }
@@ -181,10 +176,10 @@ public class MazeController {
         } else {
             long endTime = System.currentTimeMillis();
             solvingTime = endTime - startTime;
-            System.out.println("Résolution terminée en " + solvingTime + " ms");
 
             view.draw(); // dessin final
             visitedCells = getVisitedCells();
+            view.setShowVisited(true);
 
 
             if (solvingListener != null) {
@@ -214,11 +209,9 @@ public class MazeController {
         long endTime = System.currentTimeMillis();
         solvingTime = endTime - startTime;
 
-        System.out.println("Résolution complète terminée en " + solvingTime + " ms");
-
         view.draw();
         visitedCells = getVisitedCells();
-
+        view.setShowVisited(true);
 
         if (solvingListener != null) {
             solvingListener.onSolvingFinished(solvingTime);
@@ -227,31 +220,6 @@ public class MazeController {
         setSolvingState(false);
     }
     
-    public void saveMazeToFile(File file) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            int cols = maze.getCols();
-            int rows = maze.getRows();
-
-            //dimensions
-            writer.write(cols + " " + rows);
-            writer.newLine();
-
-            //cells (i j walls)
-            for (Cell cell : maze.getGrid()) {
-                StringBuilder walls = new StringBuilder();
-                for (boolean wall : cell.walls) {
-                    walls.append(wall ? "1" : "0");
-                }
-                writer.write(cell.i + " " + cell.j + " " + walls);
-                writer.newLine();
-            }
-
-            System.out.println("Labyrinthe sauvegardé dans : " + file.getAbsolutePath());
-
-        } catch (IOException e) {
-            System.err.println("Erreur lors de la sauvegarde : " + e.getMessage());
-        }
-    }   
 
     public List<Cell> getVisitedCells() {
         List<Cell> visited = new ArrayList<>();
@@ -266,11 +234,16 @@ public class MazeController {
         return visited;
     }
 
-    public void handleToggleVisited(){
+    public boolean handleToggleVisited(boolean showVisited){
+        if (visitedCells == null || visitedCells.isEmpty()) {
+            ErrorView.showError("Vous n'avez pas encore résolu le labyrinthe");
+            return showVisited;
+        }
         try {
-            view.toggleVisited(visitedCells);
+            return view.toggleVisited(visitedCells);
         } catch (Exception e) {
-            System.err.println("Vous n'avez pas encore résolu le labyrinthe");
+            ErrorView.showError("Vous n'avez pas encore résolu le labyrinthe");
+            return showVisited;
         }
     }
 

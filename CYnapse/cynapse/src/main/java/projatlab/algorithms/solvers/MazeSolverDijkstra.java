@@ -18,19 +18,19 @@ import projatlab.model.Maze;
 public class MazeSolverDijkstra extends MazeSolver {
 
     /** The maze to solve. */
-    private Maze maze;
+    private final Maze maze;
  
     /** Priority queue to process the cells with the smallest distance first */
-    private PriorityQueue<CellDistance> queue;
+    private final PriorityQueue<CellDistance> queue;
 
     /** Map to reconstruct the path */
-    private Map<Cell, Cell> cameFrom;
+    private final Map<Cell, Cell> cameFrom;
 
     /** Stores the shortest known distance to each cell */
-    private Map<Cell, Integer> distance;
+    private final Map<Cell, Integer> distance;
 
     /** Keeps track of already visited cells */
-    private Set<Cell> visited;
+    private final Set<Cell> visited;
 
     /** The current cell being visited during the algorithm. */
     private Cell current;

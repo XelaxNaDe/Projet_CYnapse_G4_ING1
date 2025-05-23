@@ -15,7 +15,7 @@ import projatlab.model.Maze;
 public class MazeGeneratorDFS extends MazeGenerator {
 
     /** Reference to the maze being generated. */
-    private Maze maze;
+    private final Maze maze;
 
     /** The current cell being processed in the DFS algorithm. */
     public Cell current;

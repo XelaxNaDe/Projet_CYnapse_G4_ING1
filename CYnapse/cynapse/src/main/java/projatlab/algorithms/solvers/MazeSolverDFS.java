@@ -15,16 +15,16 @@ import projatlab.model.Maze;
 public class MazeSolverDFS extends MazeSolver{
 
     /** The maze to solve. */
-    private Maze maze;
+    private final Maze maze;
 
     /** Random number generator for selecting neighbors randomly. */
-    private Random rand = new Random(System.currentTimeMillis());
+    private final Random rand = new Random(System.currentTimeMillis());
 
     /** Stack used for DFS backtracking. */
-    private Stack<Cell> stack = new Stack<>();
+    private final Stack<Cell> stack = new Stack<>();
 
     /** List of visited path cells. */
-    private ArrayList<Cell> path = new ArrayList<>();
+    private final ArrayList<Cell> path = new ArrayList<>();
 
     /** The current cell being visited during the algorithm. */
     public Cell current;
@@ -50,6 +50,7 @@ public class MazeSolverDFS extends MazeSolver{
      * Executes one step of the DFS algorithm to attempt solving the maze.
      * Visits neighbors if accessible and continues until the end cell is reached.
      */
+    @Override
     public void step() {
         if (current == null) return;
 

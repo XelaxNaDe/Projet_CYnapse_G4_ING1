@@ -76,22 +76,28 @@ public class MazeView extends Pane {
         draw();
     }
 
-    public void toggleVisited(List<Cell> visitedCells){
+    public boolean toggleVisited(List<Cell> visitedCells){
         if (showvisited == true) {
             for (Cell cell:grid) {
                 if (cell.visited) {
                     cell.visited = false;
                 }
             }
-            showvisited = false;
+            showvisited = false; 
             draw();
+            return showvisited;
         }
-        else if (showvisited == false) {
+        else{
             for (Cell cell:visitedCells) {
                 cell.visited = true;
             }
-            showvisited = true;
+            showvisited = true; 
             draw();
+            return showvisited;
         }
+    }
+
+    public void setShowVisited(boolean show) {
+        this.showvisited = show;
     }
 }
