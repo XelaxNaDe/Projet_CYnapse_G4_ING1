@@ -1,6 +1,8 @@
 package projatlab.model;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Maze {
     private final int rows;
@@ -42,7 +44,6 @@ public class Maze {
         return grid.get(index);
     }
 
-
     public int getCols() {
         return cols;
     }
@@ -74,6 +75,11 @@ public class Maze {
             }
         }
         return copyMaze;
+    }
+
+    public Cell getRandomCell(Random rand) {
+        List<Cell> cells = getGrid();
+        return cells.get(rand.nextInt(cells.size()));
     }
 
 }

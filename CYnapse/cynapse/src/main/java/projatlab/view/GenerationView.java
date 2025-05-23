@@ -114,6 +114,7 @@ public class GenerationView {
                 cBAlgo.getValue(),
                 mode,
                 sSpeed.getValue(),
+                cbPerfect.isSelected(),
                 genStage
         );});
 

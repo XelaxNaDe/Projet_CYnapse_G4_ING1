@@ -16,9 +16,6 @@ import projatlab.model.Maze;
  *  in a maze from the start cell to the end cell using a priority queue (to keep the distance)
  */
 public class MazeSolverDijkstra extends MazeSolver {
-
-    /** The maze to solve. */
-    private Maze maze;
  
     /** Priority queue to process the cells with the smallest distance first */
     private PriorityQueue<CellDistance> queue;
@@ -43,16 +40,17 @@ public class MazeSolverDijkstra extends MazeSolver {
         this.maze = maze;
 
         // Initialize the priority queue with custom comparator based on distance 
-
         this.queue = new PriorityQueue<>(Comparator.comparingInt(cd -> cd.distance));
         this.cameFrom = new HashMap<>();
         this.distance = new HashMap<>();
         this.visited = new HashSet<>();
 
+
         // Set initial distances to infinity 
         for (Cell c : maze.getGrid()) {
             distance.put(c, Integer.MAX_VALUE);
         }
+
 
         // Set the start cell distance to 0 and add it to the queue 
         current = maze.getStart();
@@ -61,7 +59,6 @@ public class MazeSolverDijkstra extends MazeSolver {
     }
 
     /** Executes one step of the Dijkstra algorithm */
-
     @Override
     public void step() {
         if (finished || queue.isEmpty()) return;

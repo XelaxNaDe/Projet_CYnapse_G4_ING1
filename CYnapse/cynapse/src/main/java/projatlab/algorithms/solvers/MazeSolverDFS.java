@@ -14,8 +14,7 @@ import projatlab.model.Maze;
  */
 public class MazeSolverDFS extends MazeSolver{
 
-    /** The maze to solve. */
-    private Maze maze;
+    
 
     /** Random number generator for selecting neighbors randomly. */
     private Random rand = new Random(System.currentTimeMillis());

@@ -14,9 +14,6 @@ import projatlab.model.Maze;
 
 public class MazeSolverAStar extends MazeSolver {
 
-    private final Maze maze;
-    private final Cell start;
-    private final Cell end;
     private int visitedCount = 0;
 
     private final PriorityQueue<Cell> openSet;
@@ -28,8 +25,6 @@ public class MazeSolverAStar extends MazeSolver {
     public MazeSolverAStar(Maze maze) {
         
         this.maze = maze;
-        this.start = maze.getStart();
-        this.end = maze.getEnd();
 
         Comparator<Cell> comparator = Comparator.comparingDouble(fScore::get);
         openSet = new PriorityQueue<>(comparator);
@@ -40,10 +35,10 @@ public class MazeSolverAStar extends MazeSolver {
             fScore.put(c, Double.POSITIVE_INFINITY);
         }
 
-        gScore.put(start, 0.0);
-        fScore.put(start, heuristic(start, end));
-        openSet.add(start);
-        openSetHash.add(start);
+        gScore.put(maze.getStart(), 0.0);
+        fScore.put(maze.getStart(), heuristic(maze.getStart(), maze.getEnd()));
+        openSet.add(maze.getStart());
+        openSetHash.add(maze.getStart());
     }
 
     @Override
@@ -57,13 +52,13 @@ public class MazeSolverAStar extends MazeSolver {
         openSetHash.remove(current);
 
         if (!current.visited) {   
-            if (current != start && current != end) {
+            if (current != maze.getStart() && current != maze.getEnd()) {
                 current.visited = true;
                 visitedCount++;
         }
         }
 
-        if (current == end) {
+        if (current == maze.getEnd()) {
             reconstructPath(cameFrom, current);
             finished = true;
             return;
@@ -75,7 +70,7 @@ public class MazeSolverAStar extends MazeSolver {
             if (tentativeG < gScore.get(neighbor)) {
                 cameFrom.put(neighbor, current);
                 gScore.put(neighbor, tentativeG);
-                fScore.put(neighbor, tentativeG + heuristic(neighbor, end));
+                fScore.put(neighbor, tentativeG + heuristic(neighbor, maze.getEnd()));
 
                 if (!openSetHash.contains(neighbor)) {
                     openSet.add(neighbor);
@@ -92,9 +87,9 @@ public class MazeSolverAStar extends MazeSolver {
             current.isInFinalPath = true;
             current = cameFrom.get(current);
         }
-        finalPath.add(0, start);
-        start.isInFinalPath = false;
-        end.isInFinalPath = false;
+        finalPath.add(0, maze.getStart());
+        maze.getStart().isInFinalPath = false;
+        maze.getEnd().isInFinalPath = false;
     }
 
     private List<Cell> getAccessibleNeighbors(Cell cell) {

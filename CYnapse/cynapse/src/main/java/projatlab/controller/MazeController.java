@@ -83,10 +83,13 @@ public class MazeController {
                     view.draw();
                 }
             } else {
+                finishGeneration();
                 long endTime = System.currentTimeMillis();
                 generationTime = endTime - startTime;
-                finishGeneration();
+                
+
                 view.draw(); // dessin final
+
                 if (generationListener != null) {
                     generationListener.onGenerationFinished(generationTime);
                 }
@@ -125,6 +128,11 @@ public class MazeController {
     }
 
     private void finishGeneration() {
+        
+        if (!generator.isPerfect){
+            generator.introduceImperfections(maze.getGrid().size() / 10, maze.getGrid().size() / 15);
+        }
+
         for (Cell cell : maze.getGrid()) {
             cell.setVisited(false);
         }

@@ -24,16 +24,15 @@ public class MazeGeneratorKruskal extends MazeGenerator {
     /** Index to keep track of the current position in the shuffled list of edges */
     private int currentEdgesIndex = 0;
     
-    /** Reference to the maze being generated. */
-    private Maze maze;
-    
       /** Constructs a maze with the Kruskal generator and a seed
      * @param maze the maze to generate
      * @param seed the seed for random number generation
      */
-    public MazeGeneratorKruskal(Maze maze, long seed) {
+    public MazeGeneratorKruskal(Maze maze, long seed, Boolean isPerfect) {
 
         this.maze = maze;
+        this.isPerfect = isPerfect;
+        this.rand = new Random(seed);
         this.uf = new Unionfind(maze.getRows() * maze.getCols());
 
         // Generate all possible edges between adjacent cells
@@ -51,8 +50,6 @@ public class MazeGeneratorKruskal extends MazeGenerator {
         }
 
         // Shuffle the edges using the seed
-         
-        Random rand = new Random(seed);
         Collections.shuffle(edges, rand);
     }
 
@@ -91,6 +88,7 @@ public class MazeGeneratorKruskal extends MazeGenerator {
     
     @Override
     public boolean isFinished() {
-        return currentEdgesIndex >= edges.size();
+        finished = currentEdgesIndex >= edges.size();
+        return finished;
     }
 }
