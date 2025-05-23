@@ -20,53 +20,66 @@ public class ResolverController {
     private final Maze maze;
     private final MazeController mazeController;
     private ResolverView resWindow;
+    private boolean isSolving = false;
+    private boolean isModifying = false; // Nouvel état pour la modification
 
     public ResolverController(Maze maze, MazeController mazeController) {
         this.maze = maze;
         this.mazeController = mazeController;
-
     }
 
     public void handleModify() {
+        if (isSolving || mazeController.isGenerating() || isModifying) return; // Empêche la modification multiple
+        
+        setModifyingState(true); // Désactive tous les contrôles
+        
         ModificationView modWindow = new ModificationView(maze);
-        modWindow.showAndWait();  // méthode à ajouter dans ModificationView
+        modWindow.showAndWait();  // Bloque jusqu'à fermeture de la fenêtre modale
+        
         // Après fermeture de la fenêtre modale, on redessine le labyrinthe modifié
         mazeController.drawAll();
+        
+        setModifyingState(false); // Réactive tous les contrôles
     }
 
     public void handleSolveMaze(Maze maze, String solvAlgo, String mode, double delayMs, Stage stage) {
-        MazeSolver solver;
-            switch (solvAlgo) {
-                case "DFS" -> solver = new MazeSolverDFS(maze);
-                case "A*" -> solver = new MazeSolverAStar(maze);
-                case "Dijkstra" -> solver = new MazeSolverDijkstra(maze);
-                default -> throw new AssertionError();
-                
-            }
+        if (isSolving || mazeController.isGenerating() || isModifying) return; // Empêche de lancer une nouvelle résolution pendant génération/résolution/modification
         
+        // Clear le labyrinthe avant de commencer une nouvelle résolution
+        clearMaze();
+        
+        setSolvingState(true);
+        
+        MazeSolver solver;
+        switch (solvAlgo) {
+            case "DFS" -> solver = new MazeSolverDFS(maze);
+            case "A*" -> solver = new MazeSolverAStar(maze);
+            case "Dijkstra" -> solver = new MazeSolverDijkstra(maze);
+            default -> throw new AssertionError();
+        }
 
         mazeController.setSolvingListener(time -> {
             javafx.application.Platform.runLater(() -> {
                 resWindow.setSolvingTime(time);
-
                 int cellsVisited = solver.getVisitedCount();
                 resWindow.setCellsVisited(cellsVisited);
+                setSolvingState(false); // Réactive les contrôles à la fin
             });
         });
 
-
         mazeController.setSolver(solver);
         System.out.println(mode);
-            if ("step".equals(mode)){
-                mazeController.startSolvingAnimation(delayMs);
-            }
-            else{
-                mazeController.noSolvingAnimation();
-            }
-
+        if ("step".equals(mode)){
+            mazeController.startSolvingAnimation(delayMs);
+        }
+        else{
+            mazeController.noSolvingAnimation();
+        }
     }
 
     public void handleSave(Stage stage) {
+        if (isSolving || mazeController.isGenerating() || isModifying) return; // Empêche la sauvegarde pendant la résolution, génération ou modification
+        
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Sauvegarder le labyrinthe");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers texte", "*.txt"));
@@ -95,5 +108,70 @@ public class ResolverController {
 
     public void setResolverView(ResolverView resWindow) {
         this.resWindow = resWindow;
+    }
+
+    // Méthode pour gérer l'état de résolution
+    private void setSolvingState(boolean solving) {
+        this.isSolving = solving;
+        updateControlsState();
+    }
+
+    // Méthode pour gérer l'état de modification
+    private void setModifyingState(boolean modifying) {
+        this.isModifying = modifying;
+        updateControlsState();
+    }
+
+    // Méthode centralisée pour mettre à jour l'état des contrôles
+    private void updateControlsState() {
+        if (resWindow != null) {
+            boolean shouldDisable = isSolving || mazeController.isGenerating() || isModifying;
+            resWindow.setControlsEnabled(!shouldDisable);
+            
+            // Messages spécifiques selon l'état
+            if (isSolving) {
+                resWindow.setSolvingInProgress(true);
+            } else if (isModifying) {
+                resWindow.setModificationInProgress(true);
+            } else if (mazeController.isGenerating()) {
+                resWindow.setGenerationInProgress(true);
+            } else {
+                // Tous les états sont faux, on peut réactiver
+                resWindow.setSolvingInProgress(false);
+                resWindow.setModificationInProgress(false);
+                resWindow.setGenerationInProgress(false);
+            }
+        }
+    }
+
+    public boolean isSolving() {
+        return isSolving;
+    }
+
+    public boolean isModifying() {
+        return isModifying;
+    }
+
+    // Méthode pour gérer l'état de génération depuis MazeController
+    public void setGenerationInProgress(boolean generating) {
+        updateControlsState();
+    }
+
+    // Méthode pour nettoyer le labyrinthe avant une nouvelle résolution
+    private void clearMaze() {
+        // Reset tous les états de visite et de chemin final
+        for (var cell : maze.getGrid()) {
+            cell.setVisited(false);
+            cell.isInFinalPath = false;
+        }
+        
+        // Redessiner le labyrinthe pour montrer qu'il est nettoyé
+        mazeController.drawAll();
+        
+        // Reset les statistiques dans l'interface
+        if (resWindow != null) {
+            resWindow.setCellsVisited(0);
+            resWindow.setSolvingTime(0);
+        }
     }
 }

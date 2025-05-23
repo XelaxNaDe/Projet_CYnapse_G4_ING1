@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 import projatlab.controller.MazeController;
 import projatlab.controller.ResolverController;
 import projatlab.model.Maze;
+import projatlab.model.Cell;
 
 public class ResolverView {
 
@@ -29,6 +31,17 @@ public class ResolverView {
     private Label lTimeGen;
     private Label lTimeRes;
 
+    // Références aux contrôles pour pouvoir les désactiver
+    private Button bSave;
+    private Button bSolve;
+    private Button bModify;
+    private ComboBox<String> cBAlgo;
+    private RadioButton rbComplet;
+    private RadioButton rbStep;
+    private Slider sSpeed;
+
+    private int cellSize = Cell.cellSize;
+
     public ResolverView(Maze maze, MazeController mazeController, MazeView mazeView) {
         this.maze = maze;
         this.mazeView = mazeView;
@@ -39,17 +52,23 @@ public class ResolverView {
         Stage resStage = new Stage();
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(20));
-        root.setMinWidth(100);
+        
 
-        // MazeView and Controller
-        root.setCenter(mazeView);
+        ScrollPane scrollPane = new ScrollPane(mazeView);
+        scrollPane.setPannable(true);
+        scrollPane.setFitToWidth(false);
+        scrollPane.setFitToHeight(false);
+        scrollPane.setPrefViewportWidth(1000); // Largeur max visible sans scroll horizontal
+        scrollPane.setPrefViewportHeight(500); // Hauteur max visible sans scroll vertical
+
+        root.setCenter(scrollPane);
 
         // Right Panel - Algorithm + Mode
         VBox vbAlgoMode = new VBox();
         vbAlgoMode.setAlignment(Pos.TOP_LEFT);
 
         Label lAlgo = new Label("Choix de l'algorithme :");
-        ComboBox<String> cBAlgo = new ComboBox<>();
+        cBAlgo = new ComboBox<>();
         cBAlgo.getItems().addAll("DFS", "A*","Dijkstra");
         cBAlgo.setValue("DFS");
 
@@ -57,14 +76,14 @@ public class ResolverView {
 
         ToggleGroup solverModeGroup = new ToggleGroup();
 
-        RadioButton rbComplet = new RadioButton("Complet");
+        rbComplet = new RadioButton("Complet");
         rbComplet.setToggleGroup(solverModeGroup);
         rbComplet.setSelected(true);
 
-        RadioButton rbStep = new RadioButton("Pas à pas");
+        rbStep = new RadioButton("Pas à pas");
         rbStep.setToggleGroup(solverModeGroup);
 
-        Slider sSpeed = new Slider(1, 100, 10); 
+        sSpeed = new Slider(1, 100, 10); 
         sSpeed.setPrefWidth(100); 
         sSpeed.setShowTickMarks(true);
         sSpeed.setMajorTickUnit(25);
@@ -92,19 +111,18 @@ public class ResolverView {
 
         vbStats.getChildren().addAll(lVisited,lTimeGen,lTimeRes);
 
-        Button bSave = new Button("Sauvegarder");
-        Button bSolve = new Button("Résoudre");
-        Button bModify = new Button("Modifier");
+        bSave = new Button("Sauvegarder");
+        bSolve = new Button("Résoudre");
+        bModify = new Button("Modifier");
 
         bSave.setOnAction(e -> controller.handleSave(resStage));
 
         bModify.setOnAction(e -> controller.handleModify());
 
         bSolve.setOnAction(e -> {
-
-        String mode = rbComplet.isSelected() ? "complet" : "step";
-        controller.handleSolveMaze(maze, cBAlgo.getValue(), mode, sSpeed.getValue(), resStage);
-    });
+            String mode = rbComplet.isSelected() ? "complet" : "step";
+            controller.handleSolveMaze(maze, cBAlgo.getValue(), mode, sSpeed.getValue(), resStage);
+        });
 
         HBox hbSaveModSolve = new HBox(10, bSave, bModify, bSolve);
         hbSaveModSolve.setAlignment(Pos.BOTTOM_RIGHT);
@@ -113,9 +131,24 @@ public class ResolverView {
         root.setBottom(vbStatsSave);
 
         // Scene
-        Scene scene = new Scene(root, maze.getCols() * 20 + 200, maze.getRows() * 20 + 140);
+        Scene scene = new Scene(root);
         resStage.setScene(scene);
-        resStage.setResizable(false);
+
+        int mazeCols = maze.getCols();
+        int mazeRows = maze.getRows();
+
+        if (mazeCols <= 100 && mazeRows <= 50) {
+            // Adapter la fenêtre à la taille réelle du labyrinthe
+            resStage.setWidth(mazeCols * Cell.cellSize + 300);
+            resStage.setHeight(mazeRows * Cell.cellSize + 140);
+            resStage.setResizable(false);
+        } else {
+            // Fenêtre fixe (scrollable)
+            resStage.setWidth(1300);  // 1000 (mazeView) + 300 (panel)
+            resStage.setHeight(640);  // 500 (mazeView) + 140 (panel)
+            resStage.setResizable(true); // pour l'utilisateur, optionnel
+        }
+
         resStage.setTitle("Résolution du labyrinthe");
         resStage.show();
     }
@@ -125,10 +158,51 @@ public class ResolverView {
     }
 
     public void setSolvingTime (long timeResMs) {
-        lTimeRes.setText("Temps de résolution : " + timeResMs + "ms");
+        if (timeResMs == 0) {
+            lTimeRes.setText("Temps de résolution : Pas résolu");
+        } else {
+            lTimeRes.setText("Temps de résolution : " + timeResMs + "ms");
+        }
     }
 
     public void setCellsVisited (long visitedcellsNB) {
-        lVisited.setText("Cases visitées : " + visitedcellsNB);
+        if (visitedcellsNB == 0) {
+            lVisited.setText("Cases visitées : Pas résolu");
+        } else {
+            lVisited.setText("Cases visitées : " + visitedcellsNB);
+        }
+    }
+
+    // Méthodes pour contrôler l'état des boutons et contrôles
+    public void setControlsEnabled(boolean enabled) {
+        if (bSave != null) bSave.setDisable(!enabled);
+        if (bSolve != null) bSolve.setDisable(!enabled);
+        if (bModify != null) bModify.setDisable(!enabled);
+        if (cBAlgo != null) cBAlgo.setDisable(!enabled);
+        if (rbComplet != null) rbComplet.setDisable(!enabled);
+        if (rbStep != null) rbStep.setDisable(!enabled);
+        if (sSpeed != null) sSpeed.setDisable(!enabled);
+    }
+
+    public void setSolvingInProgress(boolean inProgress) {
+        if (inProgress) {
+            lTimeRes.setText("Temps de résolution : En cours...");
+        }
+    }
+
+    public void setGenerationInProgress(boolean inProgress) {
+        if (inProgress) {
+            lTimeGen.setText("Temps de génération : En cours...");
+        }
+    }
+
+    // Nouvelle méthode pour gérer l'état de modification
+    public void setModificationInProgress(boolean inProgress) {
+        // On peut ajouter un message spécifique ou simplement désactiver les contrôles
+        // Les contrôles sont déjà gérés par setControlsEnabled dans updateControlsState
+        if (inProgress) {
+            // Optionnel : ajouter un message spécifique pour la modification
+            System.out.println("Modification en cours - contrôles désactivés");
+        }
     }
 }

@@ -4,10 +4,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import projatlab.controller.ModificationController;
+import projatlab.model.Cell;
 import projatlab.model.Maze;
 
 public class ModificationView {
@@ -28,10 +30,18 @@ public class ModificationView {
         MazeView mazeView = new MazeView(copiedMaze);
         ModificationController controller = new ModificationController(copiedMaze, mazeView, originalMaze, modStage);
         mazeView.setController(controller);
-        root.setCenter(mazeView);
         mazeView.draw();
 
-        // Right Button
+        // ScrollPane pour mazeView comme dans ResolverView
+        ScrollPane scrollPane = new ScrollPane(mazeView);
+        scrollPane.setPannable(true);
+        scrollPane.setFitToWidth(false);
+        scrollPane.setFitToHeight(false);
+        scrollPane.setPrefViewportWidth(1000); 
+        scrollPane.setPrefViewportHeight(500);
+        root.setCenter(scrollPane);
+
+        // Right Button Panel
         VBox vbChange = new VBox(10);
         vbChange.setAlignment(Pos.CENTER_RIGHT);
         vbChange.setPadding(new Insets(20));
@@ -54,21 +64,27 @@ public class ModificationView {
         btnAnnuler.setOnAction(e -> modStage.close());
         btnSave.setOnAction(e -> controller.handleSave());
 
-        vbChange.getChildren().addAll(
-            btnMur,
-            btnEntree,
-            btnSortie,
-            btnAnnuler,
-            btnSave
-        );
-
+        vbChange.getChildren().addAll(btnMur, btnEntree, btnSortie, btnAnnuler, btnSave);
         root.setRight(vbChange);
 
-        Scene scene = new Scene(root, 500, 300);
+        // Scene
+        Scene scene = new Scene(root);
+        modStage.setScene(scene);
+
+        int mazeCols = copiedMaze.getCols();
+        int mazeRows = copiedMaze.getRows();
+
+        if (mazeCols <= 100 && mazeRows <= 50) {
+            modStage.setWidth(mazeCols * Cell.cellSize + 300);
+            modStage.setHeight(mazeRows * Cell.cellSize + 140);
+            modStage.setResizable(false);
+        } else {
+            modStage.setWidth(1300);
+            modStage.setHeight(640);
+            modStage.setResizable(true);
+        }
 
         modStage.setTitle("Modification du labyrinthe");
-        modStage.setScene(scene);
-        //modStage.setResizable(false);
         modStage.showAndWait();
     }
 

@@ -137,6 +137,7 @@ public class GenerationView {
         // --- Scene setup ---
         genStage.setTitle("Génération du labyrinthe");
         Scene scene = new Scene(mainPane, 400, 200);
+        genStage.setResizable(false);
         genStage.setScene(scene);
         genStage.show();
     }

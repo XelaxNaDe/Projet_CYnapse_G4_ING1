@@ -1,4 +1,4 @@
-package projatlab.algorithms.generation;
+package projatlab.algorithms.generators;
 
 import projatlab.model.Cell;
 

@@ -7,10 +7,10 @@ import java.io.IOException;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import projatlab.algorithms.generation.MazeGenerator;
-import projatlab.algorithms.generation.MazeGeneratorDFS;
-import projatlab.algorithms.generation.MazeGeneratorKruskal;
-import projatlab.algorithms.generation.MazeGeneratorPrim;
+import projatlab.algorithms.generators.MazeGenerator;
+import projatlab.algorithms.generators.MazeGeneratorDFS;
+import projatlab.algorithms.generators.MazeGeneratorKruskal;
+import projatlab.algorithms.generators.MazeGeneratorPrim;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
 import projatlab.view.MazeView;
@@ -25,6 +25,15 @@ public class GenerationController {
             int width = Integer.parseInt(widthText);
             int height = Integer.parseInt(heightText);
 
+            if (width <= 0 || height <= 0) {
+                System.out.println("Erreur : la taille du labyrinthe doit être supérieure à 0.");
+                return;
+            }
+            if (width == 1 && height == 1) {
+                System.out.println("Avertissement : le labyrinthe 1x1 n'a qu'une seule case.");
+                return;
+            }
+
             long seed;
             if (seedText == null || seedText.isEmpty()){
                 seed = System.currentTimeMillis();
@@ -34,6 +43,26 @@ public class GenerationController {
             }
 
             Maze maze = new Maze(width, height);
+
+            int maxWidth = 1000;
+            int maxHeight = 500;
+
+            int refCellSizeWidth = maxWidth / 100;
+            int refCellSizeHeight = maxHeight / 50;
+            int refCellSize = Math.min(refCellSizeWidth, refCellSizeHeight);
+            refCellSize = Math.min(refCellSize, 40);
+            refCellSize = Math.max(refCellSize, 5);
+
+            if (width <= 100 && height <= 50) {
+                int cellSizeWidth = maxWidth / width;
+                int cellSizeHeight = maxHeight / height;
+                Cell.cellSize = Math.min(cellSizeWidth, cellSizeHeight);
+                Cell.cellSize = Math.min(Cell.cellSize, 40);
+                Cell.cellSize = Math.max(Cell.cellSize, 5);
+            } else {
+                Cell.cellSize = refCellSize;
+            }
+
 
 
             MazeGenerator generator;

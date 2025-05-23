@@ -29,7 +29,9 @@ public class MazeView extends Pane {
 
         gc = canvas.getGraphicsContext2D();
 
+        updateCanvasSize();
     }
+
 
     public void draw() {
 
@@ -65,4 +67,9 @@ public class MazeView extends Pane {
         });
     }
 
+    public void updateCanvasSize() {
+        canvas.setWidth(cols * Cell.cellSize);
+        canvas.setHeight(rows * Cell.cellSize);
+        draw();
+    }
 }
