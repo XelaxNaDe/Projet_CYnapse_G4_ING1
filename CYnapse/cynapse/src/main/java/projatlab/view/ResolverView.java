@@ -18,13 +18,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import projatlab.controller.MazeController;
 import projatlab.controller.ResolverController;
-import projatlab.model.Maze;
 import projatlab.model.Cell;
+import projatlab.model.Maze;
 
 public class ResolverView {
 
     private final Maze maze;
     private final MazeView mazeView;
+    public final MazeController mazeController;
     public final ResolverController controller;
 
     private Label lVisited;
@@ -39,12 +40,16 @@ public class ResolverView {
     private RadioButton rbComplet;
     private RadioButton rbStep;
     private Slider sSpeed;
+    private Button bToggleVisited;
+    private boolean showVisited = true;
+
 
     private int cellSize = Cell.cellSize;
 
     public ResolverView(Maze maze, MazeController mazeController, MazeView mazeView) {
         this.maze = maze;
         this.mazeView = mazeView;
+        this.mazeController = mazeController;
         this.controller = new ResolverController(maze, mazeController);
     }
 
@@ -94,7 +99,53 @@ public class ResolverView {
             lSpeed.setText(newVal.intValue() + " ms");
         });
 
-        vbAlgoMode.getChildren().addAll(lAlgo, cBAlgo, new Separator(), lModeS, rbComplet, rbStep, sSpeed, lSpeed);
+        //Legend
+        Label lLegend = new Label("Légende : ");
+
+        Label bGreen = new Label("");
+        bGreen.setStyle("-fx-background-color: green; -fx-min-width: 20; -fx-min-height: 20; -fx-border-color: black;");
+
+        Label bRed = new Label("");
+        bRed.setStyle("-fx-background-color: red; -fx-min-width: 20; -fx-min-height: 20; -fx-border-color: black;");
+
+        Label bPink = new Label("   ");
+        bPink.setStyle("-fx-background-color: #FF77FF; -fx-min-width: 20; -fx-min-height: 20; -fx-border-color: black;");
+
+        Label bBlue = new Label("   ");
+        bBlue.setStyle("-fx-background-color: #0099FF; -fx-min-width: 20; -fx-min-height: 20; -fx-border-color: black;");
+
+        Label lGreen = new Label("Entrée");
+        Label lRed = new Label("Sortie");
+        Label lPink = new Label("Cases visitées");
+        Label lBlue = new Label("Chemin trouvé");
+
+        HBox hbGreen = new HBox (bGreen, lGreen);
+        HBox hbRed = new HBox (bRed, lRed);
+        HBox hbPink = new HBox (bPink, lPink);
+        HBox hbBlue = new HBox (bBlue, lBlue);
+
+        VBox vbLegend = new VBox(10, hbGreen, hbRed, hbPink, hbBlue);
+        vbLegend.setAlignment(Pos.CENTER_LEFT);
+        vbLegend.setPadding(new Insets(10, 0, 0, 0));
+
+        //Show/Hide visited
+        bToggleVisited = new Button("Masquer les cases visitées");
+        bToggleVisited.setPrefWidth(200);
+        bToggleVisited.setPrefHeight(30);
+        bToggleVisited.setOnAction(e -> {
+            showVisited = !showVisited;
+            mazeController.handleToggleVisited();
+            bToggleVisited.setText(showVisited ? "Masquer les cases visitées" : "Montrer les cases visitées");
+        });
+
+        vbAlgoMode.getChildren().addAll(lAlgo, cBAlgo, 
+                                        new Separator(),
+                                        lModeS, rbComplet, rbStep, sSpeed, lSpeed, 
+                                        new Separator(),
+                                        lLegend, vbLegend, 
+                                        new Separator(), 
+                                        bToggleVisited
+                                        );
         vbAlgoMode.setSpacing(5);
         VBox.setVgrow(vbAlgoMode, Priority.ALWAYS);
         root.setRight(vbAlgoMode);
@@ -182,7 +233,10 @@ public class ResolverView {
         if (rbComplet != null) rbComplet.setDisable(!enabled);
         if (rbStep != null) rbStep.setDisable(!enabled);
         if (sSpeed != null) sSpeed.setDisable(!enabled);
+        if (bToggleVisited !=null) bToggleVisited.setDisable(!enabled);
     }
+
+
 
     public void setSolvingInProgress(boolean inProgress) {
         if (inProgress) {

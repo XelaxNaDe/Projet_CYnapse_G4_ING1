@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javafx.animation.KeyFrame;
@@ -18,7 +20,7 @@ import projatlab.view.MazeView;
 public class MazeController {
 
     private final Maze maze;
-    private final MazeView view;
+    public final MazeView view;
     private final Random rand;
     
     private MazeGenerator generator;
@@ -31,6 +33,8 @@ public class MazeController {
 
     private boolean isGenerating = false;
     private boolean isSolving = false;
+
+    private List<Cell> visitedCells;
     
     // Référence au ResolverController pour notifier l'état de génération
     private projatlab.controller.ResolverController resolverController;
@@ -180,6 +184,7 @@ public class MazeController {
                 System.out.println("Résolution terminée en " + solvingTime + " ms");
 
                 view.draw(); // dessin final
+                visitedCells = getVisitedCells();
 
                 if (solvingListener != null) {
                     solvingListener.onSolvingFinished(solvingTime);
@@ -211,6 +216,8 @@ public class MazeController {
         System.out.println("Résolution complète terminée en " + solvingTime + " ms");
 
         view.draw();
+        visitedCells = getVisitedCells();
+
 
         if (solvingListener != null) {
             solvingListener.onSolvingFinished(solvingTime);
@@ -244,6 +251,27 @@ public class MazeController {
             System.err.println("Erreur lors de la sauvegarde : " + e.getMessage());
         }
     }   
+
+    public List<Cell> getVisitedCells() {
+        List<Cell> visited = new ArrayList<>();
+        for (int row = 0; row < maze.getRows(); row++) {
+            for (int col = 0; col < maze.getCols(); col++) {
+                Cell cell = maze.getCell(maze.index(col,row));
+                if (cell.visited) {
+                    visited.add(cell);
+                }
+            }
+        }
+        return visited;
+    }
+
+    public void handleToggleVisited(){
+        try {
+            view.toggleVisited(visitedCells);
+        } catch (Exception e) {
+            System.err.println("Vous n'avez pas encore résolu le labyrinthe");
+        }
+    }
 
     public void drawAll() {
         view.draw();

@@ -1,6 +1,7 @@
 package projatlab.view;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,6 +19,8 @@ public class MazeView extends Pane {
     private final GraphicsContext gc;
     private final Canvas canvas;
     private ModificationController modController;
+    private boolean showvisited = true;
+
 
     public MazeView(Maze maze) {
         this.cols = maze.getCols();
@@ -71,5 +74,24 @@ public class MazeView extends Pane {
         canvas.setWidth(cols * Cell.cellSize);
         canvas.setHeight(rows * Cell.cellSize);
         draw();
+    }
+
+    public void toggleVisited(List<Cell> visitedCells){
+        if (showvisited == true) {
+            for (Cell cell:grid) {
+                if (cell.visited) {
+                    cell.visited = false;
+                }
+            }
+            showvisited = false;
+            draw();
+        }
+        else if (showvisited == false) {
+            for (Cell cell:visitedCells) {
+                cell.visited = true;
+            }
+            showvisited = true;
+            draw();
+        }
     }
 }
