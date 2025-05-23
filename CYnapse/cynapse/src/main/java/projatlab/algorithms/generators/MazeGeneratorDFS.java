@@ -63,7 +63,7 @@ public class MazeGeneratorDFS extends MazeGenerator {
             next.visited = true;
             stack.push(current);  
             removeWalls(current, next); 
-            current = next; // Getting to the next cell
+            current = next; 
         } else if (!stack.isEmpty()) {
             current = stack.pop(); // Backtrack to the previous one
         } else {
@@ -94,7 +94,7 @@ public class MazeGeneratorDFS extends MazeGenerator {
         if (left != null && !left.visited) neighbors.add(left); 
 
         if (!neighbors.isEmpty()) {
-            int r = rand.nextInt(neighbors.size()); // Choose a random number
+            int r = rand.nextInt(neighbors.size());
             return neighbors.get(r); // Return the neighbor choosed with the random number
         }
         return null; // If no more unvisited return null
