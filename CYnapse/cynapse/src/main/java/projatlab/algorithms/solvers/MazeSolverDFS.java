@@ -29,6 +29,9 @@ public class MazeSolverDFS extends MazeSolver{
     /** The current cell being visited during the algorithm. */
     public Cell current;
 
+    /** Counter to keep track of the number of visited cells. */
+    private int visitedCount = 0;
+
     /**
      * Constructs a MazeSolverDFS object with the given maze.
      *
@@ -42,9 +45,6 @@ public class MazeSolverDFS extends MazeSolver{
             this.current = maze.getStart(); // Begin at the starting point choosed randomly 
         }
     }
-
-    /** Counter to keep track of the number of visited cells. */
-    private int visitedCount =0;
 
     /**
      * Executes one step of the DFS algorithm to attempt solving the maze.
@@ -62,8 +62,8 @@ public class MazeSolverDFS extends MazeSolver{
         if (current == maze.getEnd()) {
             finished = true;
             finalPath.clear();
-            finalPath.addAll(stack); // Copy current path
-            finalPath.add(current); // Add destination cell
+            finalPath.addAll(stack); 
+            finalPath.add(current); 
 
             for (Cell c : finalPath) {
                 if (c != maze.getStart() && c != maze.getEnd()) {
@@ -98,7 +98,7 @@ public class MazeSolverDFS extends MazeSolver{
         List<Cell> accessibleNeighbors = new ArrayList<>();
 
         for (int d = 0; d < 4; d++) {
-            if (!cell.walls[d]) { // Check if there's no wall in this direction
+            if (!cell.walls[d]) { // Check if there's no wall in this direction 
                 int ni = cell.i + dx[d]; 
                 int nj = cell.j + dy[d];
                 int index = maze.index(ni, nj); 
