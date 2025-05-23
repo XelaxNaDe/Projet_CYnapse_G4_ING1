@@ -89,9 +89,9 @@ public class MazeSolverDFS extends MazeSolver{
         // Move to an accessible and unvisited neighbor
         Cell next = getAccessibleNeighbor(current, cols, rows, rand);
         if (next != null) {
-            stack.push(current); // Save current cell for backtracking
-            path.add(current);   // Track the visited path
-            current = next;      // Move to next cell
+            stack.push(current); 
+            path.add(current);   
+            current = next;      
         } else if (!stack.isEmpty()) {
             current = stack.pop(); // Backtrack if no options
         }
