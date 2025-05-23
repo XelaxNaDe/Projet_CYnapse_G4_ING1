@@ -73,11 +73,42 @@ public class ModificationController {
 
             case ENTREE:
                 maze.getGrid().forEach(c -> c.setStart(false));
-                cell.setStart(true);
+
+                // Si cette cellule est déjà la sortie, on inverse
+                if (cell.isEnd) {
+                    cell.setEnd(false);
+                    cell.setStart(true);
+
+                    // Trouver une autre cellule pour mettre l'ancienne sortie
+                    for (Cell other : maze.getGrid()) {
+                        if (!other.isStart && !other.equals(cell)) {
+                            other.setEnd(true);
+                            break;
+                        }
+                    }
+                } else {
+                    cell.setStart(true);
+                }
                 break;
+
             case SORTIE:
                 maze.getGrid().forEach(c -> c.setEnd(false));
-                cell.setEnd(true);
+
+                // Si cette cellule est déjà l’entrée, on inverse
+                if (cell.isStart) {
+                    cell.setStart(false);
+                    cell.setEnd(true);
+
+                    // Trouver une autre cellule pour mettre l'ancienne entrée
+                    for (Cell other : maze.getGrid()) {
+                        if (!other.isEnd && !other.equals(cell)) {
+                            other.setStart(true);
+                            break;
+                        }
+                    }
+                } else {
+                    cell.setEnd(true);
+                }
                 break;
         }
 

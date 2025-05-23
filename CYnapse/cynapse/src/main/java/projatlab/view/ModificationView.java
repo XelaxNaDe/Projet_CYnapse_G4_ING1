@@ -87,5 +87,4 @@ public class ModificationView {
         modStage.setTitle("Modification du labyrinthe");
         modStage.showAndWait();
     }
-
 }

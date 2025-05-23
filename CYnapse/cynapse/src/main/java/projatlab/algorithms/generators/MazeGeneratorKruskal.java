@@ -19,27 +19,22 @@ public class MazeGeneratorKruskal extends MazeGenerator {
     private final Unionfind uf;
     private int currentEdgesIndex = 0;
 
-    private final Maze maze;
-    private final ArrayList<Cell> grid;
-    private final int cols;
-    private final int rows;
+    private Maze maze;
 
     public MazeGeneratorKruskal(Maze maze, long seed) {
+
         this.maze = maze;
-        this.grid = maze.getGrid();
-        this.cols = maze.getCols();
-        this.rows = maze.getRows();
-        this.uf = new Unionfind(rows * cols);
+        this.uf = new Unionfind(maze.getRows() * maze.getCols());
 
         // Génération des arêtes (edges)
-        for (int j = 0; j < rows; j++) {
-            for (int i = 0; i < cols; i++) {
+        for (int j = 0; j < maze.getRows(); j++) {
+            for (int i = 0; i < maze.getCols(); i++) {
                 int currentIndex = maze.index(i, j);  // 👈 Utilisation centralisée
 
-                if (j < rows - 1) {
+                if (j < maze.getRows() - 1) {
                     edges.add(new int[]{currentIndex, maze.index(i, j + 1)}); // bas
                 }
-                if (i < cols - 1) {
+                if (i < maze.getCols() - 1) {
                     edges.add(new int[]{currentIndex, maze.index(i + 1, j)}); // droite
                 }
             }
@@ -58,8 +53,8 @@ public class MazeGeneratorKruskal extends MazeGenerator {
         int index1 = edge[0];
         int index2 = edge[1];
 
-        Cell cell1 = getCell(index1);
-        Cell cell2 = getCell(index2);
+        Cell cell1 = maze.getCell(index1);
+        Cell cell2 = maze.getCell(index2);
 
         if (!uf.connected(index1, index2)) {
             uf.union(index1, index2);
@@ -79,10 +74,5 @@ public class MazeGeneratorKruskal extends MazeGenerator {
     @Override
     public boolean isFinished() {
         return currentEdgesIndex >= edges.size();
-    }
-
-    private Cell getCell(int index) {
-        if (index == -1) return null;
-        return grid.get(index);
     }
 }

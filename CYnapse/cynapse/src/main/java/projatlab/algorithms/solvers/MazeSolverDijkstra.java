@@ -19,8 +19,6 @@ public class MazeSolverDijkstra extends MazeSolver {
 
     private Maze maze;
     private ArrayList<Cell> grid;
-    private int rows;
-    private int cols;
 
     private PriorityQueue<CellDistance> queue;
     /** Priority queue to process the cells with the smallest distance first */
@@ -38,8 +36,6 @@ public class MazeSolverDijkstra extends MazeSolver {
     /** Initializes the solver with the maze and prepares the data structures */
     public MazeSolverDijkstra(Maze maze) {
         this.maze = maze;
-        this.rows = maze.getRows();
-        this.cols = maze.getCols();
         this.grid = maze.getGrid();
 
         /** Initialize the priority queue with custom comparator based on distance */

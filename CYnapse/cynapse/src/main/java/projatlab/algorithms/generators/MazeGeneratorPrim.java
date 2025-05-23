@@ -9,25 +9,20 @@ import projatlab.model.Maze;
 
 public class MazeGeneratorPrim extends MazeGenerator {
 
-    private final Maze maze;
-    private final ArrayList<Cell> grid;
+    private Maze maze;
+
     private final List<Cell> frontier = new ArrayList<>();
     private final Random rand;
-    private final int cols;
-    private final int rows;
     private int visitedCount = 0;
 
     public MazeGeneratorPrim(Maze maze, long seed) {
 
         this.maze = maze;
-        this.grid = maze.getGrid();
-        this.cols = maze.getCols();
-        this.rows = maze.getRows();
         this.rand = new Random(seed);
 
         // Start from a random cell
-        int startIndex = rand.nextInt(grid.size());
-        Cell start = grid.get(startIndex);
+        int startIndex = rand.nextInt(maze.getGrid().size());
+        Cell start = maze.getGrid().get(startIndex);
         start.visited = true;
         visitedCount++;
 
@@ -36,7 +31,7 @@ public class MazeGeneratorPrim extends MazeGenerator {
 
     @Override
     public void step() {
-        if (visitedCount >= cols * rows || frontier.isEmpty()) {
+        if (visitedCount >= maze.getCols() * maze.getRows() || frontier.isEmpty()) {
             return;
         }
 
@@ -63,10 +58,10 @@ public class MazeGeneratorPrim extends MazeGenerator {
         int i = cell.i;
         int j = cell.j;
 
-        Cell top = getCell(i, j - 1);
-        Cell right = getCell(i + 1, j);
-        Cell bottom = getCell(i, j + 1);
-        Cell left = getCell(i - 1, j);
+        Cell top = maze.getCell(maze.index(i, j - 1));
+        Cell right = maze.getCell(maze.index(i + 1, j));
+        Cell bottom = maze.getCell(maze.index(i, j + 1));
+        Cell left = maze.getCell(maze.index(i - 1, j));
 
         if (top != null && !top.visited) neighbors.add(top);
         if (right != null && !right.visited) neighbors.add(right);
@@ -81,10 +76,10 @@ public class MazeGeneratorPrim extends MazeGenerator {
         int i = cell.i;
         int j = cell.j;
 
-        Cell top = getCell(i, j - 1);
-        Cell right = getCell(i + 1, j);
-        Cell bottom = getCell(i, j + 1);
-        Cell left = getCell(i - 1, j);
+        Cell top = maze.getCell(maze.index(i, j - 1));
+        Cell right = maze.getCell(maze.index(i + 1, j));
+        Cell bottom = maze.getCell(maze.index(i, j + 1));
+        Cell left = maze.getCell(maze.index(i - 1, j));
 
         if (top != null && top.visited) neighbors.add(top);
         if (right != null && right.visited) neighbors.add(right);
@@ -93,12 +88,6 @@ public class MazeGeneratorPrim extends MazeGenerator {
 
         return neighbors;
     }
-
-    private Cell getCell(int i, int j) {
-        if (i < 0 || j < 0 || i >= cols || j >= rows) return null;
-        return grid.get(i + j * cols);
-    }
-
     
 
     @Override

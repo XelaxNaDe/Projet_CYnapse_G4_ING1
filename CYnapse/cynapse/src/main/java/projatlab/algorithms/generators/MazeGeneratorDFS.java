@@ -10,9 +10,6 @@ import projatlab.model.Maze;
 public class MazeGeneratorDFS extends MazeGenerator {
 
     private Maze maze;
-    private final int cols;
-    private final int rows;
-    private final ArrayList<Cell> grid;
 
     public Cell current;
     private final Stack<Cell> stack = new Stack<>();
@@ -21,13 +18,10 @@ public class MazeGeneratorDFS extends MazeGenerator {
     public MazeGeneratorDFS(Maze maze, long seed) {
 
         this.maze = maze;
-        this.cols = maze.getCols();
-        this.rows = maze.getRows();
-        this.grid = maze.getGrid();
         this.rand = new Random(seed);
 
-        if (!grid.isEmpty()) {
-            this.current = grid.get(0);
+        if (!maze.getGrid().isEmpty()) {
+            this.current = maze.getGrid().get(0);
         }
     }
 
@@ -60,10 +54,10 @@ public class MazeGeneratorDFS extends MazeGenerator {
         int i = cell.i;
         int j = cell.j;
 
-        Cell top = getCell(i, j - 1);
-        Cell right = getCell(i + 1, j);
-        Cell bottom = getCell(i, j + 1);
-        Cell left = getCell(i - 1, j);
+        Cell top = maze.getCell(maze.index(i, j - 1));
+        Cell right = maze.getCell(maze.index(i + 1, j));
+        Cell bottom = maze.getCell(maze.index(i, j + 1));
+        Cell left = maze.getCell(maze.index(i - 1, j));
 
         if (top != null && !top.visited) neighbors.add(top);
         if (right != null && !right.visited) neighbors.add(right);
@@ -75,10 +69,5 @@ public class MazeGeneratorDFS extends MazeGenerator {
             return neighbors.get(r);
         }
         return null;
-    }
-
-    private Cell getCell(int i, int j) {
-        if (i < 0 || j < 0 || i >= cols || j >= rows) return null;
-        return grid.get(i + j * cols);
     }
 }

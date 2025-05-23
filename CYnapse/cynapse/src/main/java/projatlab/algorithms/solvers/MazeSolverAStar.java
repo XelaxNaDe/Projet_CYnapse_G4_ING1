@@ -26,6 +26,7 @@ public class MazeSolverAStar extends MazeSolver {
     private final Map<Cell, Double> fScore = new HashMap<>(); //cost of gscore + estimation of cell->end
 
     public MazeSolverAStar(Maze maze) {
+        
         this.maze = maze;
         this.start = maze.getStart();
         this.end = maze.getEnd();
