@@ -74,7 +74,7 @@ public class MazeGeneratorDFS extends MazeGenerator {
         if (next != null) {
             next.visited = true;
             stack.push(current); // Save current cell for backtracking 
-            removeWalls(current, next); // Remove the wall bitween the current cell and next cell
+            removeWalls(current, next); // Remove the wall between the current cell and next cell
             current = next; // Getting to the next cell
         } else if (!stack.isEmpty()) {
             current = stack.pop(); // Backtrack to the previous one
