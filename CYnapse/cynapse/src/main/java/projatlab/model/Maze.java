@@ -149,6 +149,12 @@ public class Maze {
         return copyMaze;
     }
 
+    /**
+     * Returns a randomly selected cell from the maze grid.
+     *
+     * @param rand The Random instance used to generate the index.
+     * @return A randomly selected {@code Cell} from the maze.
+     */
     public Cell getRandomCell(Random rand) {
         List<Cell> cells = getGrid();
         return cells.get(rand.nextInt(cells.size()));
