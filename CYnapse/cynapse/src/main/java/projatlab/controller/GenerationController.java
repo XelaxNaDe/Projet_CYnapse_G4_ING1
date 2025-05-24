@@ -19,8 +19,23 @@ import projatlab.view.ErrorView;
 import projatlab.view.MazeView;
 import projatlab.view.ResolverView;
 
+/**
+ * GenerationController handles maze generation and loading from files
+ * It manages user input, initializes the maze and UI components
+ */
 public class GenerationController {
 
+    /**
+     * Generates a new maze using  parameters and displays it
+     *
+     * @param widthText       The width of the maze
+     * @param heightText      The height of the maze 
+     * @param seedText        The seed for maze generation (optional)
+     * @param genAlgo         The generation algorithm to use
+     * @param mode            The generation mode 
+     * @param AnimationSpeed  The speed of animation in step mode
+     * @param stage           The JavaFX stage used 
+     */
     public void handleGenerateMaze(String widthText, String heightText, String seedText, String genAlgo, String mode, double AnimationSpeed, Boolean isPerfect, Stage stage) {
         try {
             int width = Integer.parseInt(widthText);
@@ -99,6 +114,12 @@ public class GenerationController {
         }
     }
 
+    
+    /**
+     * Handles loading a maze from a .txt file
+     *
+     * @param stage The JavaFX stage used 
+     */    
     public void handleLoad(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Charger un labyrinthe");
