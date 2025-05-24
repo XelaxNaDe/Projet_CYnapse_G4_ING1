@@ -1,111 +1,163 @@
 package projatlab.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
+/**
+ * The Maze class represents a rectangular grid of cells used in maze generation and solving.
+ * It stores the structure of the maze including the start and end cells and provides utility
+ * methods for indexing and copying the maze.
+ */
 public class Maze {
-    private final int width, height; 
-    private final List<List<Wall>> hWalls; 
-    private final List<List<Wall>> vWalls; 
-    private final Cell[][] grid;
+    /** Number of rows in the maze. */
+    private final int rows;
+    
+    /** Number of columns in the maze. */
+    private final int cols;
+    
+    /** List representing the grid of cells */
+    private ArrayList<Cell> grid;
+    
+    /** Starting cell of the maze. */
+    private Cell startCell;
+    
+    /** Ending cell of the maze. */
+    private Cell endCell;
 
+    /**
+     * Constructs a Maze with the specified number of columns and rows.
+     * Initializes the grid with new Cell objects.
+     *
+     * @param cols Number of columns.
+     * @param rows Number of rows.
+     */
+    public Maze(int cols, int rows) {
+        this.cols = cols;
+        this.rows = rows;
+        this.grid = new ArrayList<>();
 
-    public Maze(int width, int height) {
-        this.width = width;
-        this.height = height;
-        this.grid = new Cell[height][width];
-
-        // Wall grids initialization 
-        this.hWalls = new ArrayList<>();
-        this.vWalls = new ArrayList<>();
-
-        // Cells creation
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                grid[i][j] = new Cell(i, j);
-            }
-        }
-
-        // Walls initialization
-        for (int i = 0; i < height - 1; i++) {
-            List<Wall> row = new ArrayList<>();
-            for (int j = 0; j < width; j++) {
-                row.add(new Wall(grid[i][j], grid[i + 1][j]));  // Walls between rows i and i+1
-            }
-            hWalls.add(row);
-        }
-
-        for (int i = 0; i < height; i++) {
-            List<Wall> row = new ArrayList<>();
-            for (int j = 0; j < width - 1; j++) {
-                row.add(new Wall(grid[i][j], grid[i][j + 1]));  // Walls between columns j and j+1
-            }
-            vWalls.add(row);
-        }
-
-        linkWalls();
-    }
-
-    // Link Walls to their Cells
-    private void linkWalls() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                Cell cell = grid[i][j];
-
-                // Haut
-                if (i > 0) {
-                    cell.walls[0] = hWalls.get(i - 1).get(j);
-                } else {
-                    cell.walls[0] = null;
-                }
-
-                // Droite
-                if (j < width - 1) {
-                    cell.walls[1] = vWalls.get(i).get(j);
-                } else {
-                    cell.walls[1] = null;
-                }
-
-                // Bas
-                if (i < height - 1) {
-                    cell.walls[2] = hWalls.get(i).get(j);
-                } else {
-                    cell.walls[2] = null;
-                }
-
-                // Gauche
-                if (j > 0) {
-                    cell.walls[3] = vWalls.get(i).get(j - 1);
-                } else {
-                    cell.walls[3] = null;
-                }
+        for (int j = 0; j < rows; j++) {
+            for (int i = 0; i < cols; i++) {
+                grid.add(new Cell(i, j));
             }
         }
     }
 
-
-    // Getters
-    public int getWidth() {
-        return width;
+    /**
+     * Converts 2D grid coordinates (i, j) into a 1D index for the grid list.
+     *
+     * @param i Column index.
+     * @param j Row index.
+     * @return Index in the grid list or -1 if out of bounds.
+     */
+    public int index(int i, int j) {
+        if (i < 0 || j < 0 || i >= cols || j >= rows) {
+            return -1;
+        }
+        return i + j * cols;
     }
 
-    public int getHeight() {
-        return height;
+    /**
+     * Sets the start cell of the maze.
+     *
+     * @param cell The cell to designate as the starting point.
+     */
+    public void setStart(Cell cell) {
+        this.startCell = cell;
     }
 
-    public Cell getCell(int i, int j) {
-        return grid[i][j];
+    /**
+     * Sets the end cell of the maze.
+     *
+     * @param cell The cell to designate as the ending point.
+     */
+    public void setEnd(Cell cell) {
+        this.endCell = cell;
     }
 
-    public List<List<Wall>> getHWalls() {
-        return hWalls;
+    /**
+     * Retrieves a cell from the grid based on its 1D index.
+     *
+     * @param index The index in the grid list.
+     * @return The corresponding Cell object or null if the index is -1.
+     */
+    public Cell getCell(int index){
+        if (index == -1) return null;
+        return grid.get(index);
     }
 
-    public List<List<Wall>> getVWalls() {
-        return vWalls;
+    /**
+     * Returns the number of columns in the maze.
+     *
+     * @return Column count.
+     */
+    public int getCols() {
+        return cols;
     }
 
-    public Cell[][] getGrid() {
+    /**
+     * Returns the number of rows in the maze.
+     *
+     * @return Row count.
+     */
+    public int getRows() {
+        return rows;
+    }
+
+    /**
+     * Returns the grid of cells in the maze.
+     *
+     * @return List of Cell objects.
+     */
+    public ArrayList<Cell> getGrid() {
         return grid;
     }
+
+    /**
+     * Returns the starting cell of the maze.
+     *
+     * @return Start Cell.
+     */
+    public Cell getStart() {
+        return startCell;
+    }
+
+    /**
+     * Returns the ending cell of the maze.
+     *
+     * @return End Cell.
+     */
+    public Cell getEnd() {
+        return endCell;
+    }
+
+    /**
+     * Creates and returns a deep copy of this Maze object.
+     *
+     * @return A new Maze instance with copied Cell objects.
+     */
+    public Maze copy() {
+        Maze copyMaze = new Maze(cols, rows);
+        for (int j = 0; j < rows; j++) {
+            for (int i = 0; i < cols; i++) {
+                Cell original = getCell(index(i,j));
+                Cell copyCell = original.copy();
+                copyMaze.getGrid().set(copyMaze.index(i, j), copyCell);
+            }
+        }
+        return copyMaze;
+    }
+
+    /**
+     * Returns a randomly selected cell from the maze grid.
+     *
+     * @param rand The Random instance used to generate the index.
+     * @return A randomly selected {@code Cell} from the maze.
+     */
+    public Cell getRandomCell(Random rand) {
+        List<Cell> cells = getGrid();
+        return cells.get(rand.nextInt(cells.size()));
+    }
+
 }

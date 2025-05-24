@@ -1,137 +1,131 @@
 package projatlab.view;
 
-import java.io.File;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import projatlab.model.Maze;
+import projatlab.controller.GenerationController;
 
-
+/**
+ * GenerationView is the JavaFX user interface class for maze generation configuration.
+ * It allows users to input maze dimensions, select algorithms and modes, define randomness seed,
+ * and trigger maze generation or loading actions through a linked controller.
+ */
 public class GenerationView {
 
+    /** Text field for maze width input. */
     private TextField tfWidth;
-    private TextField tfHeight;
-    
-    public void show(Stage genStage) {
 
+    /** Text field for maze height input. */
+    private TextField tfHeight;
+
+    /** Controller responsible for handling user actions. */
+    private final GenerationController controller;
+
+    /**
+     * Constructs a GenerationView with a reference to its controller.
+     *
+     * @param controller The controller managing generation actions.
+     */
+    public GenerationView(GenerationController controller) {
+        this.controller = controller;
+    }
+
+    /**
+     * Displays the maze generation configuration window.
+     *
+     * @param genStage The JavaFX stage to render the view.
+     */
+    public void show(Stage genStage) {
         StackPane mainPane = new StackPane();
-        
-        // Seed Field
+
+        // Seed input and perfect maze checkbox
         TextField tfSeed = new TextField();
         tfSeed.setPromptText("Seed");
         tfSeed.setPrefWidth(150);
 
-        //Perfect Check
         CheckBox cbPerfect = new CheckBox("Parfait");
+        cbPerfect.setSelected(true);
 
-        HBox hbSeedPerfect = new HBox(20);
-        hbSeedPerfect.getChildren().addAll(tfSeed, cbPerfect);
+        HBox hbSeedPerfect = new HBox(20, tfSeed, cbPerfect);
 
-
-        //Size Choice
+        // Maze size input fields
         Label lSize = new Label("Taille");
 
         tfWidth = new TextField();
-        tfWidth.setPromptText("Hauteur");
+        tfWidth.setPromptText("Largeur");
         tfWidth.setPrefWidth(90);
 
         Label lX = new Label("X");
 
         tfHeight = new TextField();
-        tfHeight.setPromptText("Largeur");
+        tfHeight.setPromptText("Hauteur");
         tfHeight.setPrefWidth(90);
 
-        
-        HBox hbSize = new HBox(20);
-        hbSize.getChildren().addAll(tfWidth, lX, tfHeight);
+        HBox hbSize = new HBox(20, tfWidth, lX, tfHeight);
+        VBox vbSize = new VBox(lSize, hbSize);
 
-        VBox vbSize = new VBox();
-        vbSize.getChildren().addAll(lSize, hbSize);
+        VBox vbTopRight = new VBox(15, hbSeedPerfect, vbSize);
 
-
-        VBox vbTopRight = new VBox();
-        vbTopRight.getChildren().addAll(hbSeedPerfect, vbSize);
-
-
-        //Algorithms
+        // Algorithm selection
         Label lAlgo = new Label("Algorithmes : ");
 
-        CheckBox cbAlgo1 = new CheckBox(".....");
-        CheckBox cbAlgo2 = new CheckBox(".....");
+        ComboBox<String> cBAlgo = new ComboBox<>();
+        cBAlgo.getItems().addAll("DFS", "Prim", "Kruskal");
+        cBAlgo.setValue("DFS");
 
-        cbAlgo1.setOnAction(e -> {
-            if (cbAlgo1.isSelected()) {
-                cbAlgo2.setSelected(false);
-            }
-        });
+        VBox vbTopLeft = new VBox(10, lAlgo, cBAlgo);
 
-        cbAlgo2.setOnAction(e -> {
-            if (cbAlgo2.isSelected()) {
-                cbAlgo1.setSelected(false);
-            }
-        });
-
-
-        VBox vbTopLeft = new VBox();
-        vbTopLeft.getChildren().addAll(lAlgo, cbAlgo1, cbAlgo2);
-
-
+        // Generation mode and speed slider
         Label lModeG = new Label("Modes de génération :");
 
-        CheckBox cbStep = new CheckBox("Pas à pas");
-        CheckBox cbComplet = new CheckBox("Complet");
+        ToggleGroup generationModeGroup = new ToggleGroup();
 
-        cbStep.setOnAction(e -> {
-            if (cbStep.isSelected()) {
-                cbComplet.setSelected(false);
-            }
-        });
+        RadioButton rbComplet = new RadioButton("Complet");
+        rbComplet.setToggleGroup(generationModeGroup);
+        rbComplet.setSelected(true);
 
-        cbComplet.setOnAction(e -> {
-            if (cbComplet.isSelected()) {
-                cbStep.setSelected(false);
-            }
-        });
+        RadioButton rbStep = new RadioButton("Pas à pas");
+        rbStep.setToggleGroup(generationModeGroup);
 
-        VBox vbBotLeft = new VBox();
-        vbBotLeft.getChildren().addAll(lModeG, cbStep, cbComplet);
+        Slider sSpeed = new Slider(1, 100, 10);
+        sSpeed.setPrefWidth(100);
+        sSpeed.setShowTickMarks(true);
+        sSpeed.setMajorTickUnit(25);
+        sSpeed.setBlockIncrement(5);
 
+        Label lSpeed = new Label("10 ms");
+        sSpeed.valueProperty().addListener((obs, oldVal, newVal) ->
+            lSpeed.setText(newVal.intValue() + " ms")
+        );
 
-        // Button Load
+        HBox hbStep = new HBox(5, rbStep, sSpeed, lSpeed);
+        VBox vbBotLeft = new VBox(10, lModeG, rbComplet, hbStep);
+
+        // Action buttons: load and generate
         Button btnLoad = new Button("Charger un labyrinthe");
-        btnLoad.setPrefSize(150, 40);
-        btnLoad.setOnAction(e -> {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Charger un labyrinthe");
-        fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("Tous les fichiers", "*.*"));
-        File selectedFile = fileChooser.showOpenDialog(genStage);
-        if (selectedFile != null) {
-            System.out.println("Fichier sélectionné : " + selectedFile.getAbsolutePath());
-        }});
+        btnLoad.setOnAction(e -> controller.handleLoad(genStage));
 
-        // Button Generate
         Button btnGenerate = new Button("Générer un labyrinthe");
-        btnGenerate.setPrefSize(150, 40);
-        btnGenerate.setOnAction(e -> openResWindow());
+        btnGenerate.setOnAction(e -> {
+            String mode = rbComplet.isSelected() ? "complet" : "step";
+            controller.handleGenerateMaze(
+                tfWidth.getText(),
+                tfHeight.getText(),
+                tfSeed.getText(),
+                cBAlgo.getValue(),
+                mode,
+                sSpeed.getValue(),
+                cbPerfect.isSelected(),
+                genStage
+            );
+        });
 
-        VBox vbBotRight = new VBox();
-        vbBotRight.getChildren().addAll(btnLoad, btnGenerate);
+        VBox vbBotRight = new VBox(10, btnLoad, btnGenerate);
 
-
-
-        // GridPane
+        // Layout configuration
         GridPane root = new GridPane();
         root.setPadding(new Insets(10));
         root.setVgap(15);
@@ -146,23 +140,11 @@ public class GenerationView {
         mainPane.getChildren().add(root);
         mainPane.setAlignment(Pos.CENTER);
 
-        // Scene creation
-        genStage.setTitle("Génération");
+        // Final scene setup
+        genStage.setTitle("Génération du labyrinthe");
         Scene scene = new Scene(mainPane, 400, 200);
+        genStage.setResizable(false);
         genStage.setScene(scene);
         genStage.show();
-    }
-
-    public void openResWindow() {
-
-        try {
-            int width = Integer.parseInt(tfWidth.getText());
-            int height = Integer.parseInt(tfHeight.getText());
-            ResolverView resWindow = new ResolverView(new Maze(width, height));
-            resWindow.show();
-
-        } catch (NumberFormatException ex) {
-            System.out.println("Veuillez entrer des dimensions valides (nombres entiers).");
-        }
     }
 }

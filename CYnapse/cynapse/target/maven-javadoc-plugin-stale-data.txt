@@ -1,0 +1,52 @@
+-J-Duser.language=
+-J-Duser.country=
+@options
+@packages
+@argfile
+--class-path
+'C:/Users/olivi/.m2/repository/org/openjfx/javafx-controls/24.0.1/javafx-controls-24.0.1.jar;C:/Users/olivi/.m2/repository/org/openjfx/javafx-graphics/24.0.1/javafx-graphics-24.0.1.jar;C:/Users/olivi/.m2/repository/org/openjfx/javafx-base/24.0.1/javafx-base-24.0.1.jar;C:/Users/olivi/.m2/repository/org/openjfx/javafx-fxml/24.0.1/javafx-fxml-24.0.1.jar'
+--module-path
+'C:/Users/olivi/.m2/repository/org/openjfx/javafx-controls/24.0.1/javafx-controls-24.0.1-win.jar;C:/Users/olivi/.m2/repository/org/openjfx/javafx-fxml/24.0.1/javafx-fxml-24.0.1-win.jar;C:/Users/olivi/OneDrive/Bureau/Projet_CYnapse_G4_ING1/CYnapse/cynapse/target/classes;C:/Users/olivi/.m2/repository/org/openjfx/javafx-base/24.0.1/javafx-base-24.0.1-win.jar;C:/Users/olivi/.m2/repository/org/openjfx/javafx-graphics/24.0.1/javafx-graphics-24.0.1-win.jar'
+--patch-module
+projatlab='C:/Users/olivi/OneDrive/Bureau/Projet_CYnapse_G4_ING1/CYnapse/cynapse/src/main/java'
+-encoding
+'UTF-8'
+-protected
+-source
+'22'
+--module-source-path
+'C:/Users/olivi/OneDrive/Bureau/Projet_CYnapse_G4_ING1/CYnapse/cynapse/target/reports/apidocs/src'
+-author
+-bottom
+'Copyright &#169; 2025. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/olivi/OneDrive/Bureau/Projet_CYnapse_G4_ING1/CYnapse/cynapse/target/reports/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'cynapse 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'cynapse 1.0-SNAPSHOT API'
+projatlab.algorithms.generators
+projatlab.controller
+projatlab
+projatlab.model
+projatlab.view
+'C:/Users/olivi/OneDrive/Bureau/Projet_CYnapse_G4_ING1/CYnapse/cynapse/src/main/java/module-info.java'
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\allclasses-index.html = 1748051450371
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\allpackages-index.html = 1748051450378
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\element-list = 1748051450004
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\help-doc.html = 1748051450436
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\index-all.html = 1748051450426
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\index.html = 1748051450431
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\member-search-index.js = 1748051450394
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\module-search-index.js = 1748051450382
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\overview-tree.html = 1748051450329
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\package-search-index.js = 1748051450384
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\search.html = 1748051450428
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\tag-search-index.js = 1748051450396
+C:\Users\olivi\OneDrive\Bureau\Projet_CYnapse_G4_ING1\CYnapse\cynapse\target\reports\apidocs\type-search-index.js = 1748051450386

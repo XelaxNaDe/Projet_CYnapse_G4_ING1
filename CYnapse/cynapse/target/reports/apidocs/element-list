@@ -1,0 +1,6 @@
+module:projatlab
+projatlab
+projatlab.algorithms.generators
+projatlab.controller
+projatlab.model
+projatlab.view
