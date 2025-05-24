@@ -39,6 +39,7 @@ public class MazeSolverAStar extends MazeSolver {
     public MazeSolverAStar(Maze maze) {
         
         this.maze = maze;
+        this.visitedCount = 2;
 
         // Priority queue using the fScore for comparison
         Comparator<Cell> comparator = Comparator.comparingDouble(fScore::get);

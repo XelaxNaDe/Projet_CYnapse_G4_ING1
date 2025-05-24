@@ -96,8 +96,8 @@ public class ModificationView {
         int mazeRows = copiedMaze.getRows();
 
         if (mazeCols <= 100 && mazeRows <= 50) {
-            modStage.setWidth(mazeCols * Cell.cellSize + 300);
-            modStage.setHeight(mazeRows * Cell.cellSize + 140);
+            modStage.setWidth(Math.max(mazeCols * Cell.cellSize + 300, 500));
+            modStage.setHeight(Math.max(mazeRows * Cell.cellSize + 140, 300));
             modStage.setResizable(false);
         } else {
             modStage.setWidth(1300);
