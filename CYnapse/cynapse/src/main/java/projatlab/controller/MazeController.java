@@ -98,6 +98,11 @@ public class MazeController {
 
     /** Listener interface for maze generation completion. */
     public interface GenerationListener {
+        /**
+         * Called when generation is finished.
+         * 
+         * @param generationTime duration of generation
+         */
         void onGenerationFinished(long generationTime);
     }
 
@@ -225,6 +230,11 @@ public class MazeController {
 
     /** Listener interface for maze solving completion. */
     public interface SolvingListener {
+        /**
+         * Called when the resolution is finished
+         * 
+         * @param solvingTime duration of the resolution.
+         */
         void onSolvingFinished(long solvingTime);
     }
 

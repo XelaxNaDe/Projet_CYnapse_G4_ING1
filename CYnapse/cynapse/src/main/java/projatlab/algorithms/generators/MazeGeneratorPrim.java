@@ -22,6 +22,7 @@ public class MazeGeneratorPrim extends MazeGenerator {
     /** Constructs a maze with the Prim generator and a seed
      * @param maze the maze to generate
      * @param seed the seed for random number generation
+     * @param isPerfect Whether the maze should be perfect (no cycles).
      */
     public MazeGeneratorPrim(Maze maze, long seed, Boolean isPerfect) {
 

@@ -13,7 +13,7 @@ import projatlab.model.Cell;
 import projatlab.model.Maze;
 
 /**
- * ModificationView provides a user interface for manually modifying a maze.
+ * ModificationView provides a user interface for manually editing a maze.
  * It includes a visual representation of the maze, scrollable canvas, and buttons
  * to switch between editing modes (wall, entrance, exit) or save/cancel changes.
  */

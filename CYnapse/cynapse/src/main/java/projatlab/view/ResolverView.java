@@ -60,7 +60,7 @@ public class ResolverView {
     private Button bSolve;
 
     /** Button to enter maze modification mode. */
-    private Button bModify;
+    private Button bEdit;
 
     /** Dropdown menu to select the solving algorithm (DFS, A*, Dijkstra). */
     private ComboBox<String> cBAlgo;
@@ -208,17 +208,17 @@ public class ResolverView {
 
         bSave = new Button("Sauvegarder");
         bSolve = new Button("Résoudre");
-        bModify = new Button("Modifier");
+        bEdit = new Button("Modifier");
 
         bSave.setOnAction(e -> controller.handleSave(resStage));
-        bModify.setOnAction(e -> controller.handleModify());
+        bEdit.setOnAction(e -> controller.handleEdit());
         bSolve.setOnAction(e -> {
             bToggleVisited.setText("Masquer les cases visitées");
             String mode = rbComplet.isSelected() ? "complet" : "step";
             controller.handleSolveMaze(maze, cBAlgo.getValue(), mode, sSpeed.getValue(), resStage);
         });
 
-        HBox hbSaveModSolve = new HBox(10, bSave, bModify, bSolve);
+        HBox hbSaveModSolve = new HBox(10, bSave, bEdit, bSolve);
         hbSaveModSolve.setAlignment(Pos.BOTTOM_RIGHT);
 
         vbStatsSave.getChildren().addAll(vbStats, hbSaveModSolve);
@@ -289,7 +289,7 @@ public class ResolverView {
     public void setControlsEnabled(boolean enabled) {
         if (bSave != null) bSave.setDisable(!enabled);
         if (bSolve != null) bSolve.setDisable(!enabled);
-        if (bModify != null) bModify.setDisable(!enabled);
+        if (bEdit != null) bEdit.setDisable(!enabled);
         if (cBAlgo != null) cBAlgo.setDisable(!enabled);
         if (rbComplet != null) rbComplet.setDisable(!enabled);
         if (rbStep != null) rbStep.setDisable(!enabled);

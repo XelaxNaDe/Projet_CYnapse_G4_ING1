@@ -27,6 +27,7 @@ public class MazeGeneratorKruskal extends MazeGenerator {
       /** Constructs a maze with the Kruskal generator and a seed
      * @param maze the maze to generate
      * @param seed the seed for random number generation
+     * @param isPerfect Whether the maze should be perfect (no cycles).
      */
     public MazeGeneratorKruskal(Maze maze, long seed, Boolean isPerfect) {
 
@@ -85,7 +86,6 @@ public class MazeGeneratorKruskal extends MazeGenerator {
     /** Check if the maze generation is complete
      * @return true if all edges have been processed, false otherwise
      */
-    
     @Override
     public boolean isFinished() {
         finished = currentEdgesIndex >= edges.size();

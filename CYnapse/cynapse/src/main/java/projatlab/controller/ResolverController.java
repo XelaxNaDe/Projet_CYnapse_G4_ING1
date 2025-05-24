@@ -22,17 +22,17 @@ public class ResolverController {
     private final MazeController mazeController;
     private ResolverView resWindow;
     private boolean isSolving = false;
-    private boolean isModifying = false; // Nouvel état pour la modification
+    private boolean isEditing = false; // Nouvel état pour la modification
 
     public ResolverController(Maze maze, MazeController mazeController) {
         this.maze = maze;
         this.mazeController = mazeController;
     }
 
-    public void handleModify() {
-        if (isSolving || mazeController.isGenerating() || isModifying) return; // Empêche la modification multiple
+    public void handleEdit() {
+        if (isSolving || mazeController.isGenerating() || isEditing) return; // Empêche la modification multiple
         
-        setModifyingState(true); // Désactive tous les contrôles
+        setEditingState(true); // Désactive tous les contrôles
         
         ModificationView modWindow = new ModificationView(maze);
         modWindow.showAndWait();  // Bloque jusqu'à fermeture de la fenêtre modale
@@ -40,11 +40,11 @@ public class ResolverController {
         // Après fermeture de la fenêtre modale, on redessine le labyrinthe modifié
         mazeController.drawAll();
         
-        setModifyingState(false); // Réactive tous les contrôles
+        setEditingState(false); // Réactive tous les contrôles
     }
 
     public void handleSolveMaze(Maze maze, String solvAlgo, String mode, double delayMs, Stage stage) {
-        if (isSolving || mazeController.isGenerating() || isModifying) return;
+        if (isSolving || mazeController.isGenerating() || isEditing) return;
 
         clearMaze();
         setSolvingState(true);
@@ -89,7 +89,7 @@ public class ResolverController {
     }
 
     public void handleSave(Stage stage) {
-        if (isSolving || mazeController.isGenerating() || isModifying) return; // Empêche la sauvegarde pendant la résolution, génération ou modification
+        if (isSolving || mazeController.isGenerating() || isEditing) return; // Empêche la sauvegarde pendant la résolution, génération ou modification
         
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Sauvegarder le labyrinthe");
@@ -127,21 +127,21 @@ public class ResolverController {
     }
 
     // Méthode pour gérer l'état de modification
-    private void setModifyingState(boolean modifying) {
-        this.isModifying = modifying;
+    private void setEditingState(boolean Editing) {
+        this.isEditing = Editing;
         updateControlsState();
     }
 
     // Méthode centralisée pour mettre à jour l'état des contrôles
     private void updateControlsState() {
         if (resWindow != null) {
-            boolean shouldDisable = isSolving || mazeController.isGenerating() || isModifying;
+            boolean shouldDisable = isSolving || mazeController.isGenerating() || isEditing;
             resWindow.setControlsEnabled(!shouldDisable);
             
             // Messages spécifiques selon l'état
             if (isSolving) {
                 resWindow.setSolvingInProgress(true);
-            } else if (isModifying) {
+            } else if (isEditing) {
             } else if (mazeController.isGenerating()) {
                 resWindow.setGenerationInProgress(true);
             } else {
@@ -156,8 +156,8 @@ public class ResolverController {
         return isSolving;
     }
 
-    public boolean isModifying() {
-        return isModifying;
+    public boolean isEditing() {
+        return isEditing;
     }
 
     // Méthode pour gérer l'état de génération depuis MazeController

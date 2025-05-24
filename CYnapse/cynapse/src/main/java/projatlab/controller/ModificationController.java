@@ -6,17 +6,19 @@ import projatlab.model.Maze;
 import projatlab.view.MazeView;
 
 /**
- * ModificationController handles user interactions for modifying the maze
+ * ModificationController handles user interactions for editing the maze
  * like changing walls, the start and the end
  * It manages a copy of the original maze, applies changes via user clicks,
  * and saves the modifications back into the original maze 
  */
 public class ModificationController {
 
-    /** Represents the modication modes
-     * - MUR : for walls
-     * - ENTREE : for the start
-     * - SORTIE : for the end
+    /**
+     * Enum representing the modification modes.
+     * 
+     * {@code MUR} : for walls
+     * {@code ENTREE} : for the start
+     * {@code SORTIE} : for the end
      */
     public enum Mode { MUR, ENTREE, SORTIE }
 
@@ -61,7 +63,7 @@ public class ModificationController {
 
     /**
      * Handles a user click on the maze, determining the action based on
-     * the current mode (modifying walls, start, or end).
+     * the current mode (editing walls, start, or end).
      *
      * @param x the X-coordinate of the mouse click
      * @param y the Y-coordinate of the mouse click

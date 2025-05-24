@@ -7,14 +7,14 @@ import java.util.Random;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
 
-/** Abstract class for maze generators. */
-
+/**  
+ * Class responsible for generating mazes using specific algorithms.
+ */
 public class MazeGenerator {
 
-        /** Reference to the maze being generated. */
+    /** Reference to the maze being generated. */
     public Maze maze;
 
-    
     /** Random number generator. */
     public Random rand;
 
@@ -58,8 +58,8 @@ public class MazeGenerator {
     }
 
      /** Return a list of all unvisited neighboring cells of a given cell.
-      * @param Cell : a cell.
-      * @return List<Cell> : unvisited neighbors of the Cell cell. 
+      * @param cell : a cell.
+      * @return unvisited neighbors of the Cell cell. 
       */
     public List<Cell> getUnvisitedNeighbors(Cell cell) {
         List<Cell> neighbors = new ArrayList<>();
@@ -80,8 +80,8 @@ public class MazeGenerator {
     }
 
      /** Return a list of all visited neighboring cells of a given cell.
-      * @param Cell : a cell.
-      * @return List<Cell> : visited neighbors of the Cell cell.
+      * @param cell : a cell.
+      * @return : visited neighbors of the Cell cell.
       */
     public List<Cell> getVisitedNeighbors(Cell cell) {
         List<Cell> neighbors = new ArrayList<>();
@@ -148,7 +148,7 @@ public class MazeGenerator {
      *
      * @param a First cell.
      * @param b Second cell.
-     * @return {@code true} if a wall exists between them; {@code false} otherwise.
+     * @return true if a wall exists between them.
      */
     private boolean hasWallBetween(Cell a, Cell b) {
         int x = a.i - b.i;
