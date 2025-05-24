@@ -7,7 +7,7 @@ import java.util.Random;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
 
-/** Abstract class for maze generators */
+/** Abstract class for maze generators. */
 
 public class MazeGenerator {
 
@@ -15,19 +15,21 @@ public class MazeGenerator {
     public Maze maze;
 
     
-    /** Random number generator*/
+    /** Random number generator. */
     public Random rand;
 
-    /** Indicates true if the maze generation is complete */
+    /** Indicates true if the maze generation is complete. */
     public boolean finished = false;
 
+    /** Indicates if the maze is perfect or not. */
     public Boolean isPerfect;
 
+    /** Flag to make sure imperfections are only introduced once.*/    
     public boolean imperfectionsIntroduced = false; // Pour éviter de refaire plusieurs fois
 
-    /** Removes the wall between two adjacent cells a and b
-     * @param a the first cell
-     * @param b the second cell 
+    /** Removes the wall between two adjacent cells a and b.
+     * @param a the first cell.
+     * @param b the second cell. 
      */
     public void removeWalls(Cell a, Cell b) {
         int x = a.i - b.i;
@@ -50,15 +52,15 @@ public class MazeGenerator {
         }
     }
 
-    /** Performs one stop of the maze generation algorithm */
+    /** Performs one stop of the maze generation algorithm. */
     public void step(){
 
     }
 
-        /** Return a list of all unvisited neighboring cells of a given cell
-     * @param Cell : a cell
-     * @return List<Cell> : unvisited neighbors of the Cell cell 
-     */
+     /** Return a list of all unvisited neighboring cells of a given cell.
+      * @param Cell : a cell.
+      * @return List<Cell> : unvisited neighbors of the Cell cell. 
+      */
     public List<Cell> getUnvisitedNeighbors(Cell cell) {
         List<Cell> neighbors = new ArrayList<>();
         int i = cell.i;
@@ -77,10 +79,10 @@ public class MazeGenerator {
         return neighbors;
     }
 
-    /** Return a list of all visited neighboring cells of a given cell
-     * @param Cell : a cell
-     * @return List<Cell> : visited neighbors of the Cell cell 
-     */
+     /** Return a list of all visited neighboring cells of a given cell.
+      * @param Cell : a cell.
+      * @return List<Cell> : visited neighbors of the Cell cell.
+      */
     public List<Cell> getVisitedNeighbors(Cell cell) {
         List<Cell> neighbors = new ArrayList<>();
         int i = cell.i;
@@ -99,21 +101,28 @@ public class MazeGenerator {
         return neighbors;
     }
 
-    /** Return true if the maze generation is finished
-     * @return true if generation is complete, false otherwise
-     */
+    /** Return true if the maze generation is finished.
+    * @return true if generation is complete, false otherwise.
+    */
     public boolean isFinished() {
         return finished;
     }
 
+    /**
+     * Introduces imperfections in the maze after generation.
+     * Adds cycles (removes walls between already connected cells) and
+     * dead-ends (adds walls between connected cells).
+     *
+     * @param extraWallsToRemove Number of additional walls to remove to introduce cycles.
+     * @param extraWallsToAdd Number of walls to add to create dead-ends.
+     */   
     public void introduceImperfections(int extraWallsToRemove, int extraWallsToAdd) {
-        // Ajouter des cycles : retirer des murs entre des cellules déjà connectées
+        // Create cycles
         for (int k = 0; k < extraWallsToRemove; k++) {
             Cell cell = maze.getGrid().get(rand.nextInt(maze.getGrid().size()));
             List<Cell> visitedNeighbors = getVisitedNeighbors(cell);
             if (!visitedNeighbors.isEmpty()) {
                 Cell neighbor = visitedNeighbors.get(rand.nextInt(visitedNeighbors.size()));
-                // Vérifie que le mur existe encore
                 if (hasWallBetween(cell, neighbor)) {
 
                     removeWalls(cell, neighbor);
@@ -121,7 +130,7 @@ public class MazeGenerator {
             }
         }
 
-        // Ajouter des impasses : remettre un mur entre deux cellules connectées
+        // Create dead-ends
         for (int k = 0; k < extraWallsToAdd; k++) {
             Cell cell = maze.getGrid().get(rand.nextInt(maze.getGrid().size()));
             List<Cell> neighbors = getVisitedNeighbors(cell);
@@ -134,7 +143,13 @@ public class MazeGenerator {
         }
     }
 
-    // Méthode utilitaire pour vérifier s’il y a un mur entre deux cellules
+    /**
+     * Utility method to check if there is a wall between two adjacent cells.
+     *
+     * @param a First cell.
+     * @param b Second cell.
+     * @return {@code true} if a wall exists between them; {@code false} otherwise.
+     */
     private boolean hasWallBetween(Cell a, Cell b) {
         int x = a.i - b.i;
         int y = a.j - b.j;
@@ -146,6 +161,12 @@ public class MazeGenerator {
         return true; // Not adjacent
     }
 
+    /**
+     * Utility method to add a wall between two adjacent cells.
+     *
+     * @param a First cell.
+     * @param b Second cell.
+     */    
     private void addWallBetween(Cell a, Cell b) {
         int x = a.i - b.i;
         int y = a.j - b.j;
