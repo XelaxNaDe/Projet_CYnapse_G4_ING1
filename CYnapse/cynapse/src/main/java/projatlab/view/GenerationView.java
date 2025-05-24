@@ -3,49 +3,55 @@ package projatlab.view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import projatlab.controller.GenerationController;
 
-
+/**
+ * GenerationView is the JavaFX user interface class for maze generation configuration.
+ * It allows users to input maze dimensions, select algorithms and modes, define randomness seed,
+ * and trigger maze generation or loading actions through a linked controller.
+ */
 public class GenerationView {
 
+    /** Text field for maze width input. */
     private TextField tfWidth;
+
+    /** Text field for maze height input. */
     private TextField tfHeight;
 
+    /** Controller responsible for handling user actions. */
     private final GenerationController controller;
 
+    /**
+     * Constructs a GenerationView with a reference to its controller.
+     *
+     * @param controller The controller managing generation actions.
+     */
     public GenerationView(GenerationController controller) {
         this.controller = controller;
     }
 
+    /**
+     * Displays the maze generation configuration window.
+     *
+     * @param genStage The JavaFX stage to render the view.
+     */
     public void show(Stage genStage) {
-
         StackPane mainPane = new StackPane();
 
-        // --- Seed Field & Perfect checkbox ---
+        // --- Seed input and perfect maze checkbox ---
         TextField tfSeed = new TextField();
         tfSeed.setPromptText("Seed");
         tfSeed.setPrefWidth(150);
 
         CheckBox cbPerfect = new CheckBox("Parfait");
-
         cbPerfect.setSelected(true);
 
         HBox hbSeedPerfect = new HBox(20, tfSeed, cbPerfect);
 
-        // --- Size input fields ---
+        // --- Maze size input fields ---
         Label lSize = new Label("Taille");
 
         tfWidth = new TextField();
@@ -63,17 +69,16 @@ public class GenerationView {
 
         VBox vbTopRight = new VBox(15, hbSeedPerfect, vbSize);
 
-        // --- Algorithms checkboxes ---
+        // --- Algorithm selection ---
         Label lAlgo = new Label("Algorithmes : ");
 
         ComboBox<String> cBAlgo = new ComboBox<>();
         cBAlgo.getItems().addAll("DFS", "Prim", "Kruskal");
         cBAlgo.setValue("DFS");
 
-        
-        VBox vbTopLeft = new VBox (10, lAlgo, cBAlgo);
+        VBox vbTopLeft = new VBox(10, lAlgo, cBAlgo);
 
-        // --- Generation mode checkboxes ---
+        // --- Generation mode and speed slider ---
         Label lModeG = new Label("Modes de génération :");
 
         ToggleGroup generationModeGroup = new ToggleGroup();
@@ -85,29 +90,28 @@ public class GenerationView {
         RadioButton rbStep = new RadioButton("Pas à pas");
         rbStep.setToggleGroup(generationModeGroup);
 
-        Slider sSpeed = new Slider(1, 100, 10); 
-        sSpeed.setPrefWidth(100); 
+        Slider sSpeed = new Slider(1, 100, 10);
+        sSpeed.setPrefWidth(100);
         sSpeed.setShowTickMarks(true);
         sSpeed.setMajorTickUnit(25);
         sSpeed.setBlockIncrement(5);
 
         Label lSpeed = new Label("10 ms");
-        sSpeed.valueProperty().addListener((obs, oldVal, newVal) -> {
-            lSpeed.setText(newVal.intValue() + " ms");
-        });
+        sSpeed.valueProperty().addListener((obs, oldVal, newVal) ->
+            lSpeed.setText(newVal.intValue() + " ms")
+        );
 
         HBox hbStep = new HBox(5, rbStep, sSpeed, lSpeed);
-
         VBox vbBotLeft = new VBox(10, lModeG, rbComplet, hbStep);
 
-        // --- Buttons ---
+        // --- Action buttons: load and generate ---
         Button btnLoad = new Button("Charger un labyrinthe");
         btnLoad.setOnAction(e -> controller.handleLoad(genStage));
 
         Button btnGenerate = new Button("Générer un labyrinthe");
         btnGenerate.setOnAction(e -> {
-        String mode = rbComplet.isSelected() ? "complet" : "step";
-        controller.handleGenerateMaze(
+            String mode = rbComplet.isSelected() ? "complet" : "step";
+            controller.handleGenerateMaze(
                 tfWidth.getText(),
                 tfHeight.getText(),
                 tfSeed.getText(),
@@ -116,11 +120,12 @@ public class GenerationView {
                 sSpeed.getValue(),
                 cbPerfect.isSelected(),
                 genStage
-        );});
+            );
+        });
 
         VBox vbBotRight = new VBox(10, btnLoad, btnGenerate);
 
-        // --- Layout GridPane ---
+        // --- Layout configuration ---
         GridPane root = new GridPane();
         root.setPadding(new Insets(10));
         root.setVgap(15);
@@ -135,7 +140,7 @@ public class GenerationView {
         mainPane.getChildren().add(root);
         mainPane.setAlignment(Pos.CENTER);
 
-        // --- Scene setup ---
+        // --- Final scene setup ---
         genStage.setTitle("Génération du labyrinthe");
         Scene scene = new Scene(mainPane, 400, 200);
         genStage.setResizable(false);
