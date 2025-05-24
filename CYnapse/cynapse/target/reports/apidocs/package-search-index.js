@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"projatlab","l":"projatlab"},{"m":"projatlab","l":"projatlab.algorithms.generators"},{"m":"projatlab","l":"projatlab.controller"},{"m":"projatlab","l":"projatlab.model"},{"m":"projatlab","l":"projatlab.view"}];updateSearchResults();
