@@ -12,27 +12,47 @@ import projatlab.controller.ModificationController;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
 
+/**
+ * ModificationView provides a user interface for manually modifying a maze.
+ * It includes a visual representation of the maze, scrollable canvas, and buttons
+ * to switch between editing modes (wall, entrance, exit) or save/cancel changes.
+ */
 public class ModificationView {
     
+    /** The original maze passed for modification. */
     private Maze originalMaze;
+
+    /** A deep copy of the maze used for actual editing. */
     private Maze copiedMaze;
+
+    /** The stage used to display the modification interface. */
     private Stage modStage;
 
+    /**
+     * Constructs a ModificationView and prepares a modifiable copy of the given maze.
+     *
+     * @param maze The original Maze object to be modified.
+     */
     public ModificationView(Maze maze) {
         this.originalMaze = maze;
         this.copiedMaze = maze.copy();
     }
 
+    /**
+     * Displays the modification interface in a modal stage and waits for user interaction.
+     * Sets up canvas rendering, editing buttons, and controller interaction.
+     */
     public void showAndWait() {
         modStage = new Stage();
         BorderPane root = new BorderPane();
 
+        // MazeView and controller setup
         MazeView mazeView = new MazeView(copiedMaze);
         ModificationController controller = new ModificationController(copiedMaze, mazeView, originalMaze, modStage);
         mazeView.setController(controller);
         mazeView.draw();
 
-        // ScrollPane pour mazeView comme dans ResolverView
+        // Scrollable canvas for large mazes
         ScrollPane scrollPane = new ScrollPane(mazeView);
         scrollPane.setPannable(true);
         scrollPane.setFitToWidth(false);
@@ -41,7 +61,7 @@ public class ModificationView {
         scrollPane.setPrefViewportHeight(500);
         root.setCenter(scrollPane);
 
-        // Right Button Panel
+        // Right panel: editing buttons
         VBox vbChange = new VBox(10);
         vbChange.setAlignment(Pos.CENTER_RIGHT);
         vbChange.setPadding(new Insets(20));
@@ -52,6 +72,7 @@ public class ModificationView {
         Button btnAnnuler = new Button("Annuler");
         Button btnSave = new Button("Sauvgarder les changements");
 
+        // Set button styles and actions
         btnMur.setMaxWidth(Double.MAX_VALUE);
         btnEntree.setMaxWidth(Double.MAX_VALUE);
         btnSortie.setMaxWidth(Double.MAX_VALUE);
@@ -67,7 +88,7 @@ public class ModificationView {
         vbChange.getChildren().addAll(btnMur, btnEntree, btnSortie, btnAnnuler, btnSave);
         root.setRight(vbChange);
 
-        // Scene
+        // Scene and window configuration
         Scene scene = new Scene(root);
         modStage.setScene(scene);
 
