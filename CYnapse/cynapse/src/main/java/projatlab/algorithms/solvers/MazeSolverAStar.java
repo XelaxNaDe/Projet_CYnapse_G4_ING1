@@ -16,8 +16,6 @@ import projatlab.model.Maze;
  * Combines Dijkstra's algorithm with a heuristic to find the shortest path
  */
 public class MazeSolverAStar extends MazeSolver {
-
-    private int visitedCount = 0;
     
     /** Priority queue sorted by fScore */
     private final PriorityQueue<Cell> openSet;
@@ -59,29 +57,29 @@ public class MazeSolverAStar extends MazeSolver {
         openSetHash.add(maze.getStart());
     }
 
-    /** Performs one stee of the A* algorithm */
+    /** Performs one step of the A* algorithm */
     @Override
     public void step() {
         if (openSet.isEmpty()) {
             finished = true;
+            pathFound = false;  // No path possible
             return;
         }
 
-        // Retrive cell with the lowest estimated total cost
         Cell current = openSet.poll();
         openSetHash.remove(current);
 
-        // Mark cell as visited
-        if (!current.visited) {   
+        if (!current.visited) {
             if (current != maze.getStart() && current != maze.getEnd()) {
                 current.visited = true;
                 visitedCount++;
-        }
+            }
         }
 
         if (current == maze.getEnd()) {
             reconstructPath(cameFrom, current);
             finished = true;
+            pathFound = true;
             return;
         }
 
@@ -119,9 +117,9 @@ public class MazeSolverAStar extends MazeSolver {
         maze.getEnd().isInFinalPath = false;
     }
 
-    /** Return accesible and unvisited neighbors of a cell 
+    /** Return accessible and unvisited neighbors of a cell 
      * @param Cell the current cell
-     * @return list of accesible unvisited neigboring cells 
+     * @return list of accessible unvisited neighboring cells 
      */
     private List<Cell> getAccessibleNeighbors(Cell cell) {
         List<Cell> neighbors = new ArrayList<>();
@@ -141,7 +139,6 @@ public class MazeSolverAStar extends MazeSolver {
                 }
             }
         }
-
         return neighbors;
     }
 

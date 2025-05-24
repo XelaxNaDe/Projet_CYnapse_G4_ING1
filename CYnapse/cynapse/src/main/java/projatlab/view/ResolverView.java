@@ -31,6 +31,7 @@ public class ResolverView {
     private Label lVisited;
     private Label lTimeGen;
     private Label lTimeRes;
+    private Label lPath;
 
     // Références aux contrôles pour pouvoir les désactiver
     private Button bSave;
@@ -153,11 +154,12 @@ public class ResolverView {
         VBox vbStats = new VBox();
         vbStats.setAlignment(Pos.CENTER_LEFT);
 
-        lVisited = new Label("Cases visitées par l'algorithme : Aucune (Non résolu)");     
+        lVisited = new Label("Nombre de cases visitées par l'algorithme : Aucune (Non résolu)");     
         lTimeGen = new Label("Temps de génération : En cours de génération");
         lTimeRes = new Label("Temps de résolution : Non résolu");
+        lPath = new Label("Taille du chemin final : Non résolu");
 
-        vbStats.getChildren().addAll(lTimeGen, lTimeRes, lVisited);
+        vbStats.getChildren().addAll(lTimeGen, lTimeRes, lVisited, lPath);
 
         bSave = new Button("Sauvegarder");
         bSolve = new Button("Résoudre");
@@ -210,9 +212,17 @@ public class ResolverView {
 
     public void setCellsVisited (long visitedcellsNB) {
         if (visitedcellsNB == 0) {
-            lVisited.setText("Cases visitées : Pas résolu");
+            lVisited.setText("Nombre de cases visitées par l'algorithme : Pas résolu");
         } else {
-            lVisited.setText("Cases visitées : " + visitedcellsNB);
+            lVisited.setText("Nombre de cases visitées par l'algorithme : " + visitedcellsNB);
+        }
+    }
+
+    public void setCellsPath (long finalcellsNB) {
+        if (finalcellsNB == 0) {
+            lPath.setText("Taille du hemin final : Pas résolu");
+        } else {
+            lPath.setText("Taille du chemin final : " + finalcellsNB);
         }
     }
 

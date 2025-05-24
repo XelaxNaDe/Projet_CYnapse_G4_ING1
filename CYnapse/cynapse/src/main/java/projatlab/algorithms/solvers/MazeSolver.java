@@ -13,6 +13,9 @@ public class MazeSolver {
     /** The maze to solve. */
     public Maze maze;
 
+    /** Counter to keep track of the number of visited cells. */
+    public int visitedCount = 0;
+
     /** True if a path is found between de start and the end of the maze */
     public boolean pathFound = false;
 
@@ -43,6 +46,10 @@ public class MazeSolver {
      */
     public int getVisitedCount() {
         return 0;
+    }
+
+        public boolean isPathFound() {
+        return pathFound;
     }
     
 }

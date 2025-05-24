@@ -129,7 +129,7 @@ public class MazeController {
     private void finishGeneration() {
         
         if (!generator.isPerfect){
-            generator.introduceImperfections(maze.getGrid().size() / 10, maze.getGrid().size() / 15);
+            generator.introduceImperfections(maze.getGrid().size() / 10, maze.getGrid().size() / 20);
         }
 
         for (Cell cell : maze.getGrid()) {

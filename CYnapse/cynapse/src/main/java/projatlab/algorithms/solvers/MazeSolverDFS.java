@@ -14,8 +14,6 @@ import projatlab.model.Maze;
  */
 public class MazeSolverDFS extends MazeSolver{
 
-    
-
     /** Random number generator for selecting neighbors randomly. */
     private final Random rand = new Random(System.currentTimeMillis());
 
@@ -28,16 +26,12 @@ public class MazeSolverDFS extends MazeSolver{
     /** The current cell being visited during the algorithm. */
     public Cell current;
 
-    /** Counter to keep track of the number of visited cells. */
-    private int visitedCount = 0;
-
     /**
      * Constructs a MazeSolverDFS object with the given maze.
      *
      * @param maze The Maze object to solve.
      */
     public MazeSolverDFS(Maze maze) {
-
         this.maze = maze;
 
         if (!maze.getGrid().isEmpty()) {
@@ -51,7 +45,11 @@ public class MazeSolverDFS extends MazeSolver{
      */
     @Override
     public void step() {
-        if (current == null) return;
+        if (current == null) {
+            finished = true;
+            pathFound = false;
+            return;
+        }
 
         if (!current.visited) {
             current.visited = true;
@@ -61,6 +59,7 @@ public class MazeSolverDFS extends MazeSolver{
         // Check if the end cell is reached
         if (current == maze.getEnd()) {
             finished = true;
+            pathFound = true;
             finalPath.clear();
             finalPath.addAll(stack); 
             finalPath.add(current); 
@@ -70,7 +69,6 @@ public class MazeSolverDFS extends MazeSolver{
                     c.isInFinalPath = true;
                 }
             }
-
             return;
         }
 
@@ -82,6 +80,11 @@ public class MazeSolverDFS extends MazeSolver{
             current = next;      
         } else if (!stack.isEmpty()) {
             current = stack.pop(); // Backtrack if no options
+        } else {
+            // No more cells to visit and stack is empty - no solution exists
+            finished = true;
+            pathFound = false;
+            current = null;
         }
     }
     
