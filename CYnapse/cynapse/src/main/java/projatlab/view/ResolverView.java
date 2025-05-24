@@ -21,43 +21,88 @@ import projatlab.controller.ResolverController;
 import projatlab.model.Cell;
 import projatlab.model.Maze;
 
+/**
+ * ResolverView is the JavaFX interface for solving mazes.
+ * It provides options for selecting solving algorithms and modes,
+ * displays real-time statistics, and allows user interaction with the resolution process.
+ */
 public class ResolverView {
 
+    /** The maze to be solved. */
     private final Maze maze;
+
+    /** The MazeView used to visually display the maze. */
     private final MazeView mazeView;
+
+    /** Controller responsible for managing overall maze state and interactions. */
     public final MazeController mazeController;
+
+    /** Controller specifically for handling resolution logic and actions. */
     public final ResolverController controller;
 
+    /** Label showing the number of visited cells. */
     private Label lVisited;
+
+    /** Label showing the generation time. */
     private Label lTimeGen;
+
+    /** Label showing the solving time. */
     private Label lTimeRes;
+
+    /** Label showing the length of the final path. */
     private Label lPath;
 
-    // Références aux contrôles pour pouvoir les désactiver
+    // Control references for toggling availability
+    /** Button to save the current maze state. */
     private Button bSave;
+
+    /** Button to launch the maze-solving algorithm. */
     private Button bSolve;
+
+    /** Button to enter maze modification mode. */
     private Button bModify;
+
+    /** Dropdown menu to select the solving algorithm (DFS, A*, Dijkstra). */
     private ComboBox<String> cBAlgo;
+
+    /** Radio button to select "complet" (run full algorithm in one go) mode. */
     private RadioButton rbComplet;
+
+    /** Radio button to select "step-by-step" mode. */
     private RadioButton rbStep;
+
+    /** Slider to control the delay/speed of step-by-step solving. */
     private Slider sSpeed;
+
+    /** Button to toggle visibility of visited cells on the maze. */
     private Button bToggleVisited;
+
+    /** State flag indicating whether visited cells are currently shown. */
     private boolean showVisited = true;
 
-
+    /**
+     * Constructs the ResolverView.
+     *
+     * @param maze The maze to solve.
+     * @param mazeController The controller managing general maze state.
+     * @param mazeView The MazeView displaying the visual maze.
+     */
     public ResolverView(Maze maze, MazeController mazeController, MazeView mazeView) {
         this.maze = maze;
         this.mazeView = mazeView;
         this.mazeController = mazeController;
         this.controller = new ResolverController(maze, mazeController);
     }
-
+    
+    /**
+     * Displays the maze resolution interface with all necessary controls and panels.
+     */
     public void show() {
         Stage resStage = new Stage();
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(20));
         
-
+        // Center scrollable maze view
         ScrollPane scrollPane = new ScrollPane(mazeView);
         scrollPane.setPannable(true);
         scrollPane.setFitToWidth(false);
@@ -66,8 +111,8 @@ public class ResolverView {
         scrollPane.setPrefViewportHeight(500); // Hauteur max visible sans scroll vertical
 
         root.setCenter(scrollPane);
-
-        // Right Panel - Algorithm + Mode
+        
+        // Right Panel: Algorithm & Mode Selection
         VBox vbAlgoMode = new VBox();
         vbAlgoMode.setAlignment(Pos.TOP_LEFT);
 
@@ -98,7 +143,7 @@ public class ResolverView {
             lSpeed.setText(newVal.intValue() + " ms");
         });
 
-        //Legend
+        // Legend
         Label lLegend = new Label("Légende : ");
 
         Label bGreen = new Label("");
@@ -127,7 +172,7 @@ public class ResolverView {
         vbLegend.setAlignment(Pos.CENTER_LEFT);
         vbLegend.setPadding(new Insets(10, 0, 0, 0));
 
-        //Show/Hide visited
+        // Toggle visited cells
         bToggleVisited = new Button("Masquer les cases visitées");
         bToggleVisited.setPrefWidth(200);
         bToggleVisited.setPrefHeight(30);
@@ -148,7 +193,7 @@ public class ResolverView {
         VBox.setVgrow(vbAlgoMode, Priority.ALWAYS);
         root.setRight(vbAlgoMode);
 
-        // Bottom Panel - Stats + Buttons
+        // Bottom Panel: Statistics and buttons
         VBox vbStatsSave = new VBox();
 
         VBox vbStats = new VBox();
@@ -179,7 +224,7 @@ public class ResolverView {
         vbStatsSave.getChildren().addAll(vbStats, hbSaveModSolve);
         root.setBottom(vbStatsSave);
 
-        // Scene
+        // Scene 
         Scene scene = new Scene(root);
         resStage.setScene(scene);
 
@@ -201,15 +246,18 @@ public class ResolverView {
         resStage.setTitle("Résolution du labyrinthe");
         resStage.show();
     }
-
+    
+    /** Updates the generation time label. */
     public void setGenerationTime(long timeGenMs) {
         lTimeGen.setText("Temps de génération : " + timeGenMs + "ms");
     }
 
+    /** Updates the solving time label. */
     public void setSolvingTime (long timeResMs) {
             lTimeRes.setText("Temps de résolution : " + timeResMs + "ms");
     }
 
+    /** Updates the label with number of visited cells. */
     public void setCellsVisited (long visitedcellsNB) {
         if (visitedcellsNB == 0) {
             lVisited.setText("Nombre de cases visitées par l'algorithme : Pas résolu");
@@ -218,6 +266,7 @@ public class ResolverView {
         }
     }
 
+    /** Updates the label with final path length. */
     public void setCellsPath (long finalcellsNB) {
         if (finalcellsNB == 0) {
             lPath.setText("Taille du hemin final : Pas résolu");
@@ -226,7 +275,7 @@ public class ResolverView {
         }
     }
 
-    // Méthodes pour contrôler l'état des boutons et contrôles
+    /** Enables or disables all interactive controls. */
     public void setControlsEnabled(boolean enabled) {
         if (bSave != null) bSave.setDisable(!enabled);
         if (bSolve != null) bSolve.setDisable(!enabled);
@@ -238,26 +287,23 @@ public class ResolverView {
         if (bToggleVisited !=null) bToggleVisited.setDisable(!enabled);
     }
 
-
-
+    /** Displays a "solving in progress" message. */
     public void setSolvingInProgress(boolean inProgress) {
         if (inProgress) {
             lTimeRes.setText("Temps de résolution : En cours...");
         }
     }
 
+    /** Displays a "generation in progress" message. */
     public void setGenerationInProgress(boolean inProgress) {
         if (inProgress) {
             lTimeGen.setText("Temps de génération : En cours...");
         }
     }
 
-    // Nouvelle méthode pour gérer l'état de modification
+    /** Displays a message during maze modification. */
     public void setModificationInProgress(boolean inProgress) {
-        // On peut ajouter un message spécifique ou simplement désactiver les contrôles
-        // Les contrôles sont déjà gérés par setControlsEnabled dans updateControlsState
         if (inProgress) {
-            // Optionnel : ajouter un message spécifique pour la modification
             System.out.println("Modification en cours - contrôles désactivés");
         }
     }

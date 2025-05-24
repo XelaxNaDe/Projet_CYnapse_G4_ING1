@@ -41,7 +41,7 @@ public class GenerationView {
     public void show(Stage genStage) {
         StackPane mainPane = new StackPane();
 
-        // --- Seed input and perfect maze checkbox ---
+        // Seed input and perfect maze checkbox
         TextField tfSeed = new TextField();
         tfSeed.setPromptText("Seed");
         tfSeed.setPrefWidth(150);
@@ -51,7 +51,7 @@ public class GenerationView {
 
         HBox hbSeedPerfect = new HBox(20, tfSeed, cbPerfect);
 
-        // --- Maze size input fields ---
+        // Maze size input fields
         Label lSize = new Label("Taille");
 
         tfWidth = new TextField();
@@ -69,7 +69,7 @@ public class GenerationView {
 
         VBox vbTopRight = new VBox(15, hbSeedPerfect, vbSize);
 
-        // --- Algorithm selection ---
+        // Algorithm selection
         Label lAlgo = new Label("Algorithmes : ");
 
         ComboBox<String> cBAlgo = new ComboBox<>();
@@ -78,7 +78,7 @@ public class GenerationView {
 
         VBox vbTopLeft = new VBox(10, lAlgo, cBAlgo);
 
-        // --- Generation mode and speed slider ---
+        // Generation mode and speed slider
         Label lModeG = new Label("Modes de génération :");
 
         ToggleGroup generationModeGroup = new ToggleGroup();
@@ -104,7 +104,7 @@ public class GenerationView {
         HBox hbStep = new HBox(5, rbStep, sSpeed, lSpeed);
         VBox vbBotLeft = new VBox(10, lModeG, rbComplet, hbStep);
 
-        // --- Action buttons: load and generate ---
+        // Action buttons: load and generate
         Button btnLoad = new Button("Charger un labyrinthe");
         btnLoad.setOnAction(e -> controller.handleLoad(genStage));
 
@@ -125,7 +125,7 @@ public class GenerationView {
 
         VBox vbBotRight = new VBox(10, btnLoad, btnGenerate);
 
-        // --- Layout configuration ---
+        // Layout configuration
         GridPane root = new GridPane();
         root.setPadding(new Insets(10));
         root.setVgap(15);
@@ -140,7 +140,7 @@ public class GenerationView {
         mainPane.getChildren().add(root);
         mainPane.setAlignment(Pos.CENTER);
 
-        // --- Final scene setup ---
+        // Final scene setup
         genStage.setTitle("Génération du labyrinthe");
         Scene scene = new Scene(mainPane, 400, 200);
         genStage.setResizable(false);
