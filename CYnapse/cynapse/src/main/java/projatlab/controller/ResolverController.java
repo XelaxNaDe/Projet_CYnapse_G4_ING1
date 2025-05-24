@@ -16,33 +16,64 @@ import projatlab.view.ErrorView;
 import projatlab.view.ModificationView;
 import projatlab.view.ResolverView;
 
+/**
+ * ResolverController is responsible for handling the resolution
+ * 
+ */
 public class ResolverController {
 
+    /** Maze in question */
     private final Maze maze;
-    private final MazeController mazeController;
-    private ResolverView resWindow;
-    private boolean isSolving = false;
-    private boolean isEditing = false; // Nouvel état pour la modification
 
+    /** Reference to the main maze controller */
+    private final MazeController mazeController;
+
+    /** The view to show the results */
+    private ResolverView resWindow;
+
+    /** Whether the maze is in the proccess of being solved */
+    private boolean isSolving = false;
+
+    /** Whether the maze is in the proccess of modified. */
+    private boolean isEditing = false; 
+
+    /**
+     * Constructor of ResolverController with a maze and a reference to the maze controller.
+     *
+     * @param maze           The maze instance
+     * @param mazeController The controller responsible for maze generation and drawing
+     */
     public ResolverController(Maze maze, MazeController mazeController) {
         this.maze = maze;
         this.mazeController = mazeController;
     }
 
+    /**
+     * Opens a modification window allowing the user to edit the maze
+     * Prevents modification during solving or generation
+     */
     public void handleEdit() {
-        if (isSolving || mazeController.isGenerating() || isEditing) return; // Empêche la modification multiple
+        if (isSolving || mazeController.isGenerating() || isEditing) return; // Prevents multiple modification
         
-        setEditingState(true); // Désactive tous les contrôles
+        setEditingState(true); // disables controls
         
         ModificationView modWindow = new ModificationView(maze);
-        modWindow.showAndWait();  // Bloque jusqu'à fermeture de la fenêtre modale
+        modWindow.showAndWait();  // wait until modal window closes
         
-        // Après fermeture de la fenêtre modale, on redessine le labyrinthe modifié
         mazeController.drawAll();
         
-        setEditingState(false); // Réactive tous les contrôles
+        setEditingState(false); //enables controls
     }
 
+     /**
+     * Initiates maze solving using the selected algorithm and mode
+     *
+     * @param maze     The maze to solve
+     * @param algorithm The name of the algorithm 
+     * @param mode      Solving mode
+     * @param delayMs   Delay between animation steps 
+     * @param stage     JavaFX stage used 
+     */
     public void handleSolveMaze(Maze maze, String solvAlgo, String mode, double delayMs, Stage stage) {
         if (isSolving || mazeController.isGenerating() || isEditing) return;
 
@@ -88,6 +119,11 @@ public class ResolverController {
         }
     }
 
+    /**
+     * Saves the current state of the maze to a .txt file
+     *
+     * @param stage The JavaFX stage used
+     */
     public void handleSave(Stage stage) {
         if (isSolving || mazeController.isGenerating() || isEditing) return; // Empêche la sauvegarde pendant la résolution, génération ou modification
         
@@ -116,67 +152,94 @@ public class ResolverController {
         }
     }
 
+    /**
+     * Sets the view that displays maze solving information
+     *
+     * @param resolverView The ResolverView instance
+     */
     public void setResolverView(ResolverView resWindow) {
         this.resWindow = resWindow;
     }
 
-    // Méthode pour gérer l'état de résolution
+     /**
+     * Updates the solving state 
+     *
+     * @param solving true if maze is being solved
+     */
     private void setSolvingState(boolean solving) {
         this.isSolving = solving;
         updateControlsState();
     }
 
-    // Méthode pour gérer l'état de modification
+    /**
+     * Updates the editing state 
+     *
+     * @param solving true if maze is being modified
+     */
     private void setEditingState(boolean Editing) {
         this.isEditing = Editing;
         updateControlsState();
     }
 
-    // Méthode centralisée pour mettre à jour l'état des contrôles
+    /**
+     * Updates the enabled/disabled state of UI controls depending on solving, editing, or generating states
+     */
     private void updateControlsState() {
         if (resWindow != null) {
             boolean shouldDisable = isSolving || mazeController.isGenerating() || isEditing;
             resWindow.setControlsEnabled(!shouldDisable);
             
-            // Messages spécifiques selon l'état
+            // specific messages depending on state
             if (isSolving) {
                 resWindow.setSolvingInProgress(true);
             } else if (isEditing) {
             } else if (mazeController.isGenerating()) {
                 resWindow.setGenerationInProgress(true);
             } else {
-                // Tous les états sont faux, on peut réactiver
                 resWindow.setSolvingInProgress(false);
                 resWindow.setGenerationInProgress(false);
             }
         }
     }
 
+    /**
+     * Returns whether the maze is currently being solved
+     *
+     * @return true if solving is in progress
+     */
     public boolean isSolving() {
         return isSolving;
     }
 
+    /**
+     * Returns whether the maze is currently being modified
+     *
+     * @return true if editing is in progress
+     */
     public boolean isEditing() {
         return isEditing;
     }
 
-    // Méthode pour gérer l'état de génération depuis MazeController
+     /**
+     * Triggers control state updates when generation state changes
+     *
+     * @param generating Whether generation is in progress
+     */
     public void setGenerationInProgress(boolean generating) {
         updateControlsState();
     }
 
-    // Méthode pour nettoyer le labyrinthe avant une nouvelle résolution
-    private void clearMaze() {
-        // Reset tous les états de visite et de chemin final
+    /**
+     * Clears the maze from previous solves 
+     * redraws the maze, and resets solving statistics
+     */    private void clearMaze() {
         for (var cell : maze.getGrid()) {
             cell.setVisited(false);
             cell.isInFinalPath = false;
         }
         
-        // Redessiner le labyrinthe pour montrer qu'il est nettoyé
         mazeController.drawAll();
         
-        // Reset les statistiques dans l'interface
         if (resWindow != null) {
             resWindow.setCellsVisited(0);
             resWindow.setSolvingTime(0);
