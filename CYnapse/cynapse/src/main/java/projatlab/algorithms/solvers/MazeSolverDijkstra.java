@@ -32,9 +32,6 @@ public class MazeSolverDijkstra extends MazeSolver {
     /** The current cell being visited during the algorithm. */
     private Cell current;
 
-    /** The number of visited cells */
-    private int visitedCount = 0;
-
     /** Initializes the solver with the maze and prepares the data structures */
     public MazeSolverDijkstra(Maze maze) {
         this.maze = maze;
@@ -45,12 +42,10 @@ public class MazeSolverDijkstra extends MazeSolver {
         this.distance = new HashMap<>();
         this.visited = new HashSet<>();
 
-
         // Set initial distances to infinity 
         for (Cell c : maze.getGrid()) {
             distance.put(c, Integer.MAX_VALUE);
         }
-
 
         // Set the start cell distance to 0 and add it to the queue 
         current = maze.getStart();
@@ -61,7 +56,14 @@ public class MazeSolverDijkstra extends MazeSolver {
     /** Executes one step of the Dijkstra algorithm */
     @Override
     public void step() {
-        if (finished || queue.isEmpty()) return;
+        if (finished) return;
+        
+        if (queue.isEmpty()) {
+            // No more cells to process and end not reached - no solution
+            finished = true;
+            pathFound = false;
+            return;
+        }
 
         // Take the cell with the smallest distance 
         CellDistance cd = queue.poll();
@@ -78,10 +80,11 @@ public class MazeSolverDijkstra extends MazeSolver {
         if (current == maze.getEnd()) {
             reconstructPath();
             finished = true;
+            pathFound = true;
             return;
         }
 
-        // Check neigbors 
+        // Check neighbors 
         for (Cell neighbor : getAccessibleNeighbors(current)) {
             int newDist = distance.get(current) + 1;
             if (newDist < distance.get(neighbor)) {
@@ -110,11 +113,10 @@ public class MazeSolverDijkstra extends MazeSolver {
         }
     }
 
-    /** Returns a list of accesible and unvisted adjacents cells 
+    /** Returns a list of accessible and unvisited adjacent cells 
      *  @param cell the current cell
-     *  @return List<Cell> of valid adjacents cells 
+     *  @return List<Cell> of valid adjacent cells 
      */
-
     private List<Cell> getAccessibleNeighbors(Cell cell) {
         List<Cell> neighbors = new ArrayList<>();
         int[] dx = {0, 1, 0, -1}; 
@@ -128,7 +130,7 @@ public class MazeSolverDijkstra extends MazeSolver {
                 int ni = cell.i + dx[d];
                 int nj = cell.j + dy[d];
                 int index = maze.index(ni, nj);
-                // Checks if the cell exist 
+                // Checks if the cell exists 
                 if (index != -1) {
                     Cell neighbor = maze.getGrid().get(index);
                     if (!visited.contains(neighbor)) {
@@ -144,7 +146,6 @@ public class MazeSolverDijkstra extends MazeSolver {
     /** Returns the number of cells visited so far 
      * @return number of visited cells
      */
-
     @Override
     public int getVisitedCount() {
         return visitedCount;

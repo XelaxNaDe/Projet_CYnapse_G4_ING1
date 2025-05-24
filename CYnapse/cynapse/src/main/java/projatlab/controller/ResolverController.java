@@ -44,32 +44,42 @@ public class ResolverController {
     }
 
     public void handleSolveMaze(Maze maze, String solvAlgo, String mode, double delayMs, Stage stage) {
-        if (isSolving || mazeController.isGenerating() || isModifying) return; // Empêche de lancer une nouvelle résolution pendant génération/résolution/modification
-        
-        // Clear le labyrinthe avant de commencer une nouvelle résolution
+        if (isSolving || mazeController.isGenerating() || isModifying) return;
+
         clearMaze();
-        
         setSolvingState(true);
-        
+
         MazeSolver solver;
         switch (solvAlgo) {
             case "DFS" -> solver = new MazeSolverDFS(maze);
             case "A*" -> solver = new MazeSolverAStar(maze);
             case "Dijkstra" -> solver = new MazeSolverDijkstra(maze);
-            default -> throw new AssertionError();
+            default -> {
+                ErrorView.showError("Algorithme de résolution inconnu : " + solvAlgo);
+                setSolvingState(false);
+                return;
+            }
         }
 
         mazeController.setSolvingListener(time -> {
             javafx.application.Platform.runLater(() -> {
-                resWindow.setSolvingTime(time);
-                int cellsVisited = solver.getVisitedCount();
-                resWindow.setCellsVisited(cellsVisited);
-                setSolvingState(false); // Réactive les contrôles à la fin
+                // Check if a solution was found
+                if (!solver.isPathFound()) {
+                    resWindow.setSolvingTime(time);
+                    resWindow.setCellsVisited(solver.getVisitedCount());
+                    resWindow.setCellsPath(0);
+                    ErrorView.showError("Aucune solution trouvée ! Le labyrinthe n'a pas de chemin entre le point de départ et d'arrivée.");
+                } else {
+                    resWindow.setSolvingTime(time);
+                    resWindow.setCellsVisited(solver.getVisitedCount());
+                    resWindow.setCellsPath(solver.finalPath.size());
+                }
+                setSolvingState(false);
             });
         });
 
         mazeController.setSolver(solver);
-        System.out.println(mode);
+
         if ("step".equals(mode)){
             mazeController.startSolvingAnimation(delayMs);
         }
@@ -172,6 +182,7 @@ public class ResolverController {
         if (resWindow != null) {
             resWindow.setCellsVisited(0);
             resWindow.setSolvingTime(0);
+            resWindow.setCellsPath(0);
         }
     }
 }
