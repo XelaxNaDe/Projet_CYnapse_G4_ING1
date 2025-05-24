@@ -70,20 +70,17 @@ public class MazeView extends Pane {
             cell.show(gc);
         }
 
-        gc.setStroke(Color.BLACK); // ou une autre couleur de mur
+        gc.setStroke(Color.BLACK);
         gc.setLineWidth(4);
 
         double w = cols * Cell.cellSize;
         double h = rows * Cell.cellSize;
 
-        // Mur haut
-        gc.strokeLine(0, 0, w, 0);
-        // Mur droite
-        gc.strokeLine(w, 0, w, h);
-        // Mur bas
-        gc.strokeLine(w, h, 0, h);
-        // Mur gauche
-        gc.strokeLine(0, h, 0, 0);
+        
+        gc.strokeLine(0, 0, w, 0); // Top wall
+        gc.strokeLine(w, 0, w, h); // Right wall
+        gc.strokeLine(w, h, 0, h); // Bottom wall
+        gc.strokeLine(0, h, 0, 0); // Left wall
     }
 
     /**
