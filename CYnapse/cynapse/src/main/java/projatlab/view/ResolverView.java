@@ -233,8 +233,8 @@ public class ResolverView {
 
         if (mazeCols <= 100 && mazeRows <= 50) {
             // Adapter la fenêtre à la taille réelle du labyrinthe
-            resStage.setWidth(mazeCols * Cell.cellSize + 400);
-            resStage.setHeight(mazeRows * Cell.cellSize + 340);
+            resStage.setWidth(Math.max(mazeCols * Cell.cellSize + 400, 600));
+            resStage.setHeight(Math.max(mazeRows * Cell.cellSize + 340, 600));
             resStage.setResizable(false);
         } else {
             // Fenêtre fixe (scrollable)
