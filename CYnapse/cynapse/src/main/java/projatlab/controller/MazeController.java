@@ -14,53 +14,116 @@ import projatlab.model.Maze;
 import projatlab.view.ErrorView;
 import projatlab.view.MazeView;
 
+/**
+ * MazeController manages the generation and solving of mazes.
+ * It coordinates the interaction between the maze model, the visual display (MazeView),
+ * and the generation/solving algorithms. It also handles animation timing, user feedback, and state tracking.
+ */
 public class MazeController {
-
-    private final Maze maze;
-    public final MazeView view;
-    private final Random rand;
     
+    /** The maze being generated or solved. */
+    private final Maze maze;
+    
+    /** The MazeView associated with the maze, used for graphical rendering. */
+    public final MazeView view;
+    
+    /** Random number generator used for maze generation (start/end). */
+    private final Random rand;
+
+    
+    /** The current maze generation algorithm instance. */
     private MazeGenerator generator;
+    
+    /** The current maze solving algorithm instance. */
     private MazeSolver solver;
+
+    /** Time taken for the last maze generation (in milliseconds). */
     private long generationTime;
+
+    /** Time taken for the last maze solving (in milliseconds). */
     private long solvingTime;
+    
 
+    /** Listener to notify when maze generation is complete. */
     private GenerationListener generationListener;
+
+    /** Listener to notify when maze solving is complete. */
     private SolvingListener solvingListener;
+    
 
+    /** Indicates whether the maze is currently being generated. */
     private boolean isGenerating = false;
-    private boolean isSolving = false;
 
+    /** Indicates whether the maze is currently being solved. */
+    private boolean isSolving = false;
+    
+    /** List of all visited cells after solving, used to toggle visibility. */
     private List<Cell> visitedCells;
+
     
     // Référence au ResolverController pour notifier l'état de génération
     private projatlab.controller.ResolverController resolverController;
 
+
+    /**
+     * Constructs a MazeController to manage the given maze and its view.
+     *
+     * @param maze The maze to manage.
+     * @param view The graphical view of the maze.
+     * @param seed The random seed for reproducibility.
+     */
     public MazeController(Maze maze, MazeView view, long seed) {
         this.maze = maze;
         this.view = view;
         this.rand = new Random(seed);
     }
 
+    /**
+     * Sets the maze generation algorithm to use.
+     *
+     * @param generator The MazeGenerator implementation.
+     */
     public void setGenerator(MazeGenerator generator){
         this.generator = generator;
     }
 
+    /**
+     * Sets the maze solving algorithm to use.
+     *
+     * @param solver The MazeSolver implementation.
+     */
     public void setSolver(MazeSolver solver){
         this.solver = solver;
     }
 
+    /** Listener interface for maze generation completion. */
     public interface GenerationListener {
         void onGenerationFinished(long generationTime);
     }
 
+    /**
+     * Sets the listener to be called upon generation completion.
+     *
+     * @param listener The listener instance.
+     */
     public void setGenerationListener(GenerationListener listener) {
         this.generationListener = listener;
     }
 
+    /**
+     * Associates this controller with a ResolverController for coordination.
+     *
+     * @param resolverController The ResolverController instance.
+     */
     public void setResolverController(projatlab.controller.ResolverController resolverController) {
         this.resolverController = resolverController;
     }
+
+    /**
+     * Starts animated maze generation with a delay between each step.
+     *
+     * @param delayMillis Delay in milliseconds between steps.
+     */
 
     public void startGenerationAnimation(double delayMillis) {
         if (isGenerating) return;
@@ -105,6 +168,9 @@ public class MazeController {
     }
 
 
+    /**
+     * Performs maze generation instantly (without animation).
+     */
     public void noGenerationAnimation(){
         if (isGenerating) return;
         setGeneratingState(true);
@@ -126,6 +192,9 @@ public class MazeController {
         setGeneratingState(false);
     }
 
+    /**
+     * Finalizes the maze generation process, including start/end placement.
+     */
     private void finishGeneration() {
         
         if (!generator.isPerfect){
@@ -154,14 +223,25 @@ public class MazeController {
         view.draw(); 
     }
 
+    /** Listener interface for maze solving completion. */
     public interface SolvingListener {
         void onSolvingFinished(long solvingTime);
     }
 
+    /**
+     * Sets the listener to be called upon solving completion.
+     *
+     * @param listener The listener instance.
+     */
     public void setSolvingListener(SolvingListener listener) {
         this.solvingListener = listener;
     }
 
+    /**
+     * Starts animated maze solving with visual updates.
+     *
+     * @param delayMs Delay in milliseconds between each step.
+     */
     public void startSolvingAnimation(double delayMs) {
     if (isSolving) return;
     setSolvingState(true);
@@ -203,7 +283,9 @@ public class MazeController {
     timeline.play();
 }
 
-
+    /**
+     * Performs maze solving instantly (without animation).
+     */
     public void noSolvingAnimation() {
         if (isSolving) return;
         setSolvingState(true);
@@ -228,7 +310,11 @@ public class MazeController {
         setSolvingState(false);
     }
     
-
+    /**
+     * Returns the list of all visited cells after solving.
+     *
+     * @return List of visited cells.
+     */
     public List<Cell> getVisitedCells() {
         List<Cell> visited = new ArrayList<>();
         for (int row = 0; row < maze.getRows(); row++) {
@@ -242,6 +328,12 @@ public class MazeController {
         return visited;
     }
 
+    /**
+     * Toggles the display of visited cells in the maze view.
+     *
+     * @param showVisited Current state of visibility.
+     * @return New state of visibility.
+     */
     public boolean handleToggleVisited(boolean showVisited){
         if (visitedCells == null || visitedCells.isEmpty()) {
             ErrorView.showError("Vous n'avez pas encore résolu le labyrinthe");
@@ -255,35 +347,64 @@ public class MazeController {
         }
     }
 
+    /** Redraws the entire maze view. */
     public void drawAll() {
         view.draw();
     }
 
+    /**
+     * Returns the duration of the last maze generation.
+     *
+     * @return Generation time in milliseconds.
+     */
     public long getGenerationTime() {
         return generationTime;
     }
 
+    /**
+     * Returns the duration of the last maze solving.
+     *
+     * @return Solving time in milliseconds.
+     */
     public long getSovingTime() {
         return solvingTime;
     }
 
-    // Méthodes pour gérer les états
+    /**
+     * Updates internal and external state to reflect generation activity.
+     *
+     * @param generating Whether generation is in progress.
+     */
     private void setGeneratingState(boolean generating) {
         this.isGenerating = generating;
-        // Notifie le ResolverController de l'état de génération
         if (resolverController != null) {
             resolverController.setGenerationInProgress(generating);
         }
     }
 
+    /**
+     * Updates internal state to reflect solving activity.
+     *
+     * @param solving Whether solving is in progress.
+     */
     private void setSolvingState(boolean solving) {
         this.isSolving = solving;
     }
 
+    /**
+     * Returns whether the maze is currently being generated.
+     *
+     * @return {@code true} if generating, else {@code false}.
+     */
     public boolean isGenerating() {
         return isGenerating;
     }
 
+    /**
+     * Returns whether the maze is currently being solved.
+     *
+     * @return {@code true} if solving, else {@code false}.
+     */
     public boolean isSolving() {
         return isSolving;
     }
