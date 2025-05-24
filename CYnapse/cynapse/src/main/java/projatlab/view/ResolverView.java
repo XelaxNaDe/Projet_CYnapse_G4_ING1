@@ -247,17 +247,23 @@ public class ResolverView {
         resStage.show();
     }
     
-    /** Updates the generation time label. */
+    /** Updates the generation time label.
+     * @param timeGenMs duration time of the generation.
+     */
     public void setGenerationTime(long timeGenMs) {
         lTimeGen.setText("Temps de génération : " + timeGenMs + "ms");
     }
 
-    /** Updates the solving time label. */
+    /** Updates the solving time label.
+     * @param timeResMs duration time of the resolution.
+     */
     public void setSolvingTime (long timeResMs) {
             lTimeRes.setText("Temps de résolution : " + timeResMs + "ms");
     }
 
-    /** Updates the label with number of visited cells. */
+    /** Updates the label with number of visited cells.
+     * @param visitedcellsNB number of visited cells.
+     */
     public void setCellsVisited (long visitedcellsNB) {
         if (visitedcellsNB == 0) {
             lVisited.setText("Nombre de cases visitées par l'algorithme : Pas résolu");
@@ -266,7 +272,9 @@ public class ResolverView {
         }
     }
 
-    /** Updates the label with final path length. */
+    /** Updates the label with final path length.
+     * @param finalcellsNB number of cells in the final path.
+     */
     public void setCellsPath (long finalcellsNB) {
         if (finalcellsNB == 0) {
             lPath.setText("Taille du hemin final : Pas résolu");
@@ -275,7 +283,9 @@ public class ResolverView {
         }
     }
 
-    /** Enables or disables all interactive controls. */
+    /** Enables or disables all interactive controls. 
+     * @param enabled true to enable all of the button of a ResolutionView.
+    */
     public void setControlsEnabled(boolean enabled) {
         if (bSave != null) bSave.setDisable(!enabled);
         if (bSolve != null) bSolve.setDisable(!enabled);
@@ -287,24 +297,21 @@ public class ResolverView {
         if (bToggleVisited !=null) bToggleVisited.setDisable(!enabled);
     }
 
-    /** Displays a "solving in progress" message. */
+    /** Displays a "solving in progress" message. 
+     * @param inProgress true to change the status of lTimeRes
+    */
     public void setSolvingInProgress(boolean inProgress) {
         if (inProgress) {
             lTimeRes.setText("Temps de résolution : En cours...");
         }
     }
 
-    /** Displays a "generation in progress" message. */
+    /** Displays a "generation in progress" message. 
+     * @param inProgress true to change the status of lTimeRes
+    */
     public void setGenerationInProgress(boolean inProgress) {
         if (inProgress) {
             lTimeGen.setText("Temps de génération : En cours...");
-        }
-    }
-
-    /** Displays a message during maze modification. */
-    public void setModificationInProgress(boolean inProgress) {
-        if (inProgress) {
-            System.out.println("Modification en cours - contrôles désactivés");
         }
     }
 }

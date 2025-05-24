@@ -100,17 +100,23 @@ public class Cell {
 
     // Setters
 
-    /** Set the cell as the start or not. */
+    /** Set the cell as the start or not. 
+     * @param isStart true to set the cell as the start 
+     */
     public void setStart(boolean isStart) {
         this.isStart = isStart;
     }
 
-    /** Set the cell as the end or not. */
+    /** Set the cell as the end or not.
+     * @param isEnd true to set the cell as the end 
+     */
     public void setEnd(boolean isEnd) {
         this.isEnd = isEnd;
     }
 
-    /** Set the cell as visited or not. */
+    /** Set the cell as visited or not. 
+     * @param visited true to set the cell as visited 
+    */
     public void setVisited(boolean visited) {
         this.visited = visited;
     }

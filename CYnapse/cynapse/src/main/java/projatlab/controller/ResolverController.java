@@ -142,13 +142,11 @@ public class ResolverController {
             if (isSolving) {
                 resWindow.setSolvingInProgress(true);
             } else if (isModifying) {
-                resWindow.setModificationInProgress(true);
             } else if (mazeController.isGenerating()) {
                 resWindow.setGenerationInProgress(true);
             } else {
                 // Tous les états sont faux, on peut réactiver
                 resWindow.setSolvingInProgress(false);
-                resWindow.setModificationInProgress(false);
                 resWindow.setGenerationInProgress(false);
             }
         }

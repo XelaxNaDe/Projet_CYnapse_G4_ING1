@@ -40,7 +40,6 @@ public class MazeGeneratorPrim extends MazeGenerator {
     }
 
     /** Performs one step of the Prim maze generation algorithm */
-
     @Override
     public void step() {
         // Stop if all the cells have been visited or if no frontier cells remain

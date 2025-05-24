@@ -14,9 +14,9 @@ import projatlab.view.MazeView;
 public class ModificationController {
 
     /** Represents the modication modes
-     * MUR : for walls
-     * ENTREE : for the start
-     * SORTIE : for the end
+     * - MUR : for walls
+     * - ENTREE : for the start
+     * - SORTIE : for the end
      */
     public enum Mode { MUR, ENTREE, SORTIE }
 
