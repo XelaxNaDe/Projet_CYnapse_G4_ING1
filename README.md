@@ -22,6 +22,24 @@ Ce projet a été développé dans le cadre du module Projet ING1 à CY Tech.
 - MVC (Modèle-Vue-Contrôleur)
 
 
+## Structure
+
+- `src/main/java/projatlab/`: Code source principal
+- `controller/` : Contrôleurs de l’interface
+- `algorithms/` : Algorithmes de génération et de résolution
+- `view/` : Interface graphique
+- `model/`: Modèle d'un labyrinthe et de ces cellules
+
+
+## Contributeurs
+
+- Arthur JIN
+- Yusuf RUMELI
+- Lohan BRIARD
+- Sarusan NITHIYARAJAN
+- Omar LARABI
+
+
 ##  Installation
 
 ### Prérequis
@@ -41,21 +59,5 @@ cd CYnapse/cynapse
 mvn clean javafx:run
 
 
-##Structure
-
-- `src/main/java/projatlab/`: Code source principal
-- `controller/` : Contrôleurs de l’interface
-- `algorithms/` : Algorithmes de génération et de résolution
-- `view/` : Interface graphique
-- `model/`: Modèle d'un labyrinthe et de ces cellules
-
-
-## Contributeurs
-
-- Arthur JIN
-- Yusuf RUMELI
-- Lohan BRIARD
-- Sarusan NITHIYARAJAN
-- Omar LARABI
 
 
