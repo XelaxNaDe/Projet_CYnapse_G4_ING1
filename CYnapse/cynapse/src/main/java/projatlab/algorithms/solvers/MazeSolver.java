@@ -19,6 +19,7 @@ public class MazeSolver {
     /** True if a path is found between de start and the end of the maze */
     public boolean pathFound = false;
 
+    /** True if the the solving algorithm has ended */
     public boolean finished = false;
 
     /** Stores the final path from the start cell to the end cell */
@@ -48,7 +49,10 @@ public class MazeSolver {
         return 0;
     }
 
-        public boolean isPathFound() {
+    /** Check if a solution exist
+     * @return true if a path between the star cell and the end cell is found 
+     */
+    public boolean isPathFound() {
         return pathFound;
     }
     
