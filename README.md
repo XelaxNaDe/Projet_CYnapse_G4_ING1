@@ -53,10 +53,12 @@ Ce projet a été développé dans le cadre du module Projet ING1 à CY Tech.
 ```bash
 git clone https://github.com/XelaxNaDe/Projet_CYnapse_G4_ING1.git
 cd Projet_CYnapse_G4_ING1/CYnapse/cynapse
+```
 
 ### Lancer l'application
-
+```bash
 mvn clean javafx:run
+```
 
 
 
